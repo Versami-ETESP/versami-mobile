@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:background="@drawable/lendo"
     tools:context=".views.AgendaBanco">
 
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="65dp"
+        android:layout_height="54dp"
+        android:elevation="50dp"
+        android:scaleType="centerInside"
+        android:visibility="visible"
+        app:srcCompat="@drawable/versamilogo"
+        tools:visibility="visible" />
 </LinearLayout>
