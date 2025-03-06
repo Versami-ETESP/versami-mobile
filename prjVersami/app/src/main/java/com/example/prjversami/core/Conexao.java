@@ -11,9 +11,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Conexao {
-    ResultSet result;
-    Statement command;
-    Connection connect;
+    public ResultSet result;
+    public Statement command;
+    public Connection connect;
 
     public Connection connectDB(Context context){
         try{
