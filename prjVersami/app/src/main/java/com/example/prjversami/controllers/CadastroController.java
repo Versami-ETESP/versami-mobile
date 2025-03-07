@@ -50,23 +50,116 @@ public class CadastroController {
                 name.setError(msg);
             }
         });
+
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String usrEmail = email.getText().toString(), msg;
+                msg = Validacao.emailValidation(usrEmail) ? null : "Digite um e-mail válido";
+                email.setError(msg);
+            }
+        });
+
+        pass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String usrPass = pass.getText().toString(), msg;
+                msg = Validacao.passValidation(usrPass) ? null : "A senha precisa de 8 caracteres";
+                pass.setError(msg);
+            }
+        });
+
+        birth.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String usrbirth = birth.getText().toString(), msg;
+                msg = Validacao.birthValidation(usrbirth) ? null : "O usuário precisa ser maior de 13 anos";
+                birth.setError(msg);
+            }
+        });
+
+        confirm.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String usrPass = pass.getText().toString(), usrConfirm = confirm.getText().toString(), msg;
+                msg = Validacao.passConfirm(usrPass, usrConfirm) ? null : "As senhas não conferem";
+                confirm.setError(msg);
+            }
+        });
+
     }
 
     public boolean userLoginUnique(String login) {
         return Validacao.userIsUnique(login, this.table, this.con, this.screen);
     }
 
-    public String register(String name, String user, String pass, String confirm, String email, String birth) {
+    public boolean formIsEmpty(){
 
-        LocalDate birthDate = LocalDate.parse(birth);
-        String resposta = "";
+        boolean resposta;
+        String
+                name = this.name.getText().toString(),
+                email = this.email.getText().toString(),
+                birth = this.birth.getText().toString(),
+                pass = this.pass.getText().toString(),
+                confirm = this.confirm.getText().toString();
 
-        if (name.isEmpty() || user.isEmpty() || pass.isEmpty() || confirm.isEmpty() || email.isEmpty() || birth.isEmpty()) {
-            resposta = "Necessário preencher todos os campos para o cadastro";
-            return resposta;
+        if (name.isEmpty() || pass.isEmpty() || confirm.isEmpty() || email.isEmpty() || birth.isEmpty()) {
+            resposta = true;
+        } else {
+            resposta = false;
         }
 
-        if (!Validacao.nameValidation(name) || !Validacao.birthValidation(birthDate.atStartOfDay(ZoneId.systemDefault()).toInstant()) || !Validacao.passValidation(pass) || !this.userLoginUnique(user) || !Validacao.passConfirm(pass, confirm)) {
+        return resposta;
+    }
+    /*
+    public String register(String name, String user, String pass, String confirm, String email, String birth) {
+
+
+        String resposta = "";
+
+
+
+        if (!Validacao.nameValidation(name) || !Validacao.birthValidation(birth) || !Validacao.passValidation(pass) || !this.userLoginUnique(user) || !Validacao.passConfirm(pass, confirm)) {
             resposta = "Preencha todos os campos corretamente";
             return resposta;
         }
@@ -82,5 +175,5 @@ public class CadastroController {
         }
 
         return resposta;
-    }
+    }*/
 }

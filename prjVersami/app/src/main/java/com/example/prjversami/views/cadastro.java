@@ -1,18 +1,17 @@
 package com.example.prjversami.views;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.CadastroController;
-import com.example.prjversami.core.Validacao;
 
 public class cadastro extends AppCompatActivity {
 
     EditText name, email, pass, confirm, birth;
+    Button btnLogin, btnNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +22,14 @@ public class cadastro extends AppCompatActivity {
         pass = findViewById(R.id.cadastro_txtPass);
         confirm = findViewById(R.id.cadastro_txtConfirm);
         birth = findViewById(R.id.cadastro_txtNasc);
+        btnLogin = findViewById(R.id.cadastro_btnAcessar);
+        btnNext = findViewById(R.id.cadastro_btnCriar);
+
         getSupportActionBar().hide();
 
         CadastroController cad = new CadastroController(getApplicationContext(), name, email, pass, confirm, birth);
         cad.inputValidate();
-    }
 
+    }
 
 }

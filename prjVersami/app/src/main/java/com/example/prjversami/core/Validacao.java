@@ -5,8 +5,11 @@ import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,11 +30,30 @@ public class Validacao {
         return pass.length() >= 8;
     }
 
-    public static boolean birthValidation(Instant birth) {
-        Instant today = Instant.now();
-        long countYears = ChronoUnit.YEARS.between(birth, today);
+    public static boolean birthValidation(String birth) {
+        SimpleDateFormat formatedDate = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar birthDate = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+        int age = 0;
 
-        return countYears >= 13;
+        try{
+            birthDate.setTime(formatedDate.parse(birth));
+
+            age = today.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
+
+            if(today.get(Calendar.MONTH) < birthDate.get(Calendar.MONTH) || (today.get(Calendar.MONTH) == birthDate.get(Calendar.MONTH)
+                    && today.get(Calendar.DAY_OF_MONTH) < birthDate.get(Calendar.DAY_OF_MONTH))){
+
+                age--;
+
+            }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return age >= 13;
     }
 
     public static boolean passConfirm(String pass, String confirm) {

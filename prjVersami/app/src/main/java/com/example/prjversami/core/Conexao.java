@@ -2,6 +2,7 @@ package com.example.prjversami.core;
 
 import android.content.Context;
 import android.os.StrictMode;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.sql.Connection;
@@ -11,9 +12,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Conexao {
-    public ResultSet result;
-    public Statement command;
-    public Connection connect;
+    ResultSet result;
+    java.sql.Statement command;
+    Connection connect;
 
     public Connection connectDB(Context context){
         try{
@@ -31,7 +32,9 @@ public class Conexao {
             command = connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
             Toast.makeText(context.getApplicationContext(),"Conectado",Toast.LENGTH_SHORT).show();
         }catch(SQLException e){
+            e.printStackTrace();
             Toast.makeText(context.getApplicationContext(), "Erro de Conexão", Toast.LENGTH_SHORT).show();
+
         }
 
         return connect;
