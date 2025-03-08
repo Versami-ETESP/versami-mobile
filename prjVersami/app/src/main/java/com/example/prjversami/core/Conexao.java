@@ -12,9 +12,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Conexao {
-    ResultSet result;
-    java.sql.Statement command;
-    Connection connect;
+    public ResultSet result;
+    public java.sql.Statement command;
+    public Connection connect;
 
     public Connection connectDB(Context context){
         try{

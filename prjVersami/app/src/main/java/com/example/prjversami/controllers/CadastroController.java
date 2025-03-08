@@ -13,17 +13,21 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+/**
+ * Esta Classe faz o controle dos processos de Cadastro do APP. Os métodos realizarão a validação dos dados e a conexões com o banco de dados.
+ */
 public class CadastroController {
 
     private Conexao con;
     private String table = "tblUsuario";
     private Context screen;
-    EditText name, email, pass, confirm, birth;
+    private EditText name, email, pass, confirm, birth, user; // Todos os campos utilizados na view serão espelhados no Controller
 
-    public CadastroController(Context screen, EditText name, EditText email, EditText pass, EditText confirm, EditText birth) {
-        this.screen = screen;
-        con = new Conexao();
-        con.connectDB(screen);
+    public CadastroController(){
+
+    }
+
+    public CadastroController(EditText name, EditText email, EditText pass, EditText confirm, EditText birth) {
         this.name = name;
         this.email = email;
         this.pass = pass;
@@ -31,6 +35,18 @@ public class CadastroController {
         this.birth = birth;
     }
 
+    public CadastroController(Context screen, EditText user){
+        this.screen = screen;
+        con = new Conexao();
+        con.connectDB(screen);
+        this.user = user;
+    }
+
+    /**
+     * O método 'inputValidate' usa o evento 'addTextChanged' nos campos da view.
+     * As informações do input são salvas em uma variavel do tipo String, então é os métodos da classe Validacao são chamados
+     * Se o retorno for false, enviará um erro para o input
+     */
     public void inputValidate(){
         name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -84,7 +100,7 @@ public class CadastroController {
             @Override
             public void afterTextChanged(Editable editable) {
                 String usrPass = pass.getText().toString(), msg;
-                msg = Validacao.passValidation(usrPass) ? null : "A senha precisa de 8 caracteres";
+                msg = Validacao.passValidation(usrPass) ? null : "A senha deve ter no mínimo 8 caracteres.";
                 pass.setError(msg);
             }
         });
@@ -103,7 +119,7 @@ public class CadastroController {
             @Override
             public void afterTextChanged(Editable editable) {
                 String usrbirth = birth.getText().toString(), msg;
-                msg = Validacao.birthValidation(usrbirth) ? null : "O usuário precisa ser maior de 13 anos";
+                msg = Validacao.birthValidation(usrbirth) ? null : "Você precisa ter pelo menos 13 anos para se registrar";
                 birth.setError(msg);
             }
         });
@@ -129,9 +145,21 @@ public class CadastroController {
 
     }
 
+    /**
+     * O método 'userLoginUnique' simplifica a utilização do método 'userIsUnique' da classe Validacao.
+     * É utilizado para verificar no banco de dados se há correspondencia para um arroba de usuario.
+     * @param login
+     * @return boolean
+     */
+
     public boolean userLoginUnique(String login) {
         return Validacao.userIsUnique(login, this.table, this.con, this.screen);
     }
+
+    /**
+     * O método 'formIsEmpty' verifica se um dos campos está vazio. Se sim retorna true, se não retorna false
+     * @return boolean
+     */
 
     public boolean formIsEmpty(){
 
@@ -151,12 +179,38 @@ public class CadastroController {
 
         return resposta;
     }
+
+    /**
+     * O método 'validData' verifica se todos os campos estão com informações válidas. Se sim retorna true, se não retorna false
+     * @return boolean
+     */
+
+    public boolean validData(){
+
+        String
+                name = this.name.getText().toString(),
+                email = this.email.getText().toString(),
+                birth = this.birth.getText().toString(),
+                pass = this.pass.getText().toString(),
+                confirm = this.confirm.getText().toString();
+
+        boolean resposta = (!Validacao.nameValidation(name) || !Validacao.birthValidation(birth) || !Validacao.passValidation(pass)
+                || !Validacao.passConfirm(pass, confirm) || !Validacao.emailValidation(email));
+
+        return resposta;
+    }
+
+
     /*
-    public String register(String name, String user, String pass, String confirm, String email, String birth) {
-
-
+    public String register() {
         String resposta = "";
 
+        String
+                name = this.name.getText().toString(),
+                email = this.email.getText().toString(),
+                birth = this.birth.getText().toString(),
+                pass = this.pass.getText().toString(),
+                confirm = this.confirm.getText().toString();
 
 
         if (!Validacao.nameValidation(name) || !Validacao.birthValidation(birth) || !Validacao.passValidation(pass) || !this.userLoginUnique(user) || !Validacao.passConfirm(pass, confirm)) {
