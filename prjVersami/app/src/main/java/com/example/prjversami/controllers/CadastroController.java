@@ -7,6 +7,7 @@ import android.widget.EditText;
 
 import com.example.prjversami.core.Conexao;
 import com.example.prjversami.core.Validacao;
+import com.example.prjversami.models.Usuario;
 
 import java.sql.SQLException;
 import java.time.Instant;
@@ -22,6 +23,7 @@ public class CadastroController {
     private String table = "tblUsuario";
     private Context screen;
     private EditText name, email, pass, confirm, birth, user; // Todos os campos utilizados na view serão espelhados no Controller
+    private Usuario objUser;
 
     public CadastroController(){
 
@@ -200,34 +202,33 @@ public class CadastroController {
         return resposta;
     }
 
+    /**
+     * O método 'register' recebe um objeto usuario com as informações do usuario presentes na primeira etapa do cadastro.
+     * Esse método é chamado na segunda tela, onde ele resgata o input de usuario e com as informaçoes do objeto e do input inserir os dados do usuario no BD
+     * @param usuario
+     * @return boolean
+     */
 
-    /*
-    public String register() {
-        String resposta = "";
+    public boolean register(Usuario usuario) {
+        boolean resposta = false;
 
         String
-                name = this.name.getText().toString(),
-                email = this.email.getText().toString(),
-                birth = this.birth.getText().toString(),
-                pass = this.pass.getText().toString(),
-                confirm = this.confirm.getText().toString();
-
-
-        if (!Validacao.nameValidation(name) || !Validacao.birthValidation(birth) || !Validacao.passValidation(pass) || !this.userLoginUnique(user) || !Validacao.passConfirm(pass, confirm)) {
-            resposta = "Preencha todos os campos corretamente";
-            return resposta;
-        }
+                name = usuario.getUserName(),
+                email = usuario.getUserEmail(),
+                birth = usuario.getUserBirth(),
+                pass = usuario.getUserPass(),
+                login = user.getText().toString();
 
         try {
-            int res = con.command.executeUpdate("insert into "+this.table+"(nome,data_nasc,email,senha,arroba_usuario) values ('"+name+"','"+birth+"','"+email+"','"+pass+"','"+user+"')");
+            int res = con.command.executeUpdate("insert into "+this.table+"(nome,data_nasc,email,senha,arroba_usuario) values ('"+name+"','"+birth+"','"+email+"','"+pass+"','"+login+"')");
 
             if(res!=0)
-                resposta = "Usuario cadastrado com sucesso!";
+                resposta = true; //"Usuario cadastrado com sucesso!"
 
         } catch (SQLException ex) {
-            resposta = "Erro ao cadastrar usuário. Tente novamente mais tarde.";
+            resposta = false; //"Erro ao cadastrar usuário. Tente novamente mais tarde."
         }
 
         return resposta;
-    }*/
+    }
 }
