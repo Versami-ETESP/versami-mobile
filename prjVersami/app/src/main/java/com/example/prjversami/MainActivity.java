@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intensao = new Intent(MainActivity.this, AgendaBanco.class);
+                Intent intensao = new Intent(MainActivity.this, telaBemvindo.class);
                 startActivity(intensao);
                 finish();
             }
