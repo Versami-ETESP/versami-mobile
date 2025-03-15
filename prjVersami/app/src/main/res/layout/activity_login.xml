@@ -24,7 +24,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <EditText
-        android:id="@+id/cadastro_txtNome"
+        android:id="@+id/login_txtUsuario"
         android:layout_width="294dp"
         android:layout_height="48dp"
         android:layout_marginTop="56dp"
@@ -41,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
-        android:id="@+id/cadastro_txtPass"
+        android:id="@+id/login_txtPass"
         android:layout_width="295dp"
         android:layout_height="46dp"
         android:layout_marginTop="60dp"
@@ -54,10 +54,10 @@
         android:textColorHint="#333333"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cadastro_txtNome" />
+        app:layout_constraintTop_toBottomOf="@id/login_txtUsuario" />
 
     <View
-        android:id="@+id/container_left"
+        android:id="@+id/login_container_left"
         android:layout_width="250dp"
         android:layout_height="200dp"
         android:background="@drawable/form_top_left"
@@ -67,7 +67,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/container_right"
+        android:id="@+id/login_container_right"
         android:layout_width="250dp"
         android:layout_height="200dp"
         android:background="@drawable/form_top_right"
@@ -87,7 +87,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/cadastro_btnAcessar"
+        android:id="@+id/login_btnAcessar"
         android:layout_width="176dp"
         android:layout_height="36dp"
         android:background="@drawable/rounded_button_access"
@@ -99,11 +99,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cadastro_txtPass"
+        app:layout_constraintTop_toBottomOf="@+id/login_txtPass"
         app:layout_constraintVertical_bias="0.235" />
 
     <Button
-        android:id="@+id/cadastro_btnCriar"
+        android:id="@+id/login_btnCriar"
         android:layout_width="178dp"
         android:layout_height="37dp"
         android:background="@drawable/rounded_button_account"
@@ -114,6 +114,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cadastro_btnAcessar" />
+        app:layout_constraintTop_toBottomOf="@+id/login_btnAcessar" />
 
 </android.support.constraint.ConstraintLayout>

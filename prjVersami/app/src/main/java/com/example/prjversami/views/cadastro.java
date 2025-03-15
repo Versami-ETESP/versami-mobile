@@ -1,5 +1,6 @@
 package com.example.prjversami.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,16 @@ public class cadastro extends AppCompatActivity {
 
         cad = new CadastroController(name, email, pass, confirm, birth);
         cad.inputValidate();
+
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent tela = new Intent(cadastro.this, login.class);
+                startActivity(tela);
+                finish();
+            }
+        });
 
     }
 

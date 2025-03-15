@@ -22,7 +22,7 @@ public class telaBemvindo extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(telaBemvindo.this, login.class);
+                Intent intent = new Intent(telaBemvindo.this, cadastro.class);
                 startActivity(intent);
             }
         });
