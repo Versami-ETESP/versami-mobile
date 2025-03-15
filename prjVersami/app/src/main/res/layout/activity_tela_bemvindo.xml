@@ -1,84 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/muherlendo"
-    tools:context=".views.telaBemvindo">
-
-
+    android:orientation="vertical"
+    tools:context=".views.telaBemvindo" >
 
     <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="55dp"
-        android:layout_height="46dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"
+        android:id="@+id/imageView4"
+        android:layout_width="67dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/versamilogo" />
 
-    <Space
+    <View
+        android:id="@+id/transparent_back"
         android:layout_width="match_parent"
-        android:layout_height="316dp" />
+        android:layout_height="500dp"
+        android:background="@drawable/gradient_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
+        android:id="@+id/bemvindo"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:fontFamily="@font/quicksand_semibold"
-        android:text="Bem vindo (a) !!"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="19dp" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:fontFamily="@font/quicksand_semibold"
-        android:gravity="center"
-        android:hint="Versami é o melhor aplicativo"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:textSize="16sp" />
+        android:layout_marginTop="196dp"
+        android:fontFamily="@font/quicksand_medium"
+        android:text="Bem vindo(a)!"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/transparent_back"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/transparent_back"
+        app:layout_constraintTop_toTopOf="@+id/transparent_back" />
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:id="@+id/apresentacao"
+        android:layout_width="212dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/quicksand_semibold"
         android:gravity="center"
-        android:hint="de conexão literária"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:textSize="16sp" />
+        android:text="Versami é o melhor aplicativo de conexão literária"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/transparent_back"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/transparent_back"
+        app:layout_constraintTop_toBottomOf="@+id/bemvindo" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="53dp" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="163dp"
-        android:layout_height="123dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="150dp"
-        android:layout_weight="1"
-        android:background="#00FFFFFF"
-        android:onClick="proxTela"
-        android:padding="10dp"
-        android:paddingBottom="20dp"
-        app:srcCompat="@drawable/btniniciar" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="38dp" />
+    <Button
+        android:id="@+id/btnIniciar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="88dp"
+        android:background="@drawable/btniniciar"
+        app:layout_constraintEnd_toEndOf="@+id/transparent_back"
+        app:layout_constraintHorizontal_bias="0.886"
+        app:layout_constraintStart_toStartOf="@+id/transparent_back"
+        app:layout_constraintTop_toBottomOf="@+id/apresentacao" />
 
 
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
