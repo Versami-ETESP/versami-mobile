@@ -1,7 +1,9 @@
-package com.example.prjversami;
+package com.example.prjversami.views;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.prjversami.R;
 
 public class login extends AppCompatActivity {
 

@@ -1,9 +1,11 @@
-package com.example.prjversami;
+package com.example.prjversami.views;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import com.example.prjversami.R;
 
 public class telaBemvindo extends AppCompatActivity {
 

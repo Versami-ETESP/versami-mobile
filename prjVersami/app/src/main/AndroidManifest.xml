@@ -14,13 +14,13 @@
         android:theme="@style/Theme.PrjVersami"
         tools:targetApi="31">
         <activity
-            android:name=".login"
+            android:name=".views.login"
             android:exported="false" />
         <activity
-            android:name=".telaBemvindo"
+            android:name=".views.telaBemvindo"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".views.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
