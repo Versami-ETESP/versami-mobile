@@ -60,7 +60,7 @@ public class Validacao {
         return pass.equals(confirm);
     }
 
-    public static boolean userIsUnique(String user, String table, Conexao con, Context tela){
+    public static boolean userExist(String user, String table, Conexao con, Context tela){
         con.connectDB(tela);
         boolean findUser = false;
         try{

@@ -147,15 +147,37 @@ public class CadastroController {
 
     }
 
+    public void inputValidate2(){
+
+        user.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String msg = userLoginAvaliable() ? null : "Nome de usuário não disponível";
+                user.setError(msg);
+            }
+        });
+    }
+
     /**
-     * O método 'userLoginUnique' simplifica a utilização do método 'userIsUnique' da classe Validacao.
-     * É utilizado para verificar no banco de dados se há correspondencia para um arroba de usuario.
-     * @param login
+     * O método 'userLoginAvaliable' simplifica a utilização do método 'userExist' da classe Validacao.
+     * É utilizado para retornar para o usuário se um determinado Nome de Usuário está disponivel para uso.
      * @return boolean
      */
 
-    public boolean userLoginUnique(String login) {
-        return Validacao.userIsUnique(login, this.table, this.con, this.screen);
+    public boolean userLoginAvaliable() {
+        String login = this.user.getText().toString();
+        boolean resposta = !Validacao.userExist(login, this.table, this.con, this.screen);
+        return resposta;
     }
 
     /**
@@ -217,7 +239,7 @@ public class CadastroController {
                 email = usuario.getUserEmail(),
                 birth = usuario.getUserBirth(),
                 pass = usuario.getUserPass(),
-                login = user.getText().toString();
+                login = usuario.getUserLogin();
 
         try {
             int res = con.command.executeUpdate("insert into "+this.table+"(nome,data_nasc,email,senha,arroba_usuario) values ('"+name+"','"+birth+"','"+email+"','"+pass+"','"+login+"')");

@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.CadastroController;
+import com.example.prjversami.models.Usuario;
 
 public class cadastro extends AppCompatActivity {
 
@@ -44,17 +45,24 @@ public class cadastro extends AppCompatActivity {
             }
         });
 
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cad.formIsEmpty()) {
+                    Snackbar.make(view, "Por favor, preencher todos os campos!", Snackbar.LENGTH_LONG).show();
+                } else if (cad.validData()) {
+                    Snackbar.make(view, "Por favor, verifique os campos com erro!", Snackbar.LENGTH_LONG).show();
+                } else {
+                    Intent tela = new Intent(cadastro.this, cadastro2.class);
+                    tela.putExtra("nome", name.getText().toString());
+                    tela.putExtra("email", email.getText().toString());
+                    tela.putExtra("nasc", birth.getText().toString());
+                    tela.putExtra("senha", pass.getText().toString());
+                    startActivity(tela);
+                }
+            }
+        });
     }
 
-    public void validaCampos(View v) {
-
-        if (cad.formIsEmpty()) {
-            Snackbar.make(v, "Por favor, preencher todos os campos!", Snackbar.LENGTH_LONG).show();
-        } else if (cad.validData()) {
-            Snackbar.make(v, "Por favor, verifique os campos com erro!", Snackbar.LENGTH_LONG).show();
-        } else {
-            // Inserir aqui um Intent
-        }
-    }
 
 }

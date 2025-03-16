@@ -143,7 +143,6 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_button_account"
         android:fontFamily="@font/quisandbold"
-        android:onClick="validaCampos"
         android:text="Criar Conta"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
