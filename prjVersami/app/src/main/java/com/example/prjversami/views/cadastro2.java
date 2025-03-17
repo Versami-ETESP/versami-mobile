@@ -65,9 +65,9 @@ public class cadastro2 extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         /*
-        * Este método recebe o URI(o endereço) da imagem escolhida pelo usuário e
-        * exibe ela em um ImageView com bordas arredondadas.
-        * Essa imagem é convetida em um array de bytes para armazenamento no banco de dados.
+         * Este método recebe o URI(o endereço) da imagem escolhida pelo usuário e
+         * exibe ela em um ImageView com bordas arredondadas.
+         * Essa imagem é convetida em um array de bytes para armazenamento no banco de dados.
          */
         if (requestCode == 12 && resultCode == Activity.RESULT_OK && data != null) {
             Uri uri = data.getData();
@@ -86,9 +86,9 @@ public class cadastro2 extends AppCompatActivity {
     }
 
     /*
-    * O método 'abrirArquivos' está conectado ao image view do activity, que ao clicar
-    * cria um intent que permite o usuario selecionar um arquivo da galeria de imagens do dispositivo.
-    * Esse intent vai enviar o resultado da operação para o 'onActivityResult'.
+     * O método 'abrirArquivos' está conectado ao image view do activity, que ao clicar
+     * cria um intent que permite o usuario selecionar um arquivo da galeria de imagens do dispositivo.
+     * Esse intent vai enviar o resultado da operação para o 'onActivityResult'.
      */
     public void abrirArquivos(View v) {
 
@@ -97,9 +97,9 @@ public class cadastro2 extends AppCompatActivity {
     }
 
     /*
-    * O método 'cadastrar' está ligado ao botão presente no Activity. Sua função é preencher o objeto user
-    * com as informações do usuário recebidas pelo Intent.putExtra e pelos dados obtidos na própria activity.
-    * Após isso, o objeto será usado como parâmetro para cadastrar as informações no banco de dados.
+     * O método 'cadastrar' está ligado ao botão presente no Activity. Sua função é preencher o objeto user
+     * com as informações do usuário recebidas pelo Intent.putExtra e pelos dados obtidos na própria activity.
+     * Após isso, o objeto será usado como parâmetro para cadastrar as informações no banco de dados.
      */
 
     public void cadastrar(View v) {
@@ -123,9 +123,13 @@ public class cadastro2 extends AppCompatActivity {
         if (this.img != null)
             user.setUserImage(img);
 
-        if (cad.register(user))
+        if (cad.register(user)) {
             Snackbar.make(v, "Usuario cadastrado", Snackbar.LENGTH_LONG).show();
-        else
+            Intent tela = new Intent(cadastro2.this, login.class);
+            startActivity(tela);
+            finish();
+        } else {
             Snackbar.make(v, "Erro ao cadastrar usuário. Tente novamente mais tarde.", Snackbar.LENGTH_LONG).show();
+        }
     }
 }

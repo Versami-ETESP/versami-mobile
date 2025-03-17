@@ -3,6 +3,7 @@ package com.example.prjversami.controllers;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.example.prjversami.core.Conexao;
@@ -25,7 +26,7 @@ public class CadastroController {
     private EditText name, email, pass, confirm, birth, user; // Todos os campos utilizados na view serão espelhados no Controller
     private Usuario objUser;
 
-    public CadastroController(){
+    public CadastroController() {
 
     }
 
@@ -37,7 +38,7 @@ public class CadastroController {
         this.birth = birth;
     }
 
-    public CadastroController(Context screen, EditText user){
+    public CadastroController(Context screen, EditText user) {
         this.screen = screen;
         con = new Conexao();
         con.connectDB(screen);
@@ -49,7 +50,7 @@ public class CadastroController {
      * As informações do input são salvas em uma variavel do tipo String, então é os métodos da classe Validacao são chamados
      * Se o retorno for false, enviará um erro para o input
      */
-    public void inputValidate(){
+    public void inputValidate() {
         name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -147,7 +148,7 @@ public class CadastroController {
 
     }
 
-    public void inputValidate2(){
+    public void inputValidate2() {
 
         user.addTextChangedListener(new TextWatcher() {
             @Override
@@ -171,6 +172,7 @@ public class CadastroController {
     /**
      * O método 'userLoginAvaliable' simplifica a utilização do método 'userExist' da classe Validacao.
      * É utilizado para retornar para o usuário se um determinado Nome de Usuário está disponivel para uso.
+     *
      * @return boolean
      */
 
@@ -182,10 +184,11 @@ public class CadastroController {
 
     /**
      * O método 'formIsEmpty' verifica se um dos campos está vazio. Se sim retorna true, se não retorna false
+     *
      * @return boolean
      */
 
-    public boolean formIsEmpty(){
+    public boolean formIsEmpty() {
 
         boolean resposta;
         String
@@ -206,10 +209,11 @@ public class CadastroController {
 
     /**
      * O método 'validData' verifica se todos os campos estão com informações válidas. Se sim retorna true, se não retorna false
+     *
      * @return boolean
      */
 
-    public boolean validData(){
+    public boolean validData() {
 
         String
                 name = this.name.getText().toString(),
@@ -227,6 +231,7 @@ public class CadastroController {
     /**
      * O método 'register' recebe um objeto usuario com as informações do usuario presentes na primeira etapa do cadastro.
      * Esse método é chamado na segunda tela, onde ele resgata o input de usuario e com as informaçoes do objeto e do input inserir os dados do usuario no BD
+     *
      * @param usuario
      * @return boolean
      */
@@ -241,14 +246,32 @@ public class CadastroController {
                 pass = usuario.getUserPass(),
                 login = usuario.getUserLogin();
 
-        try {
-            int res = con.command.executeUpdate("insert into "+this.table+"(nome,data_nasc,email,senha,arroba_usuario) values ('"+name+"','"+birth+"','"+email+"','"+pass+"','"+login+"')");
+        byte[] image = usuario.getUserImage();
 
-            if(res!=0)
-                resposta = true; //"Usuario cadastrado com sucesso!"
+        if (image != null) {
+            try {
+                int res = con.command.executeUpdate("insert into " + this.table + "(nome,data_nasc,email,senha,arroba_usuario,fotoUsuario) values ('" + name + "','" + birth + "','" + email + "','" + pass + "','" + login + "', convert(varbinary(max), '" + image + "'))");
 
-        } catch (SQLException ex) {
-            resposta = false; //"Erro ao cadastrar usuário. Tente novamente mais tarde."
+                if (res != 0)
+                    resposta = true; //"Usuario cadastrado com sucesso!"
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                Log.e("SQL erro", "Erro ao executar query: " + ex.getMessage());
+                resposta = false; //"Erro ao cadastrar usuário. Tente novamente mais tarde."
+            }
+        } else {
+            try {
+                int res = con.command.executeUpdate("insert into " + this.table + "(nome,data_nasc,email,senha,arroba_usuario) values ('" + name + "','" + birth + "','" + email + "','" + pass + "','" + login + "')");
+
+                if (res != 0)
+                    resposta = true; //"Usuario cadastrado com sucesso!"
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                Log.e("SQL erro", "Erro ao executar query: " + ex.getMessage());
+                resposta = false; //"Erro ao cadastrar usuário. Tente novamente mais tarde."
+            }
         }
 
         return resposta;
