@@ -10,7 +10,9 @@ import com.example.prjversami.core.Conexao;
 import com.example.prjversami.core.Validacao;
 import com.example.prjversami.models.Usuario;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -238,41 +240,36 @@ public class CadastroController {
 
     public boolean register(Usuario usuario) {
         boolean resposta = false;
+        String sql = "INSERT INTO " + this.table + "(nome,data_nasc,email,senha,arroba_usuario,fotoUsuario) VALUES (?,?,?,?,?,?)";
 
-        String
-                name = usuario.getUserName(),
-                email = usuario.getUserEmail(),
-                birth = usuario.getUserBirth(),
-                pass = usuario.getUserPass(),
-                login = usuario.getUserLogin();
 
-        byte[] image = usuario.getUserImage();
-
-        if (image != null) {
             try {
-                int res = con.command.executeUpdate("insert into " + this.table + "(nome,data_nasc,email,senha,arroba_usuario,fotoUsuario) values ('" + name + "','" + birth + "','" + email + "','" + pass + "','" + login + "', convert(varbinary(max), '" + image + "'))");
+                PreparedStatement ps = con.connect.prepareStatement(sql);
+                ps.setString(1, usuario.getUserName());
+                ps.setString(2, usuario.getUserBirth());
+                ps.setString(3, usuario.getUserEmail());
+                ps.setString(4, usuario.getUserPass());
+                ps.setString(5, usuario.getUserLogin());
+
+                byte[] image = usuario.getUserImage();
+
+                if(image != null){
+                    ps.setBytes(6, image);
+                }else{
+                    ps.setNull(6, Types.VARBINARY);
+                }
+
+                int res = ps.executeUpdate();
 
                 if (res != 0)
                     resposta = true; //"Usuario cadastrado com sucesso!"
+
 
             } catch (SQLException ex) {
                 ex.printStackTrace();
                 Log.e("SQL erro", "Erro ao executar query: " + ex.getMessage());
                 resposta = false; //"Erro ao cadastrar usuário. Tente novamente mais tarde."
             }
-        } else {
-            try {
-                int res = con.command.executeUpdate("insert into " + this.table + "(nome,data_nasc,email,senha,arroba_usuario) values ('" + name + "','" + birth + "','" + email + "','" + pass + "','" + login + "')");
-
-                if (res != 0)
-                    resposta = true; //"Usuario cadastrado com sucesso!"
-
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                Log.e("SQL erro", "Erro ao executar query: " + ex.getMessage());
-                resposta = false; //"Erro ao cadastrar usuário. Tente novamente mais tarde."
-            }
-        }
 
         return resposta;
     }

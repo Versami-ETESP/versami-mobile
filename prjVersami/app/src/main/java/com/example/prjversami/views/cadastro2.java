@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -78,7 +79,6 @@ public class cadastro2 extends AppCompatActivity {
                 roundedDrawable.setCircular(true);
                 userImage.setImageDrawable(roundedDrawable);
                 img = ImagensUtil.converteParaBytes(bitmap);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -124,7 +124,6 @@ public class cadastro2 extends AppCompatActivity {
             user.setUserImage(img);
 
         if (cad.register(user)) {
-            Snackbar.make(v, "Usuario cadastrado", Snackbar.LENGTH_LONG).show();
             Intent tela = new Intent(cadastro2.this, login.class);
             startActivity(tela);
             finish();
