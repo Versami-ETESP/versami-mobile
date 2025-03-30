@@ -1,4 +1,11 @@
 <resources>
-    <string name="app_name">prjVersami</string>
+    <string name="app_name">Versami</string>
     <string name="hint_name">Nome</string>
+    <string name="menu_home">Início</string>
+    <string name="menu_search">Pesquisar</string>
+    <string name="menu_add">Publicar</string>
+    <string name="menu_notification">Notificações</string>
+    <string name="menu_profile">Perfil</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -27,7 +27,7 @@ public class splash extends AppCompatActivity {
                 try{
                     Cursor c = db.rawQuery("SELECT * FROM usuario",null);
                     if(c.moveToNext()){
-                        Intent tela = new Intent(splash.this, teste.class);
+                        Intent tela = new Intent(splash.this, MainActivity.class);
                         startActivity(tela);
                         finish();
                     }else{
