@@ -1,4 +1,4 @@
-package com.example.prjversami.models;
+package com.example.prjversami.entities;
 
 public class Admin extends Perfil{
     private Boolean admPermission;

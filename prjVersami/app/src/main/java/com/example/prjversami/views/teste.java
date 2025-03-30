@@ -12,8 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prjversami.R;
-import com.example.prjversami.core.Conexao;
-import com.example.prjversami.core.ImagensUtil;
+import com.example.prjversami.util.Conexao;
+import com.example.prjversami.util.ImagensUtil;
 
 import java.sql.SQLException;
 

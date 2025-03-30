@@ -1,4 +1,4 @@
-package com.example.prjversami.models;
+package com.example.prjversami.entities;
 
 public class Livro {
     private Integer bookID;

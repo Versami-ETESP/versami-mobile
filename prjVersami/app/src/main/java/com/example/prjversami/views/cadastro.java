@@ -10,7 +10,6 @@ import android.widget.EditText;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.CadastroController;
-import com.example.prjversami.models.Usuario;
 
 public class cadastro extends AppCompatActivity {
 

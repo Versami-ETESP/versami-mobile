@@ -1,15 +1,11 @@
-package com.example.prjversami.core;
+package com.example.prjversami.util;
 
 import android.content.Context;
 import android.widget.Toast;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

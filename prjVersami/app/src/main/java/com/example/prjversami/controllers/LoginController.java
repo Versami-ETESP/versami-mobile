@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.prjversami.core.Conexao;
-import com.example.prjversami.core.ImagensUtil;
+import com.example.prjversami.util.Conexao;
+import com.example.prjversami.util.ImagensUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

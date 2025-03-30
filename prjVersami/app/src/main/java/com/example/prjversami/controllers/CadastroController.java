@@ -6,16 +6,13 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.EditText;
 
-import com.example.prjversami.core.Conexao;
-import com.example.prjversami.core.Validacao;
-import com.example.prjversami.models.Usuario;
+import com.example.prjversami.util.Conexao;
+import com.example.prjversami.util.Validacao;
+import com.example.prjversami.entities.Usuario;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 
 /**
  * Esta Classe faz o controle dos processos de Cadastro do APP. Os métodos realizarão a validação dos dados e a conexões com o banco de dados.

@@ -1,9 +1,8 @@
-package com.example.prjversami.core;
+package com.example.prjversami.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;

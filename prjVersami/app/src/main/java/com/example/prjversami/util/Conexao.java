@@ -1,4 +1,4 @@
-package com.example.prjversami.core;
+package com.example.prjversami.util;
 
 import android.content.Context;
 import android.os.StrictMode;
@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Conexao {
     public ResultSet result;
