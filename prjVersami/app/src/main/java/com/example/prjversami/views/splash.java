@@ -13,40 +13,41 @@ import com.example.prjversami.R;
 
 public class splash extends AppCompatActivity {
 
+    boolean resp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_splash);
+
+        try (SQLiteDatabase db = this.openOrCreateDatabase("guardarDados", Context.MODE_PRIVATE, null);
+             Cursor c = db.rawQuery("SELECT * FROM usuario", null);) {
+
+            if (c.moveToNext()) {
+                this.resp = true;
+
+            } else {
+                this.resp = false;
+            }
+
+        } catch (Exception e) {
+            Log.e("SQLite", "Banco de dados indisponível" + e.getMessage());
+            this.resp = false;
+        }
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                SQLiteDatabase db = openOrCreateDatabase("guardarDados", Context.MODE_PRIVATE,null);
-
-                try{
-                    Cursor c = db.rawQuery("SELECT * FROM usuario",null);
-                    if(c.moveToNext()){
-                        Intent tela = new Intent(splash.this, MainActivity.class);
-                        startActivity(tela);
-                        finish();
-                    }else{
-                        Intent intensao = new Intent(splash.this, telaBemvindo.class);
-                        startActivity(intensao);
-                        finish();
-                    }
-
-                }catch(Exception e){
-                    Log.e("SQLite", "Banco de dados indisponível" + e.getMessage());
-                    Intent intensao = new Intent(splash.this, telaBemvindo.class);
-                    startActivity(intensao);
-                    finish();
+                if (resp) {
+                    startActivity(new Intent(splash.this, MainActivity.class));
+                } else {
+                    startActivity(new Intent(splash.this, telaBemvindo.class));
                 }
 
-
+                finish();
             }
-        },3000);
-
-        getSupportActionBar().hide();
-        }
+        }, 3000);
     }
+}
