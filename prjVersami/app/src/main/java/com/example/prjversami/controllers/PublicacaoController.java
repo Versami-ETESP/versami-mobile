@@ -52,6 +52,28 @@ public class PublicacaoController {
         return listaPublicaoes;
     }
 
+    public List<Publicacao> pegarPublicacoes(){
+        List<Publicacao> listaPublicaoes = new ArrayList<>();
+        String sql = "SELECT * FROM "+this.table+ " ORDER BY dataPublic DESC";
+
+        try{
+            con.result = con.command.executeQuery(sql);
+
+            while(con.result.next()){
+                Publicacao publicacao = new Publicacao();
+                publicacao.setUser(con.result.getInt("idUsuario"));
+                publicacao.setBook(con.result.getInt("idLivro"));
+                publicacao.setContent(con.result.getString("conteudo"));
+                publicacao.setPostDate(con.result.getDate("dataPublic").toString());
+
+                listaPublicaoes.add(publicacao);
+            }
+        }catch (SQLException e){
+            Log.e("Erro na consulta SQL: ", e.getMessage());
+        }
+        return listaPublicaoes;
+    }
+
     public Usuario pegarUsuario(Integer idUsuario){
         String sql = "SELECT nome, arroba_usuario, fotoUsuario FROM tblUsuario WHERE idUsuario="+idUsuario;
         Usuario user = null;

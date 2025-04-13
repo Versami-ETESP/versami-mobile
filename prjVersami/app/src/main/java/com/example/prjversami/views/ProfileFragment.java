@@ -1,8 +1,10 @@
 package com.example.prjversami.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabItem;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +29,7 @@ import com.example.prjversami.controllers.PerfilController;
 import com.example.prjversami.controllers.PublicacaoController;
 import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.entities.Usuario;
+import com.example.prjversami.util.FragmentUtil;
 import com.example.prjversami.util.ImagensUtil;
 
 /**
@@ -47,6 +51,8 @@ public class ProfileFragment extends Fragment {
     private TabLayout opcoesPerfil;
     private ImageView profileImg, coverImg;
     private TextView seguidores, seguindo, bioUser, arroba, nomeUser;
+    private ProgressBar progressBar;
+    private FrameLayout frame;
     private PerfilController perCon = new PerfilController(getContext());
 
     public ProfileFragment() {
@@ -100,74 +106,121 @@ public class ProfileFragment extends Fragment {
         this.seguidores = view.findViewById(R.id.profile_seguidores);
         this.profileImg = view.findViewById(R.id.profile_image);
         this.coverImg = view.findViewById(R.id.profile_cover);
+        this.opcoesPerfil = view.findViewById(R.id.profile_tablayout);
+        this.frame = view.findViewById(R.id.profile_framelayout);
+        this.progressBar = view.findViewById(R.id.profile_progress);
 
-        //criando obj usuario e pegando o id do usuario logado
-        Usuario user;
-        SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        visibilityItens(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
 
-        // se tiver um id registrado nas preferencias do android ele vai setar as informações do usuario nos devidos campos
-        if(pref.getInt("id", 0) > 0){
-           user = perCon.obtemPerfil(pref.getInt("id", 0));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //criando obj usuario e pegando o id do usuario logado
+                Usuario user;
+                SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
 
-           this.nomeUser.setText(user.getUserName());
-           this.arroba.setText("@"+user.getUserLogin());
-           this.seguidores.setText(user.getSeguidores().toString()+"\nSeguidores");
-           this.seguindo.setText(user.getSeguindo().toString()+"\nSeguindo");
+                // se tiver android ele vai setar as informações do usuario nos devidos campos
+                if (pref.getInt("id", 0) > 0) {
+                    user = perCon.obtemPerfil(pref.getInt("id", 0));
 
-           // As imagens só são definidas se o objeto nao estiver nulo, para evitar nullpointer exception
+                    nomeUser.setText(user.getUserName());
+                    arroba.setText("@" + user.getUserLogin());
+                    seguidores.setText(user.getSeguidores().toString() + "\nSeguidores");
+                    seguindo.setText(user.getSeguindo().toString() + "\nSeguindo");
 
-           if(user.getUserImage() != null)
-               this.profileImg.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
+                    // As imagens só são definidas se o objeto nao estiver nulo, para evitar nullpointer exception
 
-           if(user.getUserCover() != null)
-               this.coverImg.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserCover()));
+                    if (user.getUserImage() != null)
+                        profileImg.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
 
-           if (user.getUserBio() != null || user.getUserBio() != "")
-               this.bioUser.setText(user.getUserBio());
-           else
-               this.bioUser.setVisibility(View.GONE);
-        }
+                    if (user.getUserCover() != null)
+                        coverImg.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserCover()));
 
-        // Similaridade do tablayout com o xml
-        opcoesPerfil = view.findViewById(R.id.profile_tablayout);
+                    if (user.getUserBio() != null || user.getUserBio() != "")
+                        bioUser.setText(user.getUserBio());
+                    else
+                        bioUser.setVisibility(View.GONE);
+
+                    visibilityItens(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        },200);
+
+
+
+        //Cria um bundle para passar a informação de qual fragment de origem e carrega o recycler na view
+        Bundle bundle = new Bundle();
+        bundle.putString("fragment", "profile");
+        FragmentUtil.carregarFragment(getChildFragmentManager(), R.id.profile_framelayout, new RecyclerPostsFragment(), bundle);
 
         // define qual fragment colocar no lugar do framelayout de acordo com a opçao do tablayout
-        Fragment fragment = null;
-        switch (opcoesPerfil.getSelectedTabPosition()){
-            case 0:
-                fragment = new RecyclerPostsFragment();
-                break;
-            case 1:
-                fragment = null; // todo fazer fragment de favoritos
-                break;
-        }
+        opcoesPerfil.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Fragment fragment = null;
+                switch (opcoesPerfil.getSelectedTabPosition()) {
+                    case 0:
+                        bundle.putString("fragment", "profile");
+                        fragment = new RecyclerPostsFragment();
+                        if (fragment != null) {
+                            FragmentUtil.carregarFragment(getChildFragmentManager(), R.id.profile_framelayout, new RecyclerPostsFragment(), bundle);
+                        }
+                        break;
+                    case 1:
+                        fragment = null; // todo fazer fragment de favoritos
+                        break;
+                }
+            }
 
-        if(fragment != null){
-            FragmentManager fragmentManager = getChildFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.profile_framelayout, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-        }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_profile,menu);
+        inflater.inflate(R.menu.menu_fragment_profile, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_profile_edit:
-                Toast.makeText(getActivity(),"Editar Perfil Clicado",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Editar Perfil Clicado", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_profile_exit:
-                Toast.makeText(getActivity(),"Sair do Perfil Clicado",Toast.LENGTH_LONG).show();
+                SharedPreferences pref = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+
+                editor.putInt("id", -1);
+                editor.apply();
+                startActivity(new Intent(getContext(), splash.class));
+                getActivity().finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void visibilityItens(int value){
+        this.nomeUser.setVisibility(value);
+        this.bioUser.setVisibility(value);
+        this.arroba.setVisibility(value);
+        this.seguindo.setVisibility(value);
+        this.seguidores.setVisibility(value);
+        this.profileImg.setVisibility(value);
+        this.coverImg.setVisibility(value);
+        this.opcoesPerfil.setVisibility(value);
+        this.frame.setVisibility(value);
     }
 }

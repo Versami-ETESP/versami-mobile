@@ -3,13 +3,16 @@ package com.example.prjversami.views;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.PublicacaoController;
@@ -34,6 +37,7 @@ public class RecyclerPostsFragment extends Fragment {
     private String mParam2;
 
     private PublicacaoController controller;
+    ProgressBar carregando;
 
     public RecyclerPostsFragment() {
         // Required empty public constructor
@@ -78,14 +82,37 @@ public class RecyclerPostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         controller = new PublicacaoController(view.getContext());
         RecyclerView recyclerView = view.findViewById(R.id.posts_recycler);
+        carregando = view.findViewById(R.id.loading_spinner);
 
-        SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        carregando.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
 
-        if(pref.getInt("id", 0) > 0){
-            int user = pref.getInt("id", 0);
-            List<Publicacao> publicacoes = controller.pegarPublicacoes(user);
-            recyclerView.setAdapter(new AdapterPublicacoes(publicacoes, view.getContext()));
-        }
+        //carrega os posts antes de exibir na view
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Bundle bundle = getArguments();
+
+                if(bundle != null){
+                    String frag = bundle.getString("fragment");
+
+                    if(frag.equals("profile")){
+                        SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+
+                        if(pref.getInt("id", 0) > 0){
+                            int user = pref.getInt("id", 0);
+                            List<Publicacao> publicacoes = controller.pegarPublicacoes(user);
+                            recyclerView.setAdapter(new AdapterPublicacoes(publicacoes, view.getContext()));
+                        }
+                    }else if(frag.equals("home")){
+                        List<Publicacao> publicacoes = controller.pegarPublicacoes();
+                        recyclerView.setAdapter(new AdapterPublicacoes(publicacoes, view.getContext()));
+                    }
+                    carregando.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+        },200);
     }
 }

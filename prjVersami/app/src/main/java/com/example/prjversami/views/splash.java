@@ -26,23 +26,6 @@ public class splash extends AppCompatActivity {
 
         this.resp = pref.getInt("id", 0) > 0;
 
-        /*
-        try (SQLiteDatabase db = this.openOrCreateDatabase("guardarDados", Context.MODE_PRIVATE, null);
-             Cursor c = db.rawQuery("SELECT * FROM usuario", null);) {
-
-            if (c.moveToNext()) {
-                this.resp = true;
-
-            } else {
-                this.resp = false;
-            }
-
-        } catch (Exception e) {
-            Log.e("SQLite", "Banco de dados indisponível" + e.getMessage());
-            this.resp = false;
-        }*/
-
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

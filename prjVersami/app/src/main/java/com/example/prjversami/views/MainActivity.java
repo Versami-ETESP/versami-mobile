@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.Toolbar;
 
 import com.example.prjversami.R;
+import com.example.prjversami.util.FragmentUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         frameLayout = findViewById(R.id.fragment_container);
 
         if(savedInstanceState == null){
-            carregarFragment(new ProfileFragment());
+            FragmentUtil.carregarFragment(getSupportFragmentManager(),R.id.fragment_container, new ProfileFragment());
             bottomNavigationView.setSelectedItemId(R.id.menu_profile);
         }
 
@@ -61,20 +62,12 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (fragment != null){
-                    carregarFragment(fragment);
+                    FragmentUtil.carregarFragment(getSupportFragmentManager(),R.id.fragment_container, fragment);
                 }
 
                 return true;
             }
         });
-    }
-
-    public void carregarFragment(Fragment fragment){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 
     public void personalizarActionBar(String title){
