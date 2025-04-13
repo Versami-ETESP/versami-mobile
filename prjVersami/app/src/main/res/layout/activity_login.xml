@@ -85,7 +85,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/login_btnAcessar"
         android:layout_width="176dp"
         android:layout_height="36dp"
@@ -101,7 +101,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_txtPass" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/login_btnCriar"
         android:layout_width="178dp"
         android:layout_height="37dp"

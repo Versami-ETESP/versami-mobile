@@ -44,7 +44,7 @@ public class login extends AppCompatActivity {
 
                 if (!txtSenha.getText().toString().isEmpty() && !txtUsuario.getText().toString().isEmpty()) {
                     if (log.login(txtUsuario.getText().toString(), txtSenha.getText().toString())) {
-                        Intent tela = new Intent(login.this, teste.class);
+                        Intent tela = new Intent(login.this, MainActivity.class);
                         startActivity(tela);
                         finish();
                     } else {

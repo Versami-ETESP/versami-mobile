@@ -1,6 +1,7 @@
 package com.example.prjversami.controllers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -37,8 +38,19 @@ public class LoginController {
      * @param fotoPerfil
      */
     public void guardarDados(int id, String nome, String arroba, byte[] fotoPerfil){
+        SharedPreferences pref = screen.getSharedPreferences("login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
 
-        try{
+        editor.putInt("id", id);
+        editor.putString("nome", nome);
+        editor.putString("arroba", arroba);
+
+        editor.apply();
+
+        if(fotoPerfil != null)
+            ImagensUtil.salvarImagem(fotoPerfil,"imagemPerfil.jpeg", this.screen);
+
+        /*try{
             this.db = this.screen.openOrCreateDatabase("guardarDados",Context.MODE_PRIVATE,null);
 
             db.execSQL("CREATE TABLE IF NOT EXISTS usuario" +
@@ -54,7 +66,7 @@ public class LoginController {
 
         }catch(Exception e){
             Log.e("DB_ERROR", "Erro ao guardar dados: " + e.getMessage());
-        }
+        }*/
     }
 
     /**

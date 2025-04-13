@@ -8,7 +8,9 @@ public class Usuario extends Perfil{
 
     private String userBirth, userBio;
 
-    private byte[] userImage;
+    private byte[] userImage, userCover;
+
+    private Integer seguidores, seguindo;
 
     private List<Publicacao> posts = new ArrayList<>(); // esse array armazena no todos os objetos posts relacionados ao usuario
 
@@ -57,5 +59,29 @@ public class Usuario extends Perfil{
 
     public void setUserImage(byte[] userImage) {
         this.userImage = userImage;
+    }
+
+    public byte[] getUserCover() {
+        return userCover;
+    }
+
+    public void setUserCover(byte[] userCover) {
+        this.userCover = userCover;
+    }
+
+    public Integer getSeguidores() {
+        return seguidores;
+    }
+
+    public void setSeguidores(Integer seguidores) {
+        this.seguidores = seguidores;
+    }
+
+    public Integer getSeguindo() {
+        return seguindo;
+    }
+
+    public void setSeguindo(Integer seguindo) {
+        this.seguindo = seguindo;
     }
 }

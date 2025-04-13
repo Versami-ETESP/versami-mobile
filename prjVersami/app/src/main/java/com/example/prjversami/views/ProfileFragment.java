@@ -1,16 +1,32 @@
 package com.example.prjversami.views;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabItem;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prjversami.R;
+import com.example.prjversami.controllers.PerfilController;
+import com.example.prjversami.controllers.PublicacaoController;
+import com.example.prjversami.entities.Publicacao;
+import com.example.prjversami.entities.Usuario;
+import com.example.prjversami.util.ImagensUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +43,11 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private TabLayout opcoesPerfil;
+    private ImageView profileImg, coverImg;
+    private TextView seguidores, seguindo, bioUser, arroba, nomeUser;
+    private PerfilController perCon = new PerfilController(getContext());
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -65,6 +86,69 @@ public class ProfileFragment extends Fragment {
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Fazendo a similaridade com o xml
+        this.nomeUser = view.findViewById(R.id.profile_name);
+        this.bioUser = view.findViewById(R.id.profile_bio);
+        this.arroba = view.findViewById(R.id.profile_username);
+        this.seguindo = view.findViewById(R.id.profile_seguindo);
+        this.seguidores = view.findViewById(R.id.profile_seguidores);
+        this.profileImg = view.findViewById(R.id.profile_image);
+        this.coverImg = view.findViewById(R.id.profile_cover);
+
+        //criando obj usuario e pegando o id do usuario logado
+        Usuario user;
+        SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+
+        // se tiver um id registrado nas preferencias do android ele vai setar as informações do usuario nos devidos campos
+        if(pref.getInt("id", 0) > 0){
+           user = perCon.obtemPerfil(pref.getInt("id", 0));
+
+           this.nomeUser.setText(user.getUserName());
+           this.arroba.setText("@"+user.getUserLogin());
+           this.seguidores.setText(user.getSeguidores().toString()+"\nSeguidores");
+           this.seguindo.setText(user.getSeguindo().toString()+"\nSeguindo");
+
+           // As imagens só são definidas se o objeto nao estiver nulo, para evitar nullpointer exception
+
+           if(user.getUserImage() != null)
+               this.profileImg.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
+
+           if(user.getUserCover() != null)
+               this.coverImg.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserCover()));
+
+           if (user.getUserBio() != null || user.getUserBio() != "")
+               this.bioUser.setText(user.getUserBio());
+           else
+               this.bioUser.setVisibility(View.GONE);
+        }
+
+        // Similaridade do tablayout com o xml
+        opcoesPerfil = view.findViewById(R.id.profile_tablayout);
+
+        // define qual fragment colocar no lugar do framelayout de acordo com a opçao do tablayout
+        Fragment fragment = null;
+        switch (opcoesPerfil.getSelectedTabPosition()){
+            case 0:
+                fragment = new RecyclerPostsFragment();
+                break;
+            case 1:
+                fragment = null; // todo fazer fragment de favoritos
+                break;
+        }
+
+        if(fragment != null){
+            FragmentManager fragmentManager = getChildFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.profile_framelayout, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 
     @Override

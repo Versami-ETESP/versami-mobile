@@ -2,6 +2,7 @@ package com.example.prjversami.views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
@@ -21,6 +22,11 @@ public class splash extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_splash);
 
+        SharedPreferences pref = getSharedPreferences("login", Context.MODE_PRIVATE);
+
+        this.resp = pref.getInt("id", 0) > 0;
+
+        /*
         try (SQLiteDatabase db = this.openOrCreateDatabase("guardarDados", Context.MODE_PRIVATE, null);
              Cursor c = db.rawQuery("SELECT * FROM usuario", null);) {
 
@@ -34,7 +40,8 @@ public class splash extends AppCompatActivity {
         } catch (Exception e) {
             Log.e("SQLite", "Banco de dados indisponível" + e.getMessage());
             this.resp = false;
-        }
+        }*/
+
 
         new Handler().postDelayed(new Runnable() {
             @Override
