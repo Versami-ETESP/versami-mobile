@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Publicacao {
     private String content;
-    private Boolean like;
+    private boolean like;
     private String postDate;
     private Integer book;
     private Integer user;
@@ -38,7 +38,7 @@ public class Publicacao {
         this.content = content;
     }
 
-    public boolean getLike() {
+    public boolean isLike() {
         return like;
     }
 

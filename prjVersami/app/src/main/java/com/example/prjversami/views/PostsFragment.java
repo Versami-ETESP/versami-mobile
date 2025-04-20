@@ -1,14 +1,26 @@
 package com.example.prjversami.views;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.prjversami.R;
+import com.example.prjversami.controllers.PerfilController;
+import com.example.prjversami.entities.Livro;
+import com.example.prjversami.entities.Usuario;
+import com.example.prjversami.util.ImagensUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +37,14 @@ public class PostsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private EditText txtpublicacao;
+    private Button btnPublicar, btnProcurarLivro;
+    private ImageView imgPerfil;
+    private TextView lblNome, lblArroba;
+    private Usuario usuario;
+    private Livro livro;
+
 
     public PostsFragment() {
         // Required empty public constructor
@@ -62,5 +82,30 @@ public class PostsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_posts, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.lblNome = view.findViewById(R.id.addpost_name);
+        this.lblArroba = view.findViewById(R.id.addpost_username);
+        this.imgPerfil = view.findViewById(R.id.addpost_image);
+        this.txtpublicacao = view.findViewById(R.id.addpost_txtPublicacao);
+        this.btnPublicar = view.findViewById(R.id.addpost_btnpublicar);
+        this.btnProcurarLivro = view.findViewById(R.id.addpost_btnLivro);
+
+        SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        int id = pref.getInt("id", 0);
+
+        PerfilController pfc = new PerfilController(getContext());
+        usuario = pfc.obtemPerfil(id);
+
+        lblNome.setText(usuario.getUserName());
+        lblArroba.setText("@"+usuario.getUserLogin());
+
+        if(usuario.getUserImage() != null)
+            imgPerfil.setImageBitmap(ImagensUtil.converteParaBitmap(usuario.getUserImage()));
+        else
+            imgPerfil.setImageResource(R.drawable.user_icon_placeholder2);
     }
 }

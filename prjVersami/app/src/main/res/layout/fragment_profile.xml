@@ -16,7 +16,7 @@
         android:id="@+id/profile_cover"
         android:layout_width="411dp"
         android:layout_height="131dp"
-        android:background="@color/purple_200"
+        android:background="@color/versami_blue"
         android:src="@drawable/ic_account_circle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
             android:id="@+id/profile_image"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:background="@color/versami_blue"
+            android:background="#D3D3D3"
             android:src="@drawable/user_icon_placeholder2"
             android:scaleType="fitXY"/>
     </android.support.v7.widget.CardView>

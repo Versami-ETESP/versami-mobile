@@ -28,7 +28,7 @@ public class Conexao {
         }
 
         try {
-            String url = "jdbc:jtds:sqlserver://192.168.1.4:1433;databaseName=versami";
+            String url = "jdbc:jtds:sqlserver://192.168.1.6:1433;databaseName=versami";
             connect = DriverManager.getConnection(url,"sa","Tc2088275");
             command = connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
            // Toast.makeText(context.getApplicationContext(),"Conectado",Toast.LENGTH_SHORT).show();
