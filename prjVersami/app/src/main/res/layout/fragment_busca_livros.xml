@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".views.BuscaLivrosFragment"
+    android:orientation="vertical"
+    android:padding="15dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:layout_marginBottom="10dp">
+
+       <android.support.v7.widget.AppCompatButton
+           android:id="@+id/livros_fechabusca"
+           android:layout_width="30dp"
+           android:layout_height="30dp"
+           android:background="@drawable/ic_close_"/>
+
+    </LinearLayout>
+    <EditText
+        android:id="@+id/livros_txtbusca"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/rounded_background"
+        android:fontFamily="@font/quicksand_medium"
+        android:hint="Digite o nome do livro"
+        android:padding="10dp"
+        android:inputType="text"
+        android:layout_marginBottom="10dp"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/livros_btnbusca"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:text="Pesquisar"
+        android:background="@drawable/rounded_button_versamicolor"
+        android:fontFamily="@font/quicksand_medium"
+        android:textColor="@color/white"
+        android:layout_marginBottom="10dp"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/livros_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_busca_livro"/>
+
+</LinearLayout>

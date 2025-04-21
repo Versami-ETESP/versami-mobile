@@ -3,24 +3,34 @@ package com.example.prjversami.views;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.prjversami.R;
+import com.example.prjversami.controllers.CriarPostController;
 import com.example.prjversami.controllers.PerfilController;
 import com.example.prjversami.entities.Livro;
+import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.entities.Usuario;
+import com.example.prjversami.util.Compartilha;
 import com.example.prjversami.util.ImagensUtil;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,8 +50,9 @@ public class PostsFragment extends Fragment {
 
     private EditText txtpublicacao;
     private Button btnPublicar, btnProcurarLivro;
-    private ImageView imgPerfil;
-    private TextView lblNome, lblArroba;
+    private ImageView imgPerfil, imgCapa;
+    private TextView lblNome, lblArroba, lblTitulo;
+    private LinearLayout dadosLivro;
     private Usuario usuario;
     private Livro livro;
 
@@ -93,19 +104,84 @@ public class PostsFragment extends Fragment {
         this.txtpublicacao = view.findViewById(R.id.addpost_txtPublicacao);
         this.btnPublicar = view.findViewById(R.id.addpost_btnpublicar);
         this.btnProcurarLivro = view.findViewById(R.id.addpost_btnLivro);
+        this.dadosLivro = view.findViewById(R.id.addpost_bookinfo);
+        this.imgCapa = view.findViewById(R.id.addpost_bookcover);
+        this.lblTitulo = view.findViewById(R.id.addpost_bookname);
 
         SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         int id = pref.getInt("id", 0);
 
+        CriarPostController postController = new CriarPostController(getContext());
         PerfilController pfc = new PerfilController(getContext());
         usuario = pfc.obtemPerfil(id);
 
         lblNome.setText(usuario.getUserName());
-        lblArroba.setText("@"+usuario.getUserLogin());
+        lblArroba.setText("@" + usuario.getUserLogin());
 
-        if(usuario.getUserImage() != null)
+        if (usuario.getUserImage() != null)
             imgPerfil.setImageBitmap(ImagensUtil.converteParaBitmap(usuario.getUserImage()));
         else
             imgPerfil.setImageResource(R.drawable.user_icon_placeholder2);
+
+        btnProcurarLivro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomSheetDialogFragment bottomDialog = new BuscaLivrosFragment();
+                bottomDialog.show(getChildFragmentManager(), "Busca livros");
+            }
+        });
+
+        btnPublicar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Publicacao publicacao = new Publicacao();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date agora = new Date();
+                String conteudo = txtpublicacao.getText().toString(), data = df.format(agora);
+
+
+                publicacao.setUser(id);
+                publicacao.setPostDate(data);
+
+                if(conteudo.isEmpty()){
+                    txtpublicacao.setError("Campo vazio");
+                }else if(conteudo.length() > 1000){
+                    txtpublicacao.setError("A publicação deve ter no máximo 1000 caracteres");
+                }else{
+                    publicacao.setContent(conteudo);
+                }
+
+                if(livro != null)
+                    publicacao.setBook(livro.getBookID());
+
+
+                if(postController.postarPublicação(publicacao)){
+                    Snackbar.make(view, "Postagem publicada",Snackbar.LENGTH_LONG).show();
+                }else{
+                    Snackbar.make(view, "Não foi possivel compartilhar publicação. Tente mais tarde!",Snackbar.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
     }
+
+    /**
+     * Esse método é chamado dentro do BottomSheetDialogFragment para aparecer a tag
+     * do livro na pagina de escrever publicação.
+     */
+   public void selecionaLivro(){
+       if (Compartilha.getLivro() != null) {
+           livro = Compartilha.getLivro();
+           Compartilha.setLivro(null);
+
+           lblTitulo.setText(livro.getTitle());
+           if (livro.getCover() != null)
+               imgCapa.setImageBitmap(ImagensUtil.converteParaBitmap(livro.getCover()));
+
+           dadosLivro.setVisibility(View.VISIBLE);
+       } else {
+           Toast.makeText(getContext(), "Livro Não Selecionado", Toast.LENGTH_LONG).show();
+       }
+   }
 }
