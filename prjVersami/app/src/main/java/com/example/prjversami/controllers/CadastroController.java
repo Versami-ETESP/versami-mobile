@@ -1,18 +1,26 @@
 package com.example.prjversami.controllers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.example.prjversami.entities.Pergunta;
 import com.example.prjversami.util.Conexao;
+import com.example.prjversami.util.NavigationUtil;
 import com.example.prjversami.util.Validacao;
 import com.example.prjversami.entities.Usuario;
+import com.example.prjversami.views.AvisoDeErro;
 
+import java.security.MessageDigest;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Esta Classe faz o controle dos processos de Cadastro do APP. Os métodos realizarão a validação dos dados e a conexões com o banco de dados.
@@ -22,25 +30,24 @@ public class CadastroController {
     private Conexao con;
     private String table = "tblUsuario";
     private Context screen;
-    private EditText name, email, pass, confirm, birth, user; // Todos os campos utilizados na view serão espelhados no Controller
-    private Usuario objUser;
+    private EditText name, email, pass, confirm, birth, user, answer; // Todos os campos utilizados na view serão espelhados no Controller
 
     public CadastroController() {
 
     }
 
-    public CadastroController(EditText name, EditText email, EditText pass, EditText confirm, EditText birth) {
+    public CadastroController(EditText name, EditText email, EditText pass, EditText confirm, EditText birth,EditText answer, Context screen) {
         this.name = name;
         this.email = email;
         this.pass = pass;
         this.confirm = confirm;
         this.birth = birth;
+        this.screen = screen;
+        this.answer = answer;
     }
 
     public CadastroController(Context screen, EditText user) {
         this.screen = screen;
-        con = new Conexao();
-        con.connectDB(screen);
         this.user = user;
     }
 
@@ -177,7 +184,7 @@ public class CadastroController {
 
     public boolean userLoginAvaliable() {
         String login = this.user.getText().toString();
-        boolean resposta = !Validacao.userExist(login, this.table, this.con, this.screen);
+        boolean resposta = !Validacao.userExist(login, new Conexao(), this.screen);
         return resposta;
     }
 
@@ -195,9 +202,10 @@ public class CadastroController {
                 email = this.email.getText().toString(),
                 birth = this.birth.getText().toString(),
                 pass = this.pass.getText().toString(),
-                confirm = this.confirm.getText().toString();
+                confirm = this.confirm.getText().toString(),
+                anwser = this.answer.getText().toString();
 
-        if (name.isEmpty() || pass.isEmpty() || confirm.isEmpty() || email.isEmpty() || birth.isEmpty()) {
+        if (name.isEmpty() || pass.isEmpty() || confirm.isEmpty() || email.isEmpty() || birth.isEmpty()|| anwser.isEmpty()) {
             resposta = true;
         } else {
             resposta = false;
@@ -228,6 +236,35 @@ public class CadastroController {
     }
 
     /**
+     * O método 'preencheArray' retorna um arraylist do objeto pergunta  para preencher as opções de um spinner na tela de cadastro
+     * @return ArrayList<Pergunta>
+     */
+    public ArrayList<Pergunta> preencheArray(){
+        String sql = "SELECT * FROM tblPerguntaSecreta";
+        ArrayList<Pergunta> perguntas = new ArrayList<>();
+        perguntas.add(new Pergunta(0, "Selecione uma pergunta..."));
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(this.screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+        }else{
+            try {
+                con.result = con.command.executeQuery(sql);
+
+                while (con.result.next()){
+                    Pergunta p = new Pergunta(con.result.getInt("idPergunta"),con.result.getString("pergunta"));
+                    perguntas.add(p);
+                }
+            }catch (SQLException e){
+                Log.e("Erro na Consulta",e.getMessage());
+            }
+        }
+        return perguntas;
+    }
+
+    /**
      * O método 'register' recebe um objeto usuario com as informações do usuario presentes na primeira etapa do cadastro.
      * Esse método é chamado na segunda tela, onde ele resgata o input de usuario e com as informaçoes do objeto e do input inserir os dados do usuario no BD
      *
@@ -237,9 +274,12 @@ public class CadastroController {
 
     public boolean register(Usuario usuario) {
         boolean resposta = false;
-        String sql = "INSERT INTO " + this.table + "(nome,data_nasc,email,senha,arroba_usuario,fotoUsuario) VALUES (?,?,?,?,?,?)";
+        String sql = "INSERT INTO tblUsuario (nome,data_nasc,email,senha,arroba_usuario,fotoUsuario,idPergunta,resposta) VALUES (?,?,?,?,?,?,?,?)";
 
+        this.con = new Conexao();
+        Connection c = con.connectDB(screen);
 
+        if(c != null){
             try {
                 PreparedStatement ps = con.connect.prepareStatement(sql);
                 ps.setString(1, usuario.getUserName());
@@ -247,6 +287,8 @@ public class CadastroController {
                 ps.setString(3, usuario.getUserEmail());
                 ps.setString(4, usuario.getUserPass());
                 ps.setString(5, usuario.getUserLogin());
+                ps.setInt(7,usuario.getPergunta());
+                ps.setString(8,usuario.getResposta());
 
                 byte[] image = usuario.getUserImage();
 
@@ -267,7 +309,9 @@ public class CadastroController {
                 Log.e("SQL erro", "Erro ao executar query: " + ex.getMessage());
                 resposta = false; //"Erro ao cadastrar usuário. Tente novamente mais tarde."
             }
-
+        }else{
+            NavigationUtil.activityErro(screen);
+        }
         return resposta;
     }
 }

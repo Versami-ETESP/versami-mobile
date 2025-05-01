@@ -5,17 +5,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-import android.widget.Toolbar;
 
 import com.example.prjversami.R;
-import com.example.prjversami.util.FragmentUtil;
+import com.example.prjversami.util.NavigationUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         frameLayout = findViewById(R.id.fragment_container);
 
         if(savedInstanceState == null){
-            FragmentUtil.carregarFragment(getSupportFragmentManager(),R.id.fragment_container, new ProfileFragment());
+            NavigationUtil.carregarFragment(getSupportFragmentManager(),R.id.fragment_container, new ProfileFragment());
             bottomNavigationView.setSelectedItemId(R.id.menu_profile);
         }
 
@@ -62,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (fragment != null){
-                    FragmentUtil.carregarFragment(getSupportFragmentManager(),R.id.fragment_container, fragment);
+                    NavigationUtil.carregarFragment(getSupportFragmentManager(),R.id.fragment_container, fragment);
                 }
 
                 return true;

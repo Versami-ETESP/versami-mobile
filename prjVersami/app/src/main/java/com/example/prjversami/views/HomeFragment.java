@@ -1,19 +1,15 @@
 package com.example.prjversami.views;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.example.prjversami.R;
-import com.example.prjversami.util.FragmentUtil;
+import com.example.prjversami.util.NavigationUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,7 +71,7 @@ public class HomeFragment extends Fragment {
 
         Bundle bundle = new Bundle();
         bundle.putString("fragment", "home");
-        FragmentUtil.carregarFragment(getChildFragmentManager(), R.id.home_framelayout, new RecyclerPostsFragment(), bundle);
+        NavigationUtil.carregarFragment(getChildFragmentManager(), R.id.home_framelayout, new RecyclerPostsFragment(), bundle);
     }
 
 }

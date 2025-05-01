@@ -7,11 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,10 +23,8 @@ import android.widget.Toast;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.PerfilController;
-import com.example.prjversami.controllers.PublicacaoController;
-import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.entities.Usuario;
-import com.example.prjversami.util.FragmentUtil;
+import com.example.prjversami.util.NavigationUtil;
 import com.example.prjversami.util.ImagensUtil;
 
 /**
@@ -153,7 +148,7 @@ public class ProfileFragment extends Fragment {
         //Cria um bundle para passar a informação de qual fragment de origem e carrega o recycler na view
         Bundle bundle = new Bundle();
         bundle.putString("fragment", "profile");
-        FragmentUtil.carregarFragment(getChildFragmentManager(), R.id.profile_framelayout, new RecyclerPostsFragment(), bundle);
+        NavigationUtil.carregarFragment(getChildFragmentManager(), R.id.profile_framelayout, new RecyclerPostsFragment(), bundle);
 
         // define qual fragment colocar no lugar do framelayout de acordo com a opçao do tablayout
         opcoesPerfil.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
@@ -165,7 +160,7 @@ public class ProfileFragment extends Fragment {
                         bundle.putString("fragment", "profile");
                         fragment = new RecyclerPostsFragment();
                         if (fragment != null) {
-                            FragmentUtil.carregarFragment(getChildFragmentManager(), R.id.profile_framelayout, new RecyclerPostsFragment(), bundle);
+                            NavigationUtil.carregarFragment(getChildFragmentManager(), R.id.profile_framelayout, new RecyclerPostsFragment(), bundle);
                         }
                         break;
                     case 1:

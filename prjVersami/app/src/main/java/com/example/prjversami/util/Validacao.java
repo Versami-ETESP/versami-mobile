@@ -1,8 +1,11 @@
 package com.example.prjversami.util;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -56,17 +59,23 @@ public class Validacao {
         return pass.equals(confirm);
     }
 
-    public static boolean userExist(String user, String table, Conexao con, Context tela){
-        con.connectDB(tela);
+    public static boolean userExist(String user, Conexao con, Context tela){
+        String sql = "SELECT arroba_usuario FROM tblUsuario WHERE arroba_usuario like ?";
         boolean findUser = false;
-        try{
-            con.result = con.command.executeQuery("SELECT arroba_usuario FROM "+table+" WHERE arroba_usuario like '"+user+"'");
-            findUser = con.result.next();
+        Connection c = con.connectDB(tela);
+        if(c != null){
+            try{
+                PreparedStatement ps = con.connect.prepareStatement(sql);
+                ps.setString(1,user);
+                con.result = ps.executeQuery();
+                findUser = con.result.next();
 
-        }catch(SQLException e){
-            Toast.makeText(tela, "Erro de Conexão. Tente mais tarde", Toast.LENGTH_SHORT).show();
+            }catch(SQLException e){
+                Log.e("Erro no consulta", e.getMessage());
+            }
+        }else{
+            NavigationUtil.activityErro(tela);
         }
-
         return findUser;
     }
 
