@@ -7,7 +7,9 @@ import android.util.Log;
 
 import com.example.prjversami.util.Conexao;
 import com.example.prjversami.util.ImagensUtil;
+import com.example.prjversami.util.NavigationUtil;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,23 +52,33 @@ public class LoginController {
         if(fotoPerfil != null)
             ImagensUtil.salvarImagem(fotoPerfil,"imagemPerfil.jpeg", this.screen);
 
-        /*try{
-            this.db = this.screen.openOrCreateDatabase("guardarDados",Context.MODE_PRIVATE,null);
+    }
 
-            db.execSQL("CREATE TABLE IF NOT EXISTS usuario" +
-                    "(ID integer PRIMARY KEY," +
-                    "NOME varchar," +
-                    "ARROBA varchar)");
+    public String resgatarPergunta(String user){
+        String sql = "SELECT p.pergunta " +
+                "FROM tblUsuario u " +
+                "JOIN tblPerguntaSecreta p on u.idPergunta = p.idPergunta " +
+                "WHERE arroba_usuario=?";
+        String pergunta = "";
 
-            db.execSQL("INSERT INTO usuario VALUES ("+id+",'"+nome+"','"+arroba+"')");
+        con = new Conexao();
+        Connection c = con.connectDB(screen);
+        if(c != null){
+            try{
+                PreparedStatement ps = con.connect.prepareStatement(sql);
+                ps.setString(1,user);
+                con.result = ps.executeQuery();
 
-
-            if(fotoPerfil != null)
-                ImagensUtil.salvarImagem(fotoPerfil,"imagemPerfil.jpeg", this.screen);
-
-        }catch(Exception e){
-            Log.e("DB_ERROR", "Erro ao guardar dados: " + e.getMessage());
-        }*/
+                if(con.result.next()){
+                    pergunta = con.result.getString("pergunta");
+                }
+            }catch (SQLException e){
+                Log.e("Erro na Consulta", e.getMessage());
+            }
+        }else{
+            NavigationUtil.activityErro(screen);
+        }
+        return pergunta;
     }
 
     /**

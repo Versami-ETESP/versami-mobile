@@ -9,11 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.prjversami.R;
+import com.example.prjversami.TrocaSenha;
 import com.example.prjversami.controllers.LoginController;
 
 public class login extends AppCompatActivity {
 
-    Button btnAcessar, btnCadastrar;
+    Button btnAcessar, btnCadastrar, btnTrocaSenha;
     EditText txtUsuario, txtSenha;
 
     @Override
@@ -22,6 +23,7 @@ public class login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         btnAcessar = findViewById(R.id.login_btnAcessar);
         btnCadastrar = findViewById(R.id.login_btnCriar);
+        btnTrocaSenha = findViewById(R.id.login_btnTrocaSenha);
         txtUsuario = findViewById(R.id.login_txtUsuario);
         txtSenha = findViewById(R.id.login_txtPass);
 
@@ -53,6 +55,13 @@ public class login extends AppCompatActivity {
                 } else {
                     Snackbar.make(view, "Por favor, preencher os campos!", Snackbar.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        btnTrocaSenha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(login.this, TrocaSenha.class));
             }
         });
     }
