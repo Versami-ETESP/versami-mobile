@@ -152,6 +152,7 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:text="Alterar Senha"
+        android:onClick="alterarSenhar"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

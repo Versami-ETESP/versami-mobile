@@ -1,5 +1,7 @@
 package com.example.prjversami;
 
+
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,13 +12,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.prjversami.controllers.LoginController;
+import com.example.prjversami.entities.Usuario;
+import com.example.prjversami.util.Criptografia;
 import com.example.prjversami.util.Validacao;
+import com.example.prjversami.views.login;
 
 public class TrocaSenha extends AppCompatActivity {
 
     EditText nomeUser, resposta, senha, confirma;
     Button btnPesquisar, btnAlterar;
     TextView pergunta;
+    Usuario user = new Usuario();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +44,14 @@ public class TrocaSenha extends AppCompatActivity {
 
         if(!nomeUser.getText().toString().isEmpty()){
             LoginController lc = new LoginController(getApplicationContext());
-            String perg = lc.resgatarPergunta(nomeUser.getText().toString());
+            String[] dados = lc.resgatarPergunta(nomeUser.getText().toString());
 
-            if (!perg.isEmpty()){
+            if (dados != null && !dados[0].isEmpty()){
+                this.user.setResposta(dados[1]);
+                this.user.setUserLogin(nomeUser.getText().toString());
+
                 nomeUser.setEnabled(false);
-                pergunta.setText(perg);
+                pergunta.setText(dados[0]);
                 pergunta.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                 pergunta.setSelected(true);
             }else{
@@ -57,7 +66,7 @@ public class TrocaSenha extends AppCompatActivity {
         String resposta, senha, confirma;
         resposta = this.resposta.getText().toString();
         senha = this.senha.getText().toString();
-        confirma = this.confirma.toString();
+        confirma = this.confirma.getText().toString();
 
         if(!Validacao.passConfirm(senha, confirma)){
             this.confirma.setError("As senhas não coincidem");
@@ -69,7 +78,15 @@ public class TrocaSenha extends AppCompatActivity {
             return;
         }
 
-     // continuar daqui... criar o metodo para alterar a senha
+        LoginController lc = new LoginController(getApplicationContext());
+        this.user.setUserPass(Criptografia.criptografaString(senha));
 
+        if(lc.alteraSenha(this.user, resposta)){
+            Snackbar.make(v, "Senha Alterada", Snackbar.LENGTH_LONG).show();
+            startActivity(new Intent(TrocaSenha.this, login.class));
+            finish();
+        }else{
+            Snackbar.make(v, "Erro ao alterar a senha. Tente Novamente!", Snackbar.LENGTH_LONG).show();
+        }
     }
 }
