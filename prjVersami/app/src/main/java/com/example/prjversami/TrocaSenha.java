@@ -68,6 +68,11 @@ public class TrocaSenha extends AppCompatActivity {
         senha = this.senha.getText().toString();
         confirma = this.confirma.getText().toString();
 
+        if(!Validacao.passValidation(senha)){
+            this.senha.setError("A senha deve ter 8 ou mais caracteres");
+            return;
+        }
+
         if(!Validacao.passConfirm(senha, confirma)){
             this.confirma.setError("As senhas não coincidem");
             return;
