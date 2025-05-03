@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".views.PostsFragment">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/addpost_cardview_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        app:cardCornerRadius="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/addpost_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            tools:layout_editor_absoluteX="29dp"
+            tools:layout_editor_absoluteY="16dp"
+            tools:srcCompat="@tools:sample/avatars" />
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/addpost_name"
+        android:layout_width="169dp"
+        android:layout_height="25dp"
+        android:ellipsize="marquee"
+        android:fontFamily="@font/quicksand_semibold"
+        android:singleLine="true"
+        android:text="Nome do Usuário"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.065"
+        app:layout_constraintStart_toEndOf="@+id/addpost_cardview_image"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/addpost_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand_semibold"
+        android:text="'@usuario'"
+        app:layout_constraintEnd_toEndOf="@+id/addpost_name"
+        app:layout_constraintHorizontal_bias="0.099"
+        app:layout_constraintStart_toEndOf="@+id/addpost_cardview_image"
+        app:layout_constraintTop_toBottomOf="@+id/addpost_name" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/addpost_btnpublicar"
+        android:layout_width="112dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="28dp"
+        android:background="@drawable/rounded_button_versamicolor"
+        android:fontFamily="@font/quicksand_medium"
+        android:padding="5dp"
+        android:text="Publicar"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/addpost_name" />
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/addpost_txtPublicacao"
+        android:layout_width="380dp"
+        android:layout_height="183dp"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/rounded_background"
+        android:ems="10"
+        android:gravity="start"
+        android:hint="O que você está lendo com seu café hoje?"
+        android:inputType="textMultiLine"
+        android:minLines="5"
+        android:maxLines="20"
+        android:scrollbars="vertical"
+        android:overScrollMode="always"
+        android:padding="15dp"
+        android:fontFamily="@font/quicksand_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/addpost_btnLivro"
+        android:layout_width="196dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_button_versamicolor"
+        android:drawableLeft="@drawable/ic_book"
+        android:fontFamily="@font/quicksand_medium"
+        android:padding="5dp"
+        android:text="Marcar Livro"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addpost_txtPublicacao" />
+
+    <LinearLayout
+        android:id="@+id/addpost_bookinfo"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addpost_txtPublicacao"
+        android:layout_marginTop="80dp"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/addpost_bookcover"
+            android:layout_width="50dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/addpost_bookname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_semibold"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:text="Nome do Livro"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

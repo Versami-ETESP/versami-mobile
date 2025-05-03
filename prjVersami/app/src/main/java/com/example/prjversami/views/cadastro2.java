@@ -72,9 +72,7 @@ public class cadastro2 extends AppCompatActivity {
             try {
                 InputStream input = getContentResolver().openInputStream(uri);
                 Bitmap bitmap = BitmapFactory.decodeStream(input);
-                RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-                roundedDrawable.setCircular(true);
-                userImage.setImageDrawable(roundedDrawable);
+                userImage.setImageBitmap(bitmap);
                 img = ImagensUtil.converteParaBytes(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -115,7 +113,9 @@ public class cadastro2 extends AppCompatActivity {
                 userName.getText().toString(),
                 dados.getString("email"),
                 dados.getString("nasc"),
-                dados.getString("senha"));
+                dados.getString("senha"),
+                dados.getString("resposta"),
+                dados.getInt("pergunta"));
 
         if (this.img != null)
             user.setUserImage(img);

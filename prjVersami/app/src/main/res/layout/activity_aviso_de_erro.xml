@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/versami_blue"
+    android:padding="15dp"
+    android:gravity="center"
+    tools:context=".views.AvisoDeErro">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand_medium"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="10dp"
+        android:text="@string/aviso_erro"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand_medium"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_marginBottom="15dp"
+        android:text="@string/mensagem_erro"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/erro_btnEncerrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fechar"
+        android:textColor="@color/white"
+        android:fontFamily="@font/quicksand_medium"
+        android:background="@drawable/rounded_button_account"/>
+
+</android.support.v7.widget.LinearLayoutCompat>

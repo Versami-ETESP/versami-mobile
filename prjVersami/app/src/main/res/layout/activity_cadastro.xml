@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#61c1d1"
+    android:fillViewport="true"
     tools:context=".views.cadastro">
+<android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <View
         android:id="@+id/cadastro_container_left"
@@ -130,8 +134,34 @@
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cadastro_txtPass" />
+    <Spinner
+        android:id="@+id/cadastro_spnPergunta"
+        android:layout_width="296dp"
+        android:layout_height="42dp"
+        android:background="@drawable/rounded_edittext"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/quicksand_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cadastro_txtConfirm"/>
 
-    <Button
+    <EditText
+        android:id="@+id/cadastro_txtResposta"
+        android:layout_width="296dp"
+        android:layout_height="42dp"
+        android:background="@drawable/rounded_edittext"
+        android:hint="Resposta"
+        android:fontFamily="@font/quicksand_medium"
+        android:layout_marginTop="15dp"
+        android:padding="10dp"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cadastro_spnPergunta"
+        />
+
+
+    <android.widget.Button
         android:id="@+id/cadastro_btnCriar"
         android:layout_width="178dp"
         android:layout_height="37dp"
@@ -143,13 +173,14 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cadastro_txtConfirm" />
+        app:layout_constraintTop_toBottomOf="@+id/cadastro_txtResposta" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/cadastro_btnAcessar"
         android:layout_width="176dp"
         android:layout_height="36dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/rounded_button_access"
         android:fontFamily="@font/quisandbold"
         android:text="Acessar Conta"
@@ -158,19 +189,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
         android:fontFamily="@font/quicksand"
         android:text="OU"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/cadastro_btnAcessar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cadastro_btnCriar" />
 
+
 </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

@@ -2,7 +2,8 @@ package com.example.prjversami.entities;
 
 public class Livro {
     private Integer bookID;
-    private String title, summary, cover;
+    private String title, summary;
+    private byte[] cover;
     private Genero genre;
     private Autor autor;
 
@@ -30,11 +31,11 @@ public class Livro {
         this.summary = summary;
     }
 
-    public String getCover() {
+    public byte[] getCover() {
         return cover;
     }
 
-    public void setCover(String cover) {
+    public void setCover(byte[] cover) {
         this.cover = cover;
     }
 

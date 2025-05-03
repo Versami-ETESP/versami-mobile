@@ -58,12 +58,12 @@
         app:layout_constraintStart_toStartOf="@+id/transparent_back"
         app:layout_constraintTop_toBottomOf="@+id/bemvindo" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/btnIniciar"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="88dp"
-        android:background="@drawable/btniniciar"
+        android:background="@drawable/ic_chevron_right"
         app:layout_constraintEnd_toEndOf="@+id/transparent_back"
         app:layout_constraintHorizontal_bias="0.886"
         app:layout_constraintStart_toStartOf="@+id/transparent_back"

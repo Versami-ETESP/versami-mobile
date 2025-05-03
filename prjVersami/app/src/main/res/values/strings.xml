@@ -1,4 +1,20 @@
 <resources>
-    <string name="app_name">prjVersami</string>
+    <string name="app_name">Versami</string>
     <string name="hint_name">Nome</string>
+    <string name="menu_home">Início</string>
+    <string name="menu_search">Explorar</string>
+    <string name="menu_add">Publicar</string>
+    <string name="menu_notification">Notificações</string>
+    <string name="menu_profile">Perfil</string>
+    <string name="menu_fragment_exit">Sair do Perfil</string>
+    <string name="menu_fragment_edit">Editar Perfil</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="aviso_erro">Sentimos muito :(</string>
+    <string name="mensagem_erro">A aplicação identificou um problema. Verifique a sua conexão de rede e tente novamente mais tarde!</string>
+    <string-array name="spinner_teste">
+        <item>Selecione uma pergunta...</item>
+        <item>Qual o seu livro favorito?</item>
+        <item>Qual sua cidade natal?</item>
+    </string-array>
 </resources>
