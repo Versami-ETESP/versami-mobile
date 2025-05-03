@@ -59,10 +59,10 @@ public class CriarPostController {
         try(PreparedStatement ps = con.connect.prepareStatement(sql)){
            ps.setString(1,publicacao.getContent());
            ps.setString(2,publicacao.getPostDate());
-           ps.setInt(3, publicacao.getUser());
+           ps.setInt(3, publicacao.getUsuario().getUserID());
 
-           if(publicacao.getBook() != null)
-               ps.setInt(4, publicacao.getBook());
+           if(publicacao.getLivro().getBookID() != null)
+               ps.setInt(4, publicacao.getLivro().getBookID());
            else
                ps.setNull(4, Types.INTEGER);
 

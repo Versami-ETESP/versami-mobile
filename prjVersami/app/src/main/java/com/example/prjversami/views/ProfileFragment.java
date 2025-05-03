@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -46,6 +47,7 @@ public class ProfileFragment extends Fragment {
     private TabLayout opcoesPerfil;
     private ImageView profileImg, coverImg;
     private TextView seguidores, seguindo, bioUser, arroba, nomeUser;
+    private Button btnSeguir;
     private ProgressBar progressBar;
     private FrameLayout frame;
     private PerfilController perCon = new PerfilController(getContext());
@@ -104,6 +106,7 @@ public class ProfileFragment extends Fragment {
         this.opcoesPerfil = view.findViewById(R.id.profile_tablayout);
         this.frame = view.findViewById(R.id.profile_framelayout);
         this.progressBar = view.findViewById(R.id.profile_progress);
+        this.btnSeguir = view.findViewById(R.id.profile_buttonSeguir);
 
         visibilityItens(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
@@ -217,5 +220,6 @@ public class ProfileFragment extends Fragment {
         this.coverImg.setVisibility(value);
         this.opcoesPerfil.setVisibility(value);
         this.frame.setVisibility(value);
+        this.btnSeguir.setVisibility(value);
     }
 }

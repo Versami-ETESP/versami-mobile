@@ -19,7 +19,7 @@
             android:id="@+id/addpost_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             tools:layout_editor_absoluteX="29dp"
             tools:layout_editor_absoluteY="16dp"
             tools:srcCompat="@tools:sample/avatars" />

@@ -44,22 +44,22 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
         Publicacao publicacao = this.publicacao.get(i);
         controller = new PublicacaoController(this.context);
 
-        Usuario user = controller.pegarUsuario(publicacao.getUser());
-        Livro livro = controller.pegarLivro(publicacao.getBook());
-        String totCurtidas = controller.getCurtidas(publicacao.getIdPublicacao()).equals("") ? "0" : controller.getCurtidas(publicacao.getIdPublicacao());
+        Usuario user = publicacao.getUsuario();
+        Livro livro = publicacao.getLivro();
 
         holder.content.setText(publicacao.getContent());
         holder.data.setText(publicacao.getPostDate());
         holder.profileName.setText(user.getUserName());
         holder.arroba.setText("@"+user.getUserLogin());
         holder.profileImage.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
-        holder.like.setText(totCurtidas);
-        holder.like.setChecked(publicacao.isLike());
+        holder.like.setText(publicacao.getTotalLikes().toString());
         holder.like.setOnCheckedChangeListener(null);
+        holder.like.setChecked(publicacao.isLike());
+
 
         // verifica se  a publicação possui livro vinculado. Se não houver ele oculta as informações
 
-        if(publicacao.getBook() != null && publicacao.getBook() > 0){
+        if(livro != null){
             holder.bookName.setText(livro.getTitle());
             holder.bookImage.setImageBitmap(ImagensUtil.converteParaBitmap(livro.getCover()));
             holder.bookInfo.setVisibility(View.VISIBLE);
@@ -73,10 +73,14 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
                     controller.setCurtidas(publicacao.getIdPublicacao());
-                    holder.like.setText(controller.getCurtidas(publicacao.getIdPublicacao()));
+                    publicacao.addLike();
+                    publicacao.setTotalLikes(publicacao.getTotalLikes()+1);
+                    holder.like.setText(publicacao.getTotalLikes().toString());
                 }else{
                     controller.removeCurtidas(publicacao.getIdPublicacao());
-                    holder.like.setText(controller.getCurtidas(publicacao.getIdPublicacao()));
+                    publicacao.removeLike();
+                    publicacao.setTotalLikes(publicacao.getTotalLikes()-1);
+                    holder.like.setText(publicacao.getTotalLikes().toString());
                 }
             }
         });

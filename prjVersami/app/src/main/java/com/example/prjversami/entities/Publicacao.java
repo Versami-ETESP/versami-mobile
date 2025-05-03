@@ -8,9 +8,10 @@ public class Publicacao {
     private String content;
     private boolean like;
     private String postDate;
-    private Integer book;
-    private Integer user;
     private Integer idPublicacao;
+    private Integer totalLikes = 0;
+    private Usuario usuario;
+    private Livro livro;
 
 
     private List<Comentario> comments = new ArrayList<>(); // Postagem tem relação com a classe Comentario
@@ -30,6 +31,31 @@ public class Publicacao {
 
     // metodos getters e setters
 
+
+    public Integer getTotalLikes() {
+        return totalLikes;
+    }
+
+    public void setTotalLikes(Integer totalLikes) {
+        this.totalLikes = totalLikes;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Livro getLivro() {
+        return livro;
+    }
+
+    public void setLivro(Livro livro) {
+        this.livro = livro;
+    }
+
     public String getContent() {
         return content;
     }
@@ -44,22 +70,6 @@ public class Publicacao {
 
     public String getPostDate() {
         return postDate;
-    }
-
-    public Integer getBook() {
-        return book;
-    }
-
-    public void setBook(Integer book) {
-        this.book = book;
-    }
-
-    public Integer getUser() {
-        return user;
-    }
-
-    public void setUser(Integer user) {
-        this.user = user;
     }
 
     public List<Comentario> getComments() {
@@ -85,13 +95,11 @@ public class Publicacao {
     // metodos da classe
     // removi o metodo setLike e dividi a funcionalidade em dois para facilitar o uso no código
 
-    public void addLike(boolean isLike) {
-        if (isLike)
-            this.like = true;
+    public void addLike() {
+        this.like = true;
     }
 
-    public void removeLike(boolean isLike) {
-        if (!isLike && this.like == true)
-            this.like = false;
+    public void removeLike() {
+        this.like = false;
     }
 }

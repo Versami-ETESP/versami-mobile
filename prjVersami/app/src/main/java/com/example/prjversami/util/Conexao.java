@@ -23,19 +23,19 @@ public class Conexao {
             //Toast.makeText(context.getApplicationContext(), "Driver Correto", Toast.LENGTH_SHORT).show();
         }catch(Exception e){
             Log.e("Erro de Conexao: ", e.getMessage());
-            Toast.makeText(context.getApplicationContext(),"Driver Incorreto", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context.getApplicationContext(),"Driver Incorreto", Toast.LENGTH_SHORT).show();
             return null;
         }
 
         try {
-            String url = "jdbc:jtds:sqlserver://192.168.1.2:1433/versami;loginTimeout=5;socketTimeout=5";
+            String url = "jdbc:jtds:sqlserver://192.168.1.3:1433/versami;loginTimeout=5;socketTimeout=5";
             connect = DriverManager.getConnection(url,"sa","Tc2088275");
             command = connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
            // Toast.makeText(context.getApplicationContext(),"Conectado",Toast.LENGTH_SHORT).show();
         }catch(SQLException e){
             e.printStackTrace();
             Log.e("Erro Servidor: ", e.getMessage());
-            Toast.makeText(context.getApplicationContext(), "Erro de Conexão", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context.getApplicationContext(), "Erro de Conexão", Toast.LENGTH_SHORT).show();
             return null;
         }
 

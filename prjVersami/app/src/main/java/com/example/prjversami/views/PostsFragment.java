@@ -2,6 +2,7 @@ package com.example.prjversami.views;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -108,18 +109,24 @@ public class PostsFragment extends Fragment {
         this.imgCapa = view.findViewById(R.id.addpost_bookcover);
         this.lblTitulo = view.findViewById(R.id.addpost_bookname);
 
+        //RESGATANDO DADOS DO USUARIO DO SHARED PREFERENCES
         SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-        int id = pref.getInt("id", 0);
+        this.usuario = new Usuario();
+        usuario.setUserID(pref.getInt("id", 0));
+        usuario.setUserName(pref.getString("nome","Usuário"));
+        usuario.setUserLogin(pref.getString("arroba", "Usuário"));
+        Bitmap fotoPerfil = ImagensUtil.pegarImagem("imagemPerfil.jpeg",view.getContext());
+
 
         CriarPostController postController = new CriarPostController(getContext());
         PerfilController pfc = new PerfilController(getContext());
-        usuario = pfc.obtemPerfil(id);
+
 
         lblNome.setText(usuario.getUserName());
         lblArroba.setText("@" + usuario.getUserLogin());
 
-        if (usuario.getUserImage() != null)
-            imgPerfil.setImageBitmap(ImagensUtil.converteParaBitmap(usuario.getUserImage()));
+        if (fotoPerfil != null)
+            imgPerfil.setImageBitmap(fotoPerfil);
         else
             imgPerfil.setImageResource(R.drawable.user_icon_placeholder2);
 
@@ -140,7 +147,7 @@ public class PostsFragment extends Fragment {
                 String conteudo = txtpublicacao.getText().toString(), data = df.format(agora);
 
 
-                publicacao.setUser(id);
+                publicacao.setUsuario(usuario);
                 publicacao.setPostDate(data);
 
                 if(conteudo.isEmpty()){
@@ -151,8 +158,10 @@ public class PostsFragment extends Fragment {
                     publicacao.setContent(conteudo);
                 }
 
-                if(livro != null)
-                    publicacao.setBook(livro.getBookID());
+                if(livro != null){
+                    publicacao.setLivro(livro);
+                }
+
 
 
                 if(postController.postarPublicação(publicacao)){
@@ -163,7 +172,6 @@ public class PostsFragment extends Fragment {
 
             }
         });
-
     }
 
     /**

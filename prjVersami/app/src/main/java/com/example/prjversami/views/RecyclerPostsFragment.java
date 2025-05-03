@@ -13,11 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.PublicacaoController;
 import com.example.prjversami.entities.Publicacao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,10 +84,12 @@ public class RecyclerPostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         controller = new PublicacaoController(view.getContext());
         RecyclerView recyclerView = view.findViewById(R.id.posts_recycler);
+        TextView txtSemPost = view.findViewById(R.id.posts_semposts);
         carregando = view.findViewById(R.id.loading_spinner);
 
         carregando.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
+        txtSemPost.setVisibility(View.GONE);
 
         //carrega os posts antes de exibir na view
 
@@ -93,24 +97,32 @@ public class RecyclerPostsFragment extends Fragment {
             @Override
             public void run() {
                 Bundle bundle = getArguments();
+                List<Publicacao> publicacoes = new ArrayList<>();
 
                 if(bundle != null){
                     String frag = bundle.getString("fragment");
 
                     if(frag.equals("profile")){
                         SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+                        int user = pref.getInt("id", 0);
 
-                        if(pref.getInt("id", 0) > 0){
-                            int user = pref.getInt("id", 0);
-                            List<Publicacao> publicacoes = controller.pegarPublicacoes(user);
-                            recyclerView.setAdapter(new AdapterPublicacoes(publicacoes, view.getContext()));
+                        if(user > 0){
+                            publicacoes = controller.listarPublicacoes(user);
                         }
+
                     }else if(frag.equals("home")){
-                        List<Publicacao> publicacoes = controller.pegarPublicacoes();
-                        recyclerView.setAdapter(new AdapterPublicacoes(publicacoes, view.getContext()));
+                        publicacoes = controller.listarPublicacoes();
                     }
                     carregando.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
+
+                    if(publicacoes.isEmpty()){
+                        txtSemPost.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        txtSemPost.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        recyclerView.setAdapter(new AdapterPublicacoes(publicacoes, view.getContext()));
+                    }
                 }
             }
         },200);

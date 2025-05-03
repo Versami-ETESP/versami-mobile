@@ -9,7 +9,9 @@ import com.example.prjversami.entities.Livro;
 import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.Conexao;
+import com.example.prjversami.util.NavigationUtil;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +24,6 @@ import java.util.List;
  */
 public class PublicacaoController {
     private Conexao con;
-    private String table = "tblPublicacao";
     private Context screen;
 
     public PublicacaoController(Context screen){
@@ -31,43 +32,70 @@ public class PublicacaoController {
 
     /**
      * Este método resgata todas as publicações do usuario logado no sistema. O resultado podera ser usuado no recycler view
-     * @param usuarioId
+     * @param
      * @return
      */
-    public List<Publicacao> pegarPublicacoes(int usuarioId){
+
+    public List<Publicacao> listarPublicacoes(int id){
+
         List<Publicacao> listaPublicaoes = new ArrayList<>();
-        String sql = "SELECT * FROM "+this.table+" WHERE idUsuario = ?";
+        String sql =
+                "SELECT p.idPublicacao, " +
+                "p.conteudo, p.dataPublic, " +
+                "u.nome, u.arroba_usuario, " +
+                "u.fotoUsuario, l.nomeLivro, " +
+                "l.imgCapa, " +
+                "(SELECT COUNT(*) FROM tblLikesPorPost lp WHERE lp.idUsuario= ? AND lp.idPublicacao= p.idPublicacao) AS 'liked', " +
+                "(SELECT COUNT (*) FROM tblLikesPorPost lp where lp.idPublicacao=p.idPublicacao ) as 'totLike' " +
+                "FROM tblPublicacao p " +
+                "JOIN tblUsuario u ON p.idUsuario = u.idUsuario " +
+                "LEFT JOIN tblLivro l ON l.idLivro = p.idLivro " +
+                "WHERE p.idUsuario = ? ORDER BY p.dataPublic DESC";
 
         this.con = new Conexao();
-        con.connectDB(this.screen);
+        Connection c = this.con.connectDB(screen);
 
-        try(PreparedStatement ps = con.connect.prepareStatement(sql)){
-            ps.setInt(1, usuarioId);
+        if(c != null){
+            try{
+                PreparedStatement ps = con.connect.prepareStatement(sql);
+                ps.setInt(1, id);
+                ps.setInt(2, id);
 
-            try(ResultSet rs = ps.executeQuery()){
+                this.con.result = ps.executeQuery();
 
-                while (rs.next()){
-                    Publicacao publicacao = new Publicacao();
-                    publicacao.setUser(rs.getInt("idUsuario"));
-                    publicacao.setBook(rs.getInt("idLivro"));
-                    publicacao.setContent(rs.getString("conteudo"));
-                    publicacao.setPostDate(rs.getDate("dataPublic").toString());
-                    publicacao.setIdPublicacao(rs.getInt("idPublicacao"));
+                while (this.con.result.next()){
 
-                    con.result = con.command.executeQuery("SELECT COUNT(*) AS 'liked' FROM tblLikesPorPost WHERE idUsuario="+usuarioId+" AND idPublicacao="+publicacao.getIdPublicacao());
+                    Publicacao pub = new Publicacao();
+                    pub.setIdPublicacao(con.result.getInt("idPublicacao"));
+                    pub.setContent(con.result.getString("conteudo"));
+                    pub.setPostDate(con.result.getDate("dataPublic").toString());
+                    pub.setTotalLikes(con.result.getInt("totLike"));
 
-                    if(con.result.next() && con.result.getInt("liked") != 0){
-                        publicacao.addLike(true);
-                    }else{
-                        publicacao.removeLike(false);
+                    if(con.result.getInt("liked") > 0)
+                        pub.addLike();
+
+                    Usuario user = new Usuario();
+                    user.setUserName(con.result.getString("nome"));
+                    user.setUserLogin(con.result.getString("arroba_usuario"));
+                    user.setUserImage(con.result.getBytes("fotoUsuario"));
+                    pub.setUsuario(user);
+
+                    if(con.result.getString("nomeLivro") != null){
+                        Livro livro = new Livro();
+                        livro.setTitle(con.result.getString("nomeLivro"));
+                        livro.setCover(con.result.getBytes("imgCapa"));
+                        pub.setLivro(livro);
                     }
-
-                    listaPublicaoes.add(publicacao);
+                    listaPublicaoes.add(pub);
                 }
+
+                ps.close();
+
+            }catch (SQLException e){
+                Log.e("Erro na Consulta", e.getMessage());
             }
-        }catch (SQLException e){
-            Log.e("Erro na Consulta: ", e.getMessage());
-            return null;
+        }else{
+            NavigationUtil.activityErro(screen);
         }
 
         return listaPublicaoes;
@@ -77,96 +105,72 @@ public class PublicacaoController {
      * Este método resgata todas as publicações dos usuarios do aplicativo. O resultado podera ser usuado no recycler view
      * @return
      */
-    public List<Publicacao> pegarPublicacoes(){
+
+    public List<Publicacao> listarPublicacoes(){
+
+        SharedPreferences pref = screen.getSharedPreferences("login", Context.MODE_PRIVATE);
+        int id = pref.getInt("id", 0);
+
         List<Publicacao> listaPublicaoes = new ArrayList<>();
-        String sql = "SELECT * FROM "+this.table+ " ORDER BY dataPublic DESC";
+        String sql =
+                "SELECT p.idPublicacao, " +
+                        "p.conteudo, p.dataPublic, " +
+                        "u.nome, u.arroba_usuario, " +
+                        "u.fotoUsuario, l.nomeLivro, " +
+                        "l.imgCapa, " +
+                        "(SELECT COUNT(*) FROM tblLikesPorPost lp WHERE lp.idUsuario= ? AND lp.idPublicacao= p.idPublicacao) AS 'liked', " +
+                        "(SELECT COUNT (*) FROM tblLikesPorPost lp where lp.idPublicacao=p.idPublicacao ) as 'totLike' " +
+                        "FROM tblPublicacao p " +
+                        "JOIN tblUsuario u ON p.idUsuario = u.idUsuario " +
+                        "LEFT JOIN tblLivro l ON l.idLivro = p.idLivro " +
+                        "ORDER BY p.dataPublic DESC";
 
         this.con = new Conexao();
-        con.connectDB(this.screen);
+        Connection c = this.con.connectDB(screen);
 
-        try{
-            con.result = con.command.executeQuery(sql);
-            SharedPreferences pref = screen.getSharedPreferences("login", Context.MODE_PRIVATE);
-            int userAtual= pref.getInt("id", 0);
-            Statement stmt = con.connect.createStatement();
+        if(c != null){
+            try{
+                PreparedStatement ps = con.connect.prepareStatement(sql);
+                ps.setInt(1, id);
 
-            while(con.result.next()){
-                Publicacao publicacao = new Publicacao();
-                publicacao.setUser(con.result.getInt("idUsuario"));
-                publicacao.setBook(con.result.getInt("idLivro"));
-                publicacao.setContent(con.result.getString("conteudo"));
-                publicacao.setPostDate(con.result.getDate("dataPublic").toString());
-                publicacao.setIdPublicacao(con.result.getInt("idPublicacao"));
+                this.con.result = ps.executeQuery();
 
+                while (this.con.result.next()){
 
-                ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS 'liked' FROM tblLikesPorPost WHERE idUsuario="+userAtual+" AND idPublicacao="+publicacao.getIdPublicacao());
-                if(rs.next() && rs.getInt("liked") != 0){
-                    publicacao.addLike(true);
-                }else{
-                    publicacao.removeLike(false);
+                    Publicacao pub = new Publicacao();
+                    pub.setIdPublicacao(con.result.getInt("idPublicacao"));
+                    pub.setContent(con.result.getString("conteudo"));
+                    pub.setPostDate(con.result.getDate("dataPublic").toString());
+                    pub.setTotalLikes(con.result.getInt("totLike"));
+
+                    if(con.result.getInt("liked") > 0)
+                        pub.addLike();
+
+                    Usuario user = new Usuario();
+                    user.setUserName(con.result.getString("nome"));
+                    user.setUserLogin(con.result.getString("arroba_usuario"));
+                    user.setUserImage(con.result.getBytes("fotoUsuario"));
+                    pub.setUsuario(user);
+
+                    if(con.result.getString("nomeLivro") != null){
+                        Livro livro = new Livro();
+                        livro.setTitle(con.result.getString("nomeLivro"));
+                        livro.setCover(con.result.getBytes("imgCapa"));
+                        pub.setLivro(livro);
+                    }
+                    listaPublicaoes.add(pub);
                 }
-                rs.close();
-                listaPublicaoes.add(publicacao);
+
+                ps.close();
+
+            }catch (SQLException e){
+                Log.e("Erro na Consulta", e.getMessage());
             }
-            stmt.close();
-        }catch (SQLException e){
-            Log.e("Erro na consulta SQL: ", e.getMessage());
+        }else{
+            NavigationUtil.activityErro(screen);
         }
+
         return listaPublicaoes;
-    }
-
-    /**
-     * Este método resgata as informações do usuario para serem utilizadas na publicação. Preenchendo assim o nome, o arroba e outros dados do usuario
-     * @param idUsuario
-     * @return
-     */
-    public Usuario pegarUsuario(Integer idUsuario){
-        String sql = "SELECT nome, arroba_usuario, fotoUsuario FROM tblUsuario WHERE idUsuario="+idUsuario;
-        Usuario user = null;
-
-        this.con = new Conexao();
-        con.connectDB(this.screen);
-
-        try{
-            con.result = con.command.executeQuery(sql);
-
-            if(con.result.next()){
-                user = new Usuario();
-                user.setUserName(con.result.getString("nome"));
-                user.setUserLogin(con.result.getString("arroba_usuario"));
-                user.setUserImage(con.result.getBytes("fotoUsuario"));
-            }
-        }catch(SQLException e){
-            Log.e("Erro na consulta SQL: ", e.getMessage());
-        }
-
-        return user;
-    }
-
-    /**
-     * Este método regata as informações do titulo e capa do livro, caso a publicação possua um livro vinculado.
-     * @param idLivro
-     * @return
-     */
-    public Livro pegarLivro(Integer idLivro){
-        String sql = "SELECT nomeLivro, imgCapa FROM tblLivro WHERE idLivro="+idLivro;
-        Livro livro = null;
-
-        this.con = new Conexao();
-        con.connectDB(this.screen);
-
-        try{
-            con.result = con.command.executeQuery(sql);
-
-            if(con.result.next()){
-                livro = new Livro();
-                livro.setTitle(con.result.getString("nomeLivro"));
-                livro.setCover(con.result.getBytes("imgCapa"));
-            }
-        }catch(SQLException e){
-            Log.e("Erro na consulta SQL: ", e.getMessage());
-        }
-        return livro;
     }
 
     /**
