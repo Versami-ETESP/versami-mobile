@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.prjversami.R;
-import com.example.prjversami.TrocaSenha;
 import com.example.prjversami.controllers.LoginController;
 
 public class login extends AppCompatActivity {

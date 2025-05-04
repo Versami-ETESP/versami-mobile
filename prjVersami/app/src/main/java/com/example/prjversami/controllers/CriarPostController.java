@@ -6,7 +6,9 @@ import android.util.Log;
 import com.example.prjversami.entities.Livro;
 import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.util.Conexao;
+import com.example.prjversami.util.NavigationUtil;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,24 +29,28 @@ public class CriarPostController {
         List<Livro> livros = new ArrayList<>();
 
         con = new Conexao();
-        con.connectDB(screen);
+        Connection c = con.connectDB(screen);
 
-        try(PreparedStatement ps = con.connect.prepareStatement(sql)){
-            ps.setString(1,"%"+nomeLivro+"%");
+        if(c != null){
+            try(PreparedStatement ps = con.connect.prepareStatement(sql)){
+                ps.setString(1,"%"+nomeLivro+"%");
 
-            try(ResultSet rs = ps.executeQuery()){
+                try(ResultSet rs = ps.executeQuery()){
 
-                while (rs.next()){
-                    Livro livro = new Livro();
-                    livro.setBookID(rs.getInt("idLivro"));
-                    livro.setTitle(rs.getString("nomeLivro"));
-                    livro.setCover(rs.getBytes("imgCapa"));
+                    while (rs.next()){
+                        Livro livro = new Livro();
+                        livro.setBookID(rs.getInt("idLivro"));
+                        livro.setTitle(rs.getString("nomeLivro"));
+                        livro.setCover(rs.getBytes("imgCapa"));
 
-                    livros.add(livro);
+                        livros.add(livro);
+                    }
                 }
+            }catch(SQLException e){
+                Log.e("Erro na consulta", e.getMessage());
             }
-        }catch(SQLException e){
-            Log.e("Erro na consulta", e.getMessage());
+        }else{
+            NavigationUtil.activityErro(screen);
         }
         return livros;
     }
@@ -54,25 +60,28 @@ public class CriarPostController {
         boolean resposta = false;
 
         con = new Conexao();
-        con.connectDB(screen);
+        Connection c = con.connectDB(screen);
 
-        try(PreparedStatement ps = con.connect.prepareStatement(sql)){
-           ps.setString(1,publicacao.getContent());
-           ps.setString(2,publicacao.getPostDate());
-           ps.setInt(3, publicacao.getUsuario().getUserID());
+        if(c != null){
+            try(PreparedStatement ps = con.connect.prepareStatement(sql)){
+                ps.setString(1,publicacao.getContent());
+                ps.setString(2,publicacao.getPostDate());
+                ps.setInt(3, publicacao.getUsuario().getUserID());
 
-           if(publicacao.getLivro().getBookID() != null)
-               ps.setInt(4, publicacao.getLivro().getBookID());
-           else
-               ps.setNull(4, Types.INTEGER);
+                if(publicacao.getLivro().getBookID() != null)
+                    ps.setInt(4, publicacao.getLivro().getBookID());
+                else
+                    ps.setNull(4, Types.INTEGER);
 
-           int retorno = ps.executeUpdate();
-           resposta = retorno > 0;
+                int retorno = ps.executeUpdate();
+                resposta = retorno > 0;
 
-        }catch(SQLException e){
-            Log.e("Erro no Insert", e.getMessage());
+            }catch(SQLException e){
+                Log.e("Erro no Insert", e.getMessage());
+            }
+        }else{
+            NavigationUtil.activityErro(screen);
         }
-
         return resposta;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.prjversami;
+package com.example.prjversami.views;
 
 
 import android.content.Intent;
@@ -11,11 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.prjversami.R;
 import com.example.prjversami.controllers.LoginController;
 import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.Criptografia;
 import com.example.prjversami.util.Validacao;
-import com.example.prjversami.views.login;
 
 public class TrocaSenha extends AppCompatActivity {
 

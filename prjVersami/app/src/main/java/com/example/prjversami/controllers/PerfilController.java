@@ -3,6 +3,7 @@ package com.example.prjversami.controllers;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.prjversami.entities.Livro;
 import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.Conexao;
 import com.example.prjversami.util.NavigationUtil;
@@ -10,6 +11,8 @@ import com.example.prjversami.util.NavigationUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PerfilController {
     private Conexao con;
@@ -57,5 +60,38 @@ public class PerfilController {
             NavigationUtil.activityErro(this.screen);
         }
         return user;
+    }
+
+    public List<Livro> obterLivrosFavoritos(int id){
+        List<Livro> livros = new ArrayList<>();
+        String sql = "SELECT l.nomeLivro, l.imgCapa " +
+                "FROM tblLivrosFavoritos lf " +
+                "JOIN tblLivro l ON l.idLivro = lf.idLivro " +
+                "WHERE lf.idUsuario = ?";
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c != null){
+            try{
+                PreparedStatement ps = this.con.connect.prepareStatement(sql);
+                ps.setInt(1, id);
+
+                this.con.result = ps.executeQuery();
+
+                while(this.con.result.next()){
+                    Livro livro = new Livro();
+                    livro.setTitle(this.con.result.getString("nomeLivro"));
+                    livro.setCover(this.con.result.getBytes("imgCapa"));
+                    livros.add(livro);
+                }
+                ps.close();
+            }catch (SQLException e){
+                Log.e("Erro na consulta", e.getMessage());
+            }
+        }else{
+            NavigationUtil.activityErro(screen);
+        }
+        return livros;
     }
 }

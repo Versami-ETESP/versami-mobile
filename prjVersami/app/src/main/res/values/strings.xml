@@ -11,8 +11,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="aviso_erro">Sentimos muito :(</string>
-    <string name="mensagem_erro">A aplicação identificou um problema. Verifique a sua conexão de rede e tente novamente mais tarde!</string>
+    <string name="mensagem_erro">Ocorreu um problema ao tentar se conectar. Verifique sua internet e tente novamente.</string>
     <string name="mensagem_semposts">Ainda não há publicações disponíveis.</string>
+    <string name="mensagem_semfav">Ainda não há livros favoritos</string>
     <string name="botao_seguir">Seguir</string>
     <string name="botao_seguindo">Seguindo</string>
     <string-array name="spinner_teste">

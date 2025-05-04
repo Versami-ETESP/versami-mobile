@@ -189,7 +189,8 @@ public class PostsFragment extends Fragment {
 
            dadosLivro.setVisibility(View.VISIBLE);
        } else {
-           Toast.makeText(getContext(), "Livro Não Selecionado", Toast.LENGTH_LONG).show();
+           //Toast.makeText(getContext(), "Livro Não Selecionado", Toast.LENGTH_LONG).show();
+           return;
        }
    }
 }

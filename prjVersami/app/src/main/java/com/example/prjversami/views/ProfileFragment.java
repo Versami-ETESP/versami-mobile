@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prjversami.R;
+import com.example.prjversami.RecyclerFavoritosFragment;
 import com.example.prjversami.controllers.PerfilController;
 import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.NavigationUtil;
@@ -50,7 +51,7 @@ public class ProfileFragment extends Fragment {
     private Button btnSeguir;
     private ProgressBar progressBar;
     private FrameLayout frame;
-    private PerfilController perCon = new PerfilController(getContext());
+    private PerfilController perCon;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -111,6 +112,8 @@ public class ProfileFragment extends Fragment {
         visibilityItens(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
+        this.perCon = new PerfilController(view.getContext());
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -121,6 +124,9 @@ public class ProfileFragment extends Fragment {
                 // se tiver android ele vai setar as informações do usuario nos devidos campos
                 if (pref.getInt("id", 0) > 0) {
                     user = perCon.obtemPerfil(pref.getInt("id", 0));
+
+                    if(user == null)
+                        return;
 
                     nomeUser.setText(user.getUserName());
                     arroba.setText("@" + user.getUserLogin());
@@ -167,7 +173,9 @@ public class ProfileFragment extends Fragment {
                         }
                         break;
                     case 1:
-                        fragment = null; // todo fazer fragment de favoritos
+                        fragment = new RecyclerFavoritosFragment();
+                        if(fragment != null)
+                            NavigationUtil.carregarFragment(getChildFragmentManager(),R.id.profile_framelayout, fragment);
                         break;
                 }
             }
