@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".RecyclerFavoritosFragment">
+    tools:context=".views.RecyclerFavoritosFragment">
     <ProgressBar
         android:id="@+id/livroFavorito_progresso"
         android:layout_width="wrap_content"

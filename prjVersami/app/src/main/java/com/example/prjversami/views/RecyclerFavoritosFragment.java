@@ -1,4 +1,4 @@
-package com.example.prjversami;
+package com.example.prjversami.views;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,10 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.prjversami.R;
 import com.example.prjversami.controllers.PerfilController;
 import com.example.prjversami.entities.Livro;
-import com.example.prjversami.views.AdapterBuscaLivro;
-import com.example.prjversami.views.AdapterLivrosFavoritos;
 
 import java.util.List;
 

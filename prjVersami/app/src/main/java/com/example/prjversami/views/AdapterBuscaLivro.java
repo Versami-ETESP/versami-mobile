@@ -6,7 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.prjversami.R;
 import com.example.prjversami.entities.Livro;
@@ -61,4 +64,18 @@ public class AdapterBuscaLivro extends RecyclerView.Adapter{
         return this.livros.size();
     }
 
-}
+} // fim Adapter
+
+class ViewHolderBuscaLivro extends RecyclerView.ViewHolder {
+
+    final ImageView capa;
+    final TextView nomeLivro;
+    final CheckBox marcado;
+
+    public ViewHolderBuscaLivro(@NonNull View itemView) {
+        super(itemView);
+        capa = itemView.findViewById(R.id.buscalivro_capa);
+        nomeLivro = itemView.findViewById(R.id.buscalivro_nome);
+        marcado = itemView.findViewById(R.id.buscalivro_checkbox);
+    }
+} // fim view holder

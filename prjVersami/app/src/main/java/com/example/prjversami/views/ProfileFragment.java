@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prjversami.R;
-import com.example.prjversami.RecyclerFavoritosFragment;
 import com.example.prjversami.controllers.PerfilController;
 import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.NavigationUtil;
