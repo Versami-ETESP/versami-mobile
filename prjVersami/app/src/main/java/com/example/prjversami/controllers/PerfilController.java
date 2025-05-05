@@ -94,4 +94,67 @@ public class PerfilController {
         }
         return livros;
     }
+
+    public boolean atualizarDados(Usuario user, int opc){
+        boolean resultado = false;
+        String sql = "";
+        switch (opc){
+            case 1:
+            sql = "UPDATE tblUsuario SET nome=?, arroba_usuario=?, bio_usuario=?, fotoUsuario=?, fotoCapa=? " +
+                    "WHERE idUsuario=?";
+            break;
+            case 2:
+                sql = "UPDATE tblUsuario SET nome=?, arroba_usuario=?, bio_usuario=?, fotoUsuario=? " +
+                        "WHERE idUsuario=?";
+                break;
+            case 3:
+                sql = "UPDATE tblUsuario SET nome=?, arroba_usuario=?, bio_usuario=?, fotoCapa=? " +
+                        "WHERE idUsuario=?";
+                break;
+            case 4:
+                sql = "UPDATE tblUsuario SET nome=?, arroba_usuario=?, bio_usuario=? " +
+                        "WHERE idUsuario=?";
+                break;
+        }
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c != null){
+            try{
+               PreparedStatement ps = this.con.connect.prepareStatement(sql);
+               ps.setString(1, user.getUserName());
+               ps.setString(2, user.getUserLogin());
+               ps.setString(3, user.getUserBio());
+
+                switch (opc){
+                    case 1:
+                        ps.setBytes(4,user.getUserImage());
+                        ps.setBytes(5,user.getUserCover());
+                        ps.setInt(6,user.getUserID());
+                        break;
+                    case 2:
+                        ps.setBytes(4,user.getUserImage());
+                        ps.setInt(5,user.getUserID());
+                        break;
+                    case 3:
+                        ps.setBytes(4,user.getUserCover());
+                        ps.setInt(5,user.getUserID());
+                        break;
+                    case 4:
+                        ps.setInt(4,user.getUserID());
+                        break;
+                }
+
+               resultado = ps.executeUpdate() > 0;
+
+            }catch (SQLException e){
+                Log.e("Erro no Update", e.getMessage());
+            }
+        }else{
+            NavigationUtil.activityErro(screen);
+        }
+
+        return resultado;
+    }
 }

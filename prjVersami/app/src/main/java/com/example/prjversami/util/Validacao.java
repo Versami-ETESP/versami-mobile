@@ -60,7 +60,7 @@ public class Validacao {
     }
 
     public static boolean userExist(String user, Conexao con, Context tela){
-        String sql = "SELECT arroba_usuario FROM tblUsuario WHERE arroba_usuario like ?";
+        String sql = "SELECT arroba_usuario FROM tblUsuario WHERE arroba_usuario=?";
         boolean findUser = false;
         Connection c = con.connectDB(tela);
         if(c != null){

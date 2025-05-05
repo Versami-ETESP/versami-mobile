@@ -201,7 +201,7 @@ public class ProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_profile_edit:
-                Toast.makeText(getActivity(), "Editar Perfil Clicado", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getContext(), EditarPerfil.class));
                 return true;
             case R.id.menu_profile_exit:
                 SharedPreferences pref = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
