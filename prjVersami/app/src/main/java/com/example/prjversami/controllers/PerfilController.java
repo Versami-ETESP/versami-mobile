@@ -22,10 +22,12 @@ public class PerfilController {
         this.screen = screen;
     }
 
-    public Usuario obtemPerfil(Integer id){
+    public Usuario obtemPerfil(Integer idUsuarioVisualizado){
+        int idUsuarioLogado = screen.getSharedPreferences("login", Context.MODE_PRIVATE).getInt("id", 0);
         String sql = "SELECT nome, arroba_usuario, fotoUsuario, fotoCapa, bio_usuario," +
                 "(SELECT COUNT(*) FROM tblSeguidores s1 WHERE s1.idSeguido = u.idUsuario) AS seguidores," +
-                "(SELECT COUNT(*) FROM tblSeguidores s2 WHERE s2.idSeguidor = u.idUsuario) AS seguindo " +
+                "(SELECT COUNT(*) FROM tblSeguidores s2 WHERE s2.idSeguidor = u.idUsuario) AS seguindo, " +
+                "(SELECT COUNT(*) FROM tblSeguidores s3 WHERE s3.idSeguidor = ? AND s3.idSeguido = ?) AS seguiu" +
                 "FROM tblUsuario u WHERE u.idUsuario=?";
         Usuario user = null;
         this.con = new Conexao();
@@ -35,7 +37,9 @@ public class PerfilController {
 
             try{
                 PreparedStatement ps = this.con.connect.prepareStatement(sql);
-                ps.setInt(1, id);
+                ps.setInt(1, idUsuarioLogado);
+                ps.setInt(2, idUsuarioVisualizado);
+                ps.setInt(3, idUsuarioVisualizado);
 
                 this.con.result = ps.executeQuery();
 
@@ -48,6 +52,7 @@ public class PerfilController {
                     user.setUserCover(con.result.getBytes("fotoCapa"));
                     user.setSeguidores(con.result.getInt("seguidores"));
                     user.setSeguindo(con.result.getInt("seguindo"));
+                    user.setSeguidor(con.result.getInt("seguiu") > 0);
                 }
 
                 ps.close();

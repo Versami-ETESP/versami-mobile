@@ -90,19 +90,22 @@ public class RecyclerFavoritosFragment extends Fragment {
             public void run() {
                 PerfilController pc = new PerfilController(view.getContext());
 
-                SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-                int user = pref.getInt("id", 0);
-                List<Livro> livros = pc.obterLivrosFavoritos(user);
+                Bundle bundle = getArguments();
 
-                progressBar.setVisibility(View.GONE);
+                if(bundle != null){
+                    int user = bundle.getInt("idUsuario");
+                    List<Livro> livros = pc.obterLivrosFavoritos(user);
 
-                if(!livros.isEmpty()){
-                    textView.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    recyclerView.setAdapter(new AdapterLivrosFavoritos(livros, view.getContext()));
-                }else {
-                    recyclerView.setVisibility(View.GONE);
-                    textView.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+
+                    if(!livros.isEmpty()){
+                        textView.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        recyclerView.setAdapter(new AdapterLivrosFavoritos(livros, view.getContext()));
+                    }else {
+                        recyclerView.setVisibility(View.GONE);
+                        textView.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         },200);

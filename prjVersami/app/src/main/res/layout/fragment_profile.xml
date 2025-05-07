@@ -118,6 +118,7 @@
             android:background="@drawable/rounded_button_versamicolor"
             android:fontFamily="@font/quicksand_medium"
             android:textColor="@color/white"
+            android:visibility="gone"
             android:text="@string/botao_seguir"/>
 
     </LinearLayout>

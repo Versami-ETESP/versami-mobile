@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,14 +36,7 @@ import com.example.prjversami.util.ImagensUtil;
  */
 public class ProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ARG_ID_USUARIO = "idUsuario";
 
     private TabLayout opcoesPerfil;
     private ImageView profileImg, coverImg;
@@ -51,25 +45,16 @@ public class ProfileFragment extends Fragment {
     private ProgressBar progressBar;
     private FrameLayout frame;
     private PerfilController perCon;
+    private int idUsuarioVisualizado;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
+    public static ProfileFragment newInstance(int idUsuario) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_ID_USUARIO, idUsuario);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,8 +63,7 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            idUsuarioVisualizado = getArguments().getInt(ARG_ID_USUARIO, 0);
         }
     }
 
@@ -117,15 +101,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void run() {
                 //criando obj usuario e pegando o id do usuario logado
-                Usuario user;
                 SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+                int idUsuarioLogado = pref.getInt("id", 0);
 
-                // se tiver android ele vai setar as informações do usuario nos devidos campos
-                if (pref.getInt("id", 0) > 0) {
-                    user = perCon.obtemPerfil(pref.getInt("id", 0));
+                if(idUsuarioVisualizado == 0)
+                    idUsuarioVisualizado = idUsuarioLogado;
 
-                    if(user == null)
-                        return;
+                Usuario user = perCon.obtemPerfil(idUsuarioVisualizado);
+                if (user == null) return;
 
                     nomeUser.setText(user.getUserName());
                     arroba.setText("@" + user.getUserLogin());
@@ -145,17 +128,22 @@ public class ProfileFragment extends Fragment {
                     else
                         bioUser.setVisibility(View.GONE);
 
+                    if(idUsuarioVisualizado == idUsuarioLogado)
+                        btnSeguir.setVisibility(View.GONE);
+                    else
+                        btnSeguir.setVisibility(View.VISIBLE);
+
                     visibilityItens(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
-                }
-            }
-        },200);
 
+            }
+        },1000);
 
 
         //Cria um bundle para passar a informação de qual fragment de origem e carrega o recycler na view
         Bundle bundle = new Bundle();
         bundle.putString("fragment", "profile");
+        bundle.putInt("idUsuario", idUsuarioVisualizado);
         NavigationUtil.carregarFragment(getChildFragmentManager(), R.id.profile_framelayout, new RecyclerPostsFragment(), bundle);
 
         // define qual fragment colocar no lugar do framelayout de acordo com a opçao do tablayout
@@ -163,20 +151,20 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Fragment fragment = null;
+                bundle.putInt("idUsuario", idUsuarioVisualizado);
+
                 switch (opcoesPerfil.getSelectedTabPosition()) {
                     case 0:
                         bundle.putString("fragment", "profile");
                         fragment = new RecyclerPostsFragment();
-                        if (fragment != null) {
-                            NavigationUtil.carregarFragment(getChildFragmentManager(), R.id.profile_framelayout, new RecyclerPostsFragment(), bundle);
-                        }
                         break;
                     case 1:
                         fragment = new RecyclerFavoritosFragment();
-                        if(fragment != null)
-                            NavigationUtil.carregarFragment(getChildFragmentManager(),R.id.profile_framelayout, fragment);
                         break;
                 }
+
+                if(fragment != null)
+                    NavigationUtil.carregarFragment(getChildFragmentManager(),R.id.profile_framelayout, fragment, bundle);
             }
 
             @Override
@@ -193,7 +181,11 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_profile, menu);
+        int idUsuarioLogado = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE).getInt("id", 0);
+
+        if(idUsuarioVisualizado == idUsuarioLogado){
+            inflater.inflate(R.menu.menu_fragment_profile, menu);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -227,6 +219,5 @@ public class ProfileFragment extends Fragment {
         this.coverImg.setVisibility(value);
         this.opcoesPerfil.setVisibility(value);
         this.frame.setVisibility(value);
-        this.btnSeguir.setVisibility(value);
     }
 }

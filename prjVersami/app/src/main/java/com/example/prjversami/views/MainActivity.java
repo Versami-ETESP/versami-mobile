@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
         frameLayout = findViewById(R.id.fragment_container);
 
         if(savedInstanceState == null){
-            NavigationUtil.carregarFragment(getSupportFragmentManager(),R.id.fragment_container, new ProfileFragment());
-            bottomNavigationView.setSelectedItemId(R.id.menu_profile);
+            NavigationUtil.carregarFragment(getSupportFragmentManager(),R.id.fragment_container, new HomeFragment());
+            bottomNavigationView.setSelectedItemId(R.id.menu_home);
         }
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new NotificationFragment();
                         break;
                     case R.id.menu_profile:
-                        fragment = new ProfileFragment();
+                        int idUsuarioLogado = getSharedPreferences("login", MODE_PRIVATE).getInt("id", 0);
+                        fragment = ProfileFragment.newInstance(idUsuarioLogado);
                         break;
                 }
 

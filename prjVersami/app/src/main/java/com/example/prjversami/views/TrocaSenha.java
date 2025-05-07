@@ -64,7 +64,7 @@ public class TrocaSenha extends AppCompatActivity {
 
     public void alterarSenhar(View v){
         String resposta, senha, confirma;
-        resposta = this.resposta.getText().toString();
+        resposta = this.resposta.getText().toString().toUpperCase();
         senha = this.senha.getText().toString();
         confirma = this.confirma.getText().toString();
 

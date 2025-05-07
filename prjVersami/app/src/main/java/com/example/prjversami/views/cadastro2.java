@@ -114,7 +114,7 @@ public class cadastro2 extends AppCompatActivity {
                 dados.getString("email"),
                 dados.getString("nasc"),
                 dados.getString("senha"),
-                dados.getString("resposta"),
+                dados.getString("resposta").toUpperCase(),
                 dados.getInt("pergunta"));
 
         if (this.img != null)

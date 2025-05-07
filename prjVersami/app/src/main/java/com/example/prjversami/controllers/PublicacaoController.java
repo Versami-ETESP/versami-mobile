@@ -115,7 +115,7 @@ public class PublicacaoController {
         String sql =
                 "SELECT p.idPublicacao, " +
                         "p.conteudo, p.dataPublic, " +
-                        "u.nome, u.arroba_usuario, " +
+                        "u.idUsuario, u.nome, u.arroba_usuario, " +
                         "u.fotoUsuario, l.nomeLivro, " +
                         "l.imgCapa, " +
                         "(SELECT COUNT(*) FROM tblLikesPorPost lp WHERE lp.idUsuario= ? AND lp.idPublicacao= p.idPublicacao) AS 'liked', " +
@@ -147,6 +147,7 @@ public class PublicacaoController {
                         pub.addLike();
 
                     Usuario user = new Usuario();
+                    user.setUserID(con.result.getInt("idUsuario"));
                     user.setUserName(con.result.getString("nome"));
                     user.setUserLogin(con.result.getString("arroba_usuario"));
                     user.setUserImage(con.result.getBytes("fotoUsuario"));

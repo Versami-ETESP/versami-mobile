@@ -101,14 +101,11 @@ public class RecyclerPostsFragment extends Fragment {
 
                 if(bundle != null){
                     String frag = bundle.getString("fragment");
+                    int user = bundle.getInt("idUsuario");
 
                     if(frag.equals("profile")){
-                        SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-                        int user = pref.getInt("id", 0);
 
-                        if(user > 0){
-                            publicacoes = controller.listarPublicacoes(user);
-                        }
+                        publicacoes = controller.listarPublicacoes(user);
 
                     }else if(frag.equals("home")){
                         publicacoes = controller.listarPublicacoes();

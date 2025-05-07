@@ -12,6 +12,8 @@ public class Usuario extends Perfil{
 
     private Integer seguidores, seguindo, pergunta;
 
+    private boolean isSeguidor;
+
     private List<Publicacao> posts = new ArrayList<>(); // esse array armazena no todos os objetos posts relacionados ao usuario
 
     public Usuario(){
@@ -39,6 +41,14 @@ public class Usuario extends Perfil{
     // Declaração de métodos
     // metodos getters e setters
 
+
+    public boolean isSeguidor() {
+        return isSeguidor;
+    }
+
+    public void setSeguidor(boolean seguidor) {
+        isSeguidor = seguidor;
+    }
 
     public String getResposta() {
         return resposta;

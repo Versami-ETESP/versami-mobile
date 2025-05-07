@@ -2,6 +2,9 @@ package com.example.prjversami.views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +23,7 @@ import com.example.prjversami.entities.Livro;
 import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.ImagensUtil;
+import com.example.prjversami.util.NavigationUtil;
 
 import java.util.List;
 
@@ -89,6 +93,16 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
                 }
             }
         });
+
+        holder.userInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int id = user.getUserID();
+
+                Fragment fragment = ProfileFragment.newInstance(id);
+                NavigationUtil.carregarFragment(((FragmentActivity) context).getSupportFragmentManager(), R.id.fragment_container, fragment);
+            }
+        });
     }
 
     @Override
@@ -109,7 +123,8 @@ class ViewHolderPublicacoes extends RecyclerView.ViewHolder {
     final TextView arroba;
     final ImageButton comments;
     final CheckBox like;
-    final LinearLayout bookInfo;
+    final LinearLayout bookInfo, commentButton;
+    final ConstraintLayout userInfo;
 
     public ViewHolderPublicacoes(@NonNull View itemView) {
         super(itemView);
@@ -124,6 +139,8 @@ class ViewHolderPublicacoes extends RecyclerView.ViewHolder {
         commentLabel = itemView.findViewById(R.id.profile_post_labelcomment);
         arroba = itemView.findViewById(R.id.profile_post_username);
         bookInfo = itemView.findViewById(R.id.profile_post_book);
+        userInfo = itemView.findViewById(R.id.profile_post_clickuser);
+        commentButton = itemView.findViewById(R.id.profile_post_commentbutton);
     }
 } // fim classe view holder
 

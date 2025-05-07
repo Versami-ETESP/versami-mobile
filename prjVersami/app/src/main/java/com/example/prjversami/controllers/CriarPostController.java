@@ -68,7 +68,7 @@ public class CriarPostController {
                 ps.setString(2,publicacao.getPostDate());
                 ps.setInt(3, publicacao.getUsuario().getUserID());
 
-                if(publicacao.getLivro().getBookID() != null)
+                if(publicacao.getLivro() != null)
                     ps.setInt(4, publicacao.getLivro().getBookID());
                 else
                     ps.setNull(4, Types.INTEGER);
