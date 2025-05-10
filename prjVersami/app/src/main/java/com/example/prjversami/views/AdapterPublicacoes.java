@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.prjversami.PostPageFragment;
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.PublicacaoController;
 import com.example.prjversami.entities.Livro;
@@ -103,6 +104,14 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
                 NavigationUtil.carregarFragment(((FragmentActivity) context).getSupportFragmentManager(), R.id.fragment_container, fragment);
             }
         });
+
+        holder.postContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = PostPageFragment.newInstance(publicacao);
+                NavigationUtil.carregarFragment(((FragmentActivity) context).getSupportFragmentManager(), R.id.fragment_container,fragment);
+            }
+        });
     }
 
     @Override
@@ -124,7 +133,7 @@ class ViewHolderPublicacoes extends RecyclerView.ViewHolder {
     final ImageButton comments;
     final CheckBox like;
     final LinearLayout bookInfo, commentButton;
-    final ConstraintLayout userInfo;
+    final ConstraintLayout userInfo, postContainer;
 
     public ViewHolderPublicacoes(@NonNull View itemView) {
         super(itemView);
@@ -141,6 +150,7 @@ class ViewHolderPublicacoes extends RecyclerView.ViewHolder {
         bookInfo = itemView.findViewById(R.id.profile_post_book);
         userInfo = itemView.findViewById(R.id.profile_post_clickuser);
         commentButton = itemView.findViewById(R.id.profile_post_commentbutton);
+        postContainer = itemView.findViewById(R.id.profile_post_container);
     }
 } // fim classe view holder
 

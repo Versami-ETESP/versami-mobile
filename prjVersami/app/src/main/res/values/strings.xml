@@ -16,6 +16,7 @@
     <string name="mensagem_semfav">Ainda não há livros favoritos</string>
     <string name="botao_seguir">Seguir</string>
     <string name="botao_seguindo">Seguindo</string>
+
     <string-array name="spinner_teste">
         <item>Selecione uma pergunta...</item>
         <item>Qual o seu livro favorito?</item>

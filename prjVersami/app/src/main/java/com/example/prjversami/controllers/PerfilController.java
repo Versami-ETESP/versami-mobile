@@ -27,7 +27,7 @@ public class PerfilController {
         String sql = "SELECT nome, arroba_usuario, fotoUsuario, fotoCapa, bio_usuario," +
                 "(SELECT COUNT(*) FROM tblSeguidores s1 WHERE s1.idSeguido = u.idUsuario) AS seguidores," +
                 "(SELECT COUNT(*) FROM tblSeguidores s2 WHERE s2.idSeguidor = u.idUsuario) AS seguindo, " +
-                "(SELECT COUNT(*) FROM tblSeguidores s3 WHERE s3.idSeguidor = ? AND s3.idSeguido = ?) AS seguiu" +
+                "(SELECT COUNT(*) FROM tblSeguidores s3 WHERE s3.idSeguidor = ? AND s3.idSeguido = ?) AS seguiu " +
                 "FROM tblUsuario u WHERE u.idUsuario=?";
         Usuario user = null;
         this.con = new Conexao();
