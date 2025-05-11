@@ -4,6 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,9 +75,15 @@ public class ImagensUtil {
         Livro livro = publicacao.getLivro();
         Usuario user = publicacao.getUsuario();
 
+        if(user.getUserImage() != null){
+            imagemUser.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
+        }else{
+            imagemUser.setImageResource(R.drawable.user_icon_placeholder2);
+            imagemUser.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        }
+
         nomeUser.setText(user.getUserName());
-        arrobaUser.setText(user.getUserLogin());
-        imagemUser.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
+        arrobaUser.setText("@"+user.getUserLogin());
         conteudoPost.setText(publicacao.getContent());
 
         if(livro != null){
@@ -92,6 +103,26 @@ public class ImagensUtil {
         Canvas canvas = new Canvas(bitmap);
         view.draw(canvas);
 
+        bitmap = ImagensUtil.arredondarBitmap(bitmap);
+
         return bitmap;
+    }
+
+    public static Bitmap arredondarBitmap(Bitmap bitmapOriginal){
+        float radius = 48f;
+
+        Bitmap rounded = Bitmap.createBitmap(bitmapOriginal.getWidth(), bitmapOriginal.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas roundedCanvas = new Canvas(rounded);
+
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+
+        RectF rect = new RectF(0f, 0f, bitmapOriginal.getWidth(), bitmapOriginal.getHeight());
+        roundedCanvas.drawRoundRect(rect, radius, radius, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        roundedCanvas.drawBitmap(bitmapOriginal, 0f, 0f, paint);
+
+        return rounded;
     }
 }

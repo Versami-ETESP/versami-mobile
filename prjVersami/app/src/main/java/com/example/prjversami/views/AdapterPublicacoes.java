@@ -1,6 +1,8 @@
 package com.example.prjversami.views;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -15,9 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.prjversami.PostPageFragment;
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.PublicacaoController;
 import com.example.prjversami.entities.Livro;
@@ -61,10 +61,16 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
         holder.data.setText(publicacao.getPostDate());
         holder.profileName.setText(user.getUserName());
         holder.arroba.setText("@"+user.getUserLogin());
-        holder.profileImage.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
         holder.like.setText(publicacao.getTotalLikes().toString());
         holder.like.setOnCheckedChangeListener(null);
         holder.like.setChecked(publicacao.isLike());
+
+        if(user.getUserImage() != null){
+            holder.profileImage.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
+        }else{
+            holder.profileImage.setImageResource(R.drawable.user_icon_placeholder2);
+            holder.profileImage.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        }
 
 
         // verifica se  a publicação possui livro vinculado. Se não houver ele oculta as informações
@@ -108,8 +114,9 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
         holder.postContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = PostPageFragment.newInstance(publicacao);
-                NavigationUtil.carregarFragment(((FragmentActivity) context).getSupportFragmentManager(), R.id.fragment_container,fragment);
+                Intent intent = new Intent(context, PostPage.class);
+                intent.putExtra("idPublicacao", publicacao.getIdPublicacao());
+                context.startActivity(intent);
             }
         });
     }

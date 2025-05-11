@@ -68,6 +68,14 @@
 
     </android.support.constraint.ConstraintLayout>
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/versamilogoblue"
+            android:layout_marginRight="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/sticker_clickuser"/>
+
     <TextView
         android:id="@+id/sticker_textcontent"
         android:layout_width="match_parent"
@@ -111,7 +119,6 @@
             android:ellipsize="marquee"
             android:text="Nome do Livro"
             android:textColor="@color/black"
-            android:textAlignment="center"
             android:textSize="16dp"
             android:textStyle="bold" />
     </LinearLayout>

@@ -16,6 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,8 +70,11 @@ public class PublicacaoController {
                     Publicacao pub = new Publicacao();
                     pub.setIdPublicacao(con.result.getInt("idPublicacao"));
                     pub.setContent(con.result.getString("conteudo"));
-                    pub.setPostDate(con.result.getDate("dataPublic").toString());
                     pub.setTotalLikes(con.result.getInt("totLike"));
+
+                    Timestamp timestamp = con.result.getTimestamp("dataPublic");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    pub.setPostDate(sdf.format(timestamp));
 
                     if(con.result.getInt("liked") > 0)
                         pub.addLike();
@@ -140,8 +145,11 @@ public class PublicacaoController {
                     Publicacao pub = new Publicacao();
                     pub.setIdPublicacao(con.result.getInt("idPublicacao"));
                     pub.setContent(con.result.getString("conteudo"));
-                    pub.setPostDate(con.result.getDate("dataPublic").toString());
                     pub.setTotalLikes(con.result.getInt("totLike"));
+
+                    Timestamp timestamp = con.result.getTimestamp("dataPublic");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    pub.setPostDate(sdf.format(timestamp));
 
                     if(con.result.getInt("liked") > 0)
                         pub.addLike();
@@ -172,6 +180,68 @@ public class PublicacaoController {
         }
 
         return listaPublicaoes;
+    }
+
+    public Publicacao obterPublicacao(int idPublicacao){
+        Publicacao publicacao = new Publicacao();
+        int idUser = screen.getSharedPreferences("login", Context.MODE_PRIVATE).getInt("id", 0);
+        String sql =
+                "SELECT p.idPublicacao, " +
+                        "p.conteudo, p.dataPublic, " +
+                        "u.idUsuario, u.nome, u.arroba_usuario, " +
+                        "u.fotoUsuario, l.nomeLivro, " +
+                        "l.imgCapa, " +
+                        "(SELECT COUNT(*) FROM tblLikesPorPost lp WHERE lp.idUsuario= ? AND lp.idPublicacao= p.idPublicacao) AS 'liked', " +
+                        "(SELECT COUNT (*) FROM tblLikesPorPost lp where lp.idPublicacao=p.idPublicacao ) as 'totLike' " +
+                        "FROM tblPublicacao p " +
+                        "JOIN tblUsuario u ON p.idUsuario = u.idUsuario " +
+                        "LEFT JOIN tblLivro l ON l.idLivro = p.idLivro " +
+                        "WHERE p.idPublicacao = ?";
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return null;
+        }
+
+        try{
+            PreparedStatement ps =  con.connect.prepareStatement(sql);
+            ps.setInt(1, idUser);
+            ps.setInt(2, idPublicacao);
+
+            this.con.result = ps.executeQuery();
+
+            if(!this.con.result.next()) return null;
+
+            publicacao.setIdPublicacao(con.result.getInt("idPublicacao"));
+            publicacao.setContent(con.result.getString("conteudo"));
+            publicacao.setTotalLikes(con.result.getInt("totLike"));
+            if(con.result.getInt("liked") > 0) publicacao.addLike();
+
+            // pegando data e hora no banco para exibir nos posts
+            Timestamp timestamp = con.result.getTimestamp("dataPublic");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            publicacao.setPostDate(sdf.format(timestamp));
+
+            Usuario user = new Usuario();
+            user.setUserID(con.result.getInt("idUsuario"));
+            user.setUserName(con.result.getString("nome"));
+            user.setUserLogin(con.result.getString("arroba_usuario"));
+            user.setUserImage(con.result.getBytes("fotoUsuario"));
+            publicacao.setUsuario(user);
+
+            if(con.result.getString("nomeLivro") != null){
+                Livro livro = new Livro();
+                livro.setTitle(con.result.getString("nomeLivro"));
+                livro.setCover(con.result.getBytes("imgCapa"));
+                publicacao.setLivro(livro);
+            }
+            ps.close();
+        }catch (SQLException e){
+            Log.e("Erro na Consulta", e.getMessage());
+        }
+     return publicacao;
     }
 
     /**
