@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.entities.Usuario;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,13 +50,26 @@ public class ImagensUtil {
     }
 
     public static Bitmap pegarImagem(String nomeArquivo, Context context){
+        File file = new File(context.getFilesDir(), nomeArquivo);
+        if (!file.exists()) {
+            return null;
+        }
+
         try (FileInputStream fis = context.openFileInput(nomeArquivo)) {
             return BitmapFactory.decodeStream(fis);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("Erro no arquivo", e.getMessage());
             return null;
         }
     }
+
+    public static void apagarImagem(String nomeArquivo, Context context) {
+        File file = new File(context.getFilesDir(), nomeArquivo);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
 
     public static Bitmap criarStickerPublicacao(Context context, Publicacao publicacao){
         LayoutInflater inflater = LayoutInflater.from(context);

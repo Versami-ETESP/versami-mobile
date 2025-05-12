@@ -225,6 +225,7 @@ public class ProfileFragment extends Fragment {
 
                 editor.putInt("id", -1);
                 editor.apply();
+                ImagensUtil.apagarImagem("imagemPerfil.jpeg", getContext());
                 startActivity(new Intent(getContext(), splash.class));
                 getActivity().finish();
                 return true;

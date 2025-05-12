@@ -3,6 +3,7 @@ package com.example.prjversami.views;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -117,18 +118,16 @@ public class PostsFragment extends Fragment {
         usuario.setUserLogin(pref.getString("arroba", "Usuário"));
         Bitmap fotoPerfil = ImagensUtil.pegarImagem("imagemPerfil.jpeg",view.getContext());
 
-
-        CriarPostController postController = new CriarPostController(getContext());
-        PerfilController pfc = new PerfilController(getContext());
-
-
         lblNome.setText(usuario.getUserName());
         lblArroba.setText("@" + usuario.getUserLogin());
-
-        if (fotoPerfil != null)
+        if (fotoPerfil != null){
             imgPerfil.setImageBitmap(fotoPerfil);
-        else
+        }else{
             imgPerfil.setImageResource(R.drawable.user_icon_placeholder2);
+            imgPerfil.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        }
+
+        CriarPostController postController = new CriarPostController(getContext());
 
         btnProcurarLivro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,16 +161,21 @@ public class PostsFragment extends Fragment {
                     publicacao.setLivro(livro);
                 }
 
-
-
                 if(postController.postarPublicação(publicacao)){
                     Snackbar.make(view, "Postagem publicada",Snackbar.LENGTH_LONG).show();
+                    limparCampos();
                 }else{
                     Snackbar.make(view, "Não foi possivel compartilhar publicação. Tente mais tarde!",Snackbar.LENGTH_LONG).show();
                 }
 
             }
         });
+    }
+
+    public void limparCampos(){
+        this.txtpublicacao.setText("");
+        this.livro = null;
+        this.dadosLivro.setVisibility(View.GONE);
     }
 
     /**
