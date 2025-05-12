@@ -46,6 +46,7 @@ public class ProfileFragment extends Fragment {
     private FrameLayout frame;
     private PerfilController perCon;
     private int idUsuarioVisualizado;
+    private Usuario user;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -107,7 +108,7 @@ public class ProfileFragment extends Fragment {
                 if(idUsuarioVisualizado == 0)
                     idUsuarioVisualizado = idUsuarioLogado;
 
-                Usuario user = perCon.obtemPerfil(idUsuarioVisualizado);
+                user = perCon.obtemPerfil(idUsuarioVisualizado);
                 if (user == null) return;
 
                     nomeUser.setText(user.getUserName());
@@ -132,6 +133,9 @@ public class ProfileFragment extends Fragment {
                         btnSeguir.setVisibility(View.GONE);
                     else
                         btnSeguir.setVisibility(View.VISIBLE);
+
+                    if(user.isSeguidor())
+                        btnSeguir.setText("Seguindo");
 
                     visibilityItens(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
@@ -177,6 +181,26 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+
+        btnSeguir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int idUsurioLogado = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE).getInt("id", 0);
+                if(!user.isSeguidor()){
+                    perCon.seguirUsuario(idUsurioLogado, idUsuarioVisualizado);
+                    user.setSeguidor(true);
+                    user.setSeguidores(user.getSeguidores() + 1);
+                    seguidores.setText(user.getSeguidores().toString()+"\nSeguidores");
+                    btnSeguir.setText("Seguindo");
+                }else{
+                    perCon.deixarDeSeguirUsuario(idUsurioLogado, idUsuarioVisualizado);
+                    user.setSeguidor(false);
+                    user.setSeguidores(user.getSeguidores() - 1);
+                    seguidores.setText(user.getSeguidores().toString()+"\nSeguidores");
+                    btnSeguir.setText("Seguir");
+                }
+            }
+        });
     }
 
     @Override
@@ -201,6 +225,7 @@ public class ProfileFragment extends Fragment {
 
                 editor.putInt("id", -1);
                 editor.apply();
+                ImagensUtil.apagarImagem("imagemPerfil.jpeg", getContext());
                 startActivity(new Intent(getContext(), splash.class));
                 getActivity().finish();
                 return true;

@@ -1,6 +1,8 @@
 package com.example.prjversami.views;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -15,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.PublicacaoController;
@@ -60,10 +61,16 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
         holder.data.setText(publicacao.getPostDate());
         holder.profileName.setText(user.getUserName());
         holder.arroba.setText("@"+user.getUserLogin());
-        holder.profileImage.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
         holder.like.setText(publicacao.getTotalLikes().toString());
         holder.like.setOnCheckedChangeListener(null);
         holder.like.setChecked(publicacao.isLike());
+
+        if(user.getUserImage() != null){
+            holder.profileImage.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
+        }else{
+            holder.profileImage.setImageResource(R.drawable.user_icon_placeholder2);
+            holder.profileImage.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        }
 
 
         // verifica se  a publicação possui livro vinculado. Se não houver ele oculta as informações
@@ -103,6 +110,15 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
                 NavigationUtil.carregarFragment(((FragmentActivity) context).getSupportFragmentManager(), R.id.fragment_container, fragment);
             }
         });
+
+        holder.postContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, PostPage.class);
+                intent.putExtra("idPublicacao", publicacao.getIdPublicacao());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -124,7 +140,7 @@ class ViewHolderPublicacoes extends RecyclerView.ViewHolder {
     final ImageButton comments;
     final CheckBox like;
     final LinearLayout bookInfo, commentButton;
-    final ConstraintLayout userInfo;
+    final ConstraintLayout userInfo, postContainer;
 
     public ViewHolderPublicacoes(@NonNull View itemView) {
         super(itemView);
@@ -141,6 +157,7 @@ class ViewHolderPublicacoes extends RecyclerView.ViewHolder {
         bookInfo = itemView.findViewById(R.id.profile_post_book);
         userInfo = itemView.findViewById(R.id.profile_post_clickuser);
         commentButton = itemView.findViewById(R.id.profile_post_commentbutton);
+        postContainer = itemView.findViewById(R.id.profile_post_container);
     }
 } // fim classe view holder
 

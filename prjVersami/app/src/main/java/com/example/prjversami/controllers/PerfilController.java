@@ -1,6 +1,7 @@
 package com.example.prjversami.controllers;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import com.example.prjversami.entities.Livro;
@@ -27,7 +28,7 @@ public class PerfilController {
         String sql = "SELECT nome, arroba_usuario, fotoUsuario, fotoCapa, bio_usuario," +
                 "(SELECT COUNT(*) FROM tblSeguidores s1 WHERE s1.idSeguido = u.idUsuario) AS seguidores," +
                 "(SELECT COUNT(*) FROM tblSeguidores s2 WHERE s2.idSeguidor = u.idUsuario) AS seguindo, " +
-                "(SELECT COUNT(*) FROM tblSeguidores s3 WHERE s3.idSeguidor = ? AND s3.idSeguido = ?) AS seguiu" +
+                "(SELECT COUNT(*) FROM tblSeguidores s3 WHERE s3.idSeguidor = ? AND s3.idSeguido = ?) AS seguiu " +
                 "FROM tblUsuario u WHERE u.idUsuario=?";
         Usuario user = null;
         this.con = new Conexao();
@@ -161,5 +162,59 @@ public class PerfilController {
         }
 
         return resultado;
+    }
+
+    public void seguirUsuario(int idUsuarioLogado, int idUsuarioSeguido){
+
+        String sql = "INSERT INTO tblSeguidores (idSeguidor, idSeguido) VALUES (?, ?)";
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return;
+        }
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, idUsuarioLogado);
+            ps.setInt(2,idUsuarioSeguido);
+
+            ps.executeUpdate();
+
+            ps.close();
+            c.close();
+
+        }catch (SQLException e){
+            Log.e("Erro no Insert", e.getMessage());
+        }
+    }
+
+    public void deixarDeSeguirUsuario(int idUsuarioLogado, int idUsuarioSeguido){
+
+        String sql = "DELETE FROM tblSeguidores WHERE idSeguidor=? AND idSeguido=?";
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return ;
+        }
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, idUsuarioLogado);
+            ps.setInt(2,idUsuarioSeguido);
+
+            ps.executeUpdate();
+
+            ps.close();
+            c.close();
+
+        }catch (SQLException e){
+            Log.e("Erro no Delete", e.getMessage());
+        }
     }
 }
