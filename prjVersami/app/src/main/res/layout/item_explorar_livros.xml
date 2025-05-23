@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toplivro_container"
     android:layout_width="170dp"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,6 +17,7 @@
         android:background="#eeeeee"
         >
         <TextView
+            android:id="@+id/toplivro_titulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/versami_blue"
@@ -28,6 +30,7 @@
             android:textAlignment="center"
             android:fontFamily="@font/quicksand_bold"/>
         <ImageView
+            android:id="@+id/toplivro_capa"
             android:layout_width="115dp"
             android:layout_height="150dp"
             android:layout_marginTop="5dp"
