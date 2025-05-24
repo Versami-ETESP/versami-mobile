@@ -1,6 +1,7 @@
 package com.example.prjversami.views;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -75,14 +76,28 @@ public class resultadoPesquisaFragment extends Fragment {
         recyclerView = view.findViewById(R.id.resultado_recycler);
 
         SearchController sc = new SearchController(getContext());
-        this.livros = sc.pesquisarLivros(textoPesquisa);
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
 
-        if(this.livros.isEmpty()){
-            txtSemResultado.setVisibility(View.VISIBLE);
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                livros = sc.pesquisarLivros(textoPesquisa);
+                usuarios = sc.pesquisarUsuarios(textoPesquisa);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new AdapaterResultadoLivros(this.livros, getContext()));
+                progressBar.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                tabLayout.setVisibility(View.VISIBLE);
+
+                if(livros.isEmpty()){
+                    txtSemResultado.setVisibility(View.VISIBLE);
+                }
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(new AdapaterResultadoLivros(livros, getContext()));
+            }
+        },500);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
             @Override
@@ -90,7 +105,6 @@ public class resultadoPesquisaFragment extends Fragment {
                 switch (tabLayout.getSelectedTabPosition()){
                     case 0:
                         txtSemResultado.setVisibility(View.GONE);
-                        livros = sc.pesquisarLivros(textoPesquisa);
                         if(livros.isEmpty()){
                             txtSemResultado.setVisibility(View.VISIBLE);
                         }
@@ -98,11 +112,10 @@ public class resultadoPesquisaFragment extends Fragment {
                         break;
                     case 1:
                         txtSemResultado.setVisibility(View.GONE);
-                        usuarios = sc.pesquisarUsuarios(textoPesquisa);
                         if(usuarios.isEmpty()){
                             txtSemResultado.setVisibility(View.VISIBLE);
                         }
-                        recyclerView.setAdapter(new AdapterResultadoUsuarios(usuarios,getContext()));
+                        recyclerView.setAdapter(new AdapterResultadoUsuarios(usuarios,getContext(),getFragmentManager()));
                         break;
                 }
             }

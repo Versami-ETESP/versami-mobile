@@ -6,6 +6,11 @@
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".views.resultadoPesquisaFragment">
+    <ProgressBar
+        android:id="@+id/resultado_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
     <android.support.design.widget.TabLayout
         android:id="@+id/resultado_tablayout"
         android:layout_width="match_parent"
@@ -21,11 +26,6 @@
             android:layout_height="wrap_content"
             android:text="Pessoas"/>
     </android.support.design.widget.TabLayout>
-    <ProgressBar
-        android:id="@+id/resultado_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
     <TextView
         android:id="@+id/resultado_lblSemResultado"
         android:layout_width="match_parent"
