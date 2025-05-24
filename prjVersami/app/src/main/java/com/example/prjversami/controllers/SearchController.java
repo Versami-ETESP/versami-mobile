@@ -3,11 +3,14 @@ package com.example.prjversami.controllers;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.prjversami.entities.Autor;
+import com.example.prjversami.entities.Genero;
 import com.example.prjversami.entities.Livro;
 import com.example.prjversami.util.Conexao;
 import com.example.prjversami.util.NavigationUtil;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,5 +54,107 @@ public class SearchController {
         }
 
         return livros;
+    }
+
+    public Livro obterInfoLivro(int idLivro, int idUser){
+        String sql = "SELECT l.nomeLivro, l.descLivro, l.imgCapa, a.nomeAutor, g.nomeGenero, " +
+                "(SELECT COUNT(*) FROM tblLivrosFavoritos lf WHERE lf.idLivro = l.idLivro AND lf.idUsuario = ?) AS livroFavorito " +
+                "FROM tblLivro l " +
+                "JOIN tblAutor a ON l.idAutor = a.idAutor " +
+                "JOIN tblGenero g ON g.idGenero = l.idGenero " +
+                "WHERE l.idLivro = ?";
+        Livro livro = new Livro();
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return null;
+        }
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1,idUser);
+            ps.setInt(2,idLivro);
+
+            this.con.result = ps.executeQuery();
+
+            if(this.con.result.next()){
+                Genero genero = new Genero();
+                genero.setType(this.con.result.getString("nomeGenero"));
+                Autor autor = new Autor();
+                autor.setName(this.con.result.getString("nomeAutor"));
+
+                livro.setTitle(this.con.result.getString("nomeLivro"));
+                livro.setBookID(idLivro);
+                livro.setSummary(this.con.result.getString("descLivro"));
+                livro.setFavorite(this.con.result.getInt("livroFavorito") > 0);
+                livro.setAutor(autor);
+                livro.setGenre(genero);
+                if(this.con.result.getBytes("imgCapa") != null) livro.setCover(this.con.result.getBytes("imgCapa"));
+            }
+            ps.close();
+            c.close();
+
+        }catch (SQLException e){
+            Log.e("Erro na Consulta", e.getMessage());
+        }
+        return livro;
+    }
+
+    public boolean definirLivroFavorito(int idLivro, int idUser){
+        String sql = "INSERT INTO tblLivrosFavoritos (idUsuario, idLivro) VALUES (?,?)";
+        boolean resultado = false;
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return false;
+        }
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, idUser);
+            ps.setInt(2,idLivro);
+
+            resultado = ps.executeUpdate() > 0;
+            ps.close();
+            c.close();
+
+        }catch (SQLException e){
+            Log.e("Erro no Insert", e.getMessage());
+        }
+
+        return resultado;
+    }
+
+    public boolean removerLivroFavorito(int idLivro, int idUser){
+        String sql = "DELETE FROM tblLivrosFavoritos WHERE idUsuario = ? AND idLivro = ?";
+        boolean resultado = false;
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return false;
+        }
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, idUser);
+            ps.setInt(2,idLivro);
+
+            resultado = ps.executeUpdate() > 0;
+            ps.close();
+            c.close();
+
+        }catch (SQLException e){
+            Log.e("Erro no Insert", e.getMessage());
+        }
+
+        return resultado;
     }
 }

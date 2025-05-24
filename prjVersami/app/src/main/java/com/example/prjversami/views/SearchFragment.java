@@ -32,7 +32,6 @@ public class SearchFragment extends Fragment {
     private String mParam2;
 
     private EditText pesquisar;
-    private TextView label;
 
 
     public SearchFragment() {
@@ -77,7 +76,6 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         pesquisar = view.findViewById(R.id.search_pesquisar);
-        label = view.findViewById(R.id.search_label);
 
         NavigationUtil.carregarFragment(getChildFragmentManager(),R.id.search_framelayout,new RecyclerExolorarFragment());
     }

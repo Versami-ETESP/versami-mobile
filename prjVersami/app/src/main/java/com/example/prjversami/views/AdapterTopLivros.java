@@ -39,9 +39,7 @@ public class AdapterTopLivros extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         ViewHolderTopLivros holder = (ViewHolderTopLivros) viewHolder;
-        Livro livro = new Livro();
-
-        livro = this.livros.get(i);
+        Livro livro = this.livros.get(i);
 
         holder.titulo.setText(livro.getTitle());
         if(livro.getCover() != null){
@@ -51,7 +49,9 @@ public class AdapterTopLivros extends RecyclerView.Adapter{
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, InfoLivro.class));
+                Intent intent = new Intent(context, InfoLivro.class);
+                intent.putExtra("idLivro", livro.getBookID());
+                context.startActivity(intent);
             }
         });
     }
