@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".views.resultadoPesquisaFragment">
+    <android.support.design.widget.TabLayout
+        android:id="@+id/resultado_tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.TabItem
+            android:id="@+id/resultado_livros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Livros"/>
+        <android.support.design.widget.TabItem
+            android:id="@+id/resultado_pessoas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pessoas"/>
+    </android.support.design.widget.TabLayout>
+    <ProgressBar
+        android:id="@+id/resultado_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/resultado_lblSemResultado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="Nenhum resultado para a pesquisa"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:fontFamily="@font/quicksand_medium"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/resultado_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_resultado_pesquisa"/>
+</android.support.v7.widget.LinearLayoutCompat>

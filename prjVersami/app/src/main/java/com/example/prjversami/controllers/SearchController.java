@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.prjversami.entities.Autor;
 import com.example.prjversami.entities.Genero;
 import com.example.prjversami.entities.Livro;
+import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.Conexao;
 import com.example.prjversami.util.NavigationUtil;
 
@@ -54,6 +55,74 @@ public class SearchController {
         }
 
         return livros;
+    }
+
+    public List<Livro> pesquisarLivros(String termoPesquisa){
+        List<Livro> livros = new ArrayList<>();
+        String sql = "SELECT idLivro, nomeLivro, imgCapa FROM tblLivro WHERE nomeLivro LIKE ?";
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return null;
+        }
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1, "%"+termoPesquisa+"%");
+            this.con.result = ps.executeQuery();
+
+            while(this.con.result.next()){
+                Livro livro = new Livro();
+                livro.setBookID(this.con.result.getInt("idLivro"));
+                livro.setTitle(this.con.result.getString("nomeLivro"));
+                if(this.con.result.getBytes("imgCapa") != null)
+                    livro.setCover(this.con.result.getBytes("imgCapa"));
+
+                livros.add(livro);
+            }
+            ps.close();
+            c.close();
+        }catch (SQLException e){
+            Log.e("Erro na Consulta", e.getMessage());
+        }
+        return livros;
+    }
+
+    public List<Usuario> pesquisarUsuarios(String termoPesquisa){
+        List<Usuario> usuarios = new ArrayList<>();
+        String sql = "SELECT idUsuario, nome, fotoUsuario FROM tblUsuario WHERE arroba_usuario LIKE ?";
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return null;
+        }
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1, "%"+termoPesquisa+"%");
+            this.con.result = ps.executeQuery();
+
+            while(this.con.result.next()){
+                Usuario user = new Usuario();
+                user.setUserID(this.con.result.getInt("idUsuario"));
+                user.setUserName(this.con.result.getString("nome"));
+                if(this.con.result.getBytes("fotoUsuario") != null)
+                    user.setUserImage(this.con.result.getBytes("imgCapa"));
+
+                usuarios.add(user);
+            }
+            ps.close();
+            c.close();
+        }catch (SQLException e){
+            Log.e("Erro na Consulta", e.getMessage());
+        }
+        return usuarios;
     }
 
     public Livro obterInfoLivro(int idLivro, int idUser){
