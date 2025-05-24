@@ -18,6 +18,9 @@
         android:theme="@style/Theme.MyApp"
         tools:targetApi="31">
         <activity
+            android:name=".views.InfoLivro"
+            android:exported="false" />
+        <activity
             android:name=".views.PostPage"
             android:exported="false" />
         <activity
