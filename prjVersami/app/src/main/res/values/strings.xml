@@ -16,6 +16,7 @@
     <string name="mensagem_semfav">Ainda não há livros favoritos</string>
     <string name="botao_seguir">Seguir</string>
     <string name="botao_seguindo">Seguindo</string>
+    <string name="lorem">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint provident aliquid quas quasi quisquam voluptas, pariatur culpa! Sequi accusamus libero animi error autem eveniet porro, eos quam voluptates unde eum!</string>
 
     <string-array name="spinner_teste">
         <item>Selecione uma pergunta...</item>

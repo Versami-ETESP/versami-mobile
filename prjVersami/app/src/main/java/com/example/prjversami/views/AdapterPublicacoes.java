@@ -104,8 +104,10 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
         holder.userInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int id = user.getUserID();
 
+                if(user.getUserID() == null) return;
+
+                int id = user.getUserID();
                 Fragment fragment = ProfileFragment.newInstance(id);
                 NavigationUtil.carregarFragment(((FragmentActivity) context).getSupportFragmentManager(), R.id.fragment_container, fragment);
             }
