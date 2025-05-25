@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.prjversami.entities.Comentario;
 import com.example.prjversami.entities.Livro;
 import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.entities.Usuario;
@@ -192,7 +193,8 @@ public class PublicacaoController {
                         "u.fotoUsuario, l.nomeLivro, " +
                         "l.imgCapa, " +
                         "(SELECT COUNT(*) FROM tblLikesPorPost lp WHERE lp.idUsuario= ? AND lp.idPublicacao= p.idPublicacao) AS 'liked', " +
-                        "(SELECT COUNT (*) FROM tblLikesPorPost lp where lp.idPublicacao=p.idPublicacao ) as 'totLike' " +
+                        "(SELECT COUNT (*) FROM tblLikesPorPost lp WHERE lp.idPublicacao=p.idPublicacao ) AS 'totLike', " +
+                        "(SELECT COUNT (*) FROM tblComentario c WHERE c.idPublicacao = p.idPublicacao) AS 'totComent' " +
                         "FROM tblPublicacao p " +
                         "JOIN tblUsuario u ON p.idUsuario = u.idUsuario " +
                         "LEFT JOIN tblLivro l ON l.idLivro = p.idLivro " +
@@ -217,6 +219,7 @@ public class PublicacaoController {
             publicacao.setIdPublicacao(con.result.getInt("idPublicacao"));
             publicacao.setContent(con.result.getString("conteudo"));
             publicacao.setTotalLikes(con.result.getInt("totLike"));
+            publicacao.setTotalComentarios(con.result.getInt("totComent"));
             if(con.result.getInt("liked") > 0) publicacao.addLike();
 
             // pegando data e hora no banco para exibir nos posts
@@ -244,28 +247,47 @@ public class PublicacaoController {
      return publicacao;
     }
 
-    /**
-     * Este método consulta no BD e retorna o total de curtidas de uma publicação.
-     * @param id
-     * @return
-     */
-    public String getCurtidas(Integer id){
-        String sql = "SELECT COUNT(*) AS 'totCurtidas' FROM tblLikesPorPost WHERE idPublicacao="+id;
-        String resultado = "";
-
+    public List<Comentario> listarComentarios(int idPublicação, int idUser){
+        List<Comentario> comentarios = new ArrayList<>();
+        String sql = "SELECT c.idComentario, c.comentario, u.arroba_usuario, u.fotoUsuario, u.idUsuario, " +
+                "(SELECT COUNT(*) FROM tblLikesPorComentario lp WHERE lp.idUsuario= ? AND lp.idComentario = c.idComentario) AS 'liked', " +
+                "FROM tblComentario c " +
+                "JOIN tblUsuario u ON c.idUsuario = u.idUsuario " +
+                "WHERE c.idPublicacao = ? ORDER BY c.dataPublic DESC";
         this.con = new Conexao();
-        con.connectDB(this.screen);
+        Connection c = this.con.connectDB(screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return comentarios;
+        }
 
         try{
-            con.result = con.command.executeQuery(sql);
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, idUser);
+            ps.setInt(2, idPublicação);
+            this.con.result = ps.executeQuery();
 
-            if(con.result.next()){
-                resultado = Integer.toString(con.result.getInt("totCurtidas"));
+            while (this.con.result.next()){
+                Usuario user = new Usuario();
+                user.setUserID(this.con.result.getInt("idUsuario"));
+                user.setUserLogin(this.con.result.getString("arroba_usuario"));
+                if(this.con.result.getBytes("fotoUsuario") != null)
+                    user.setUserImage(this.con.result.getBytes("fotoUsuario"));
+                String conteudo = this.con.result.getString("comentario");
+
+                Comentario comentario = new Comentario(conteudo, user);
+                comentario.setIdComentario(this.con.result.getInt("idComentario"));
+                if(this.con.result.getInt("liked") > 0) comentario.addLike();
+
+                comentarios.add(comentario);
             }
-        }catch(SQLException e){
-            Log.e("Erro na consulta SQL: ", e.getMessage());
+            ps.close();
+            c.close();
+        }catch (SQLException e){
+            Log.e("Erro na Consulta", e.getMessage());
         }
-        return resultado;
+        return comentarios;
     }
 
     /**
@@ -318,4 +340,57 @@ public class PublicacaoController {
             Log.e("Erro no Delete SQL: ", e.getMessage());
         }
     }
+
+    public boolean adicionarCurtidaComentario(int idComentario, int idUserLogado){
+        boolean res = false;
+        String sql = "INSERT INTO tblLikesPorComentario (idUsuario, idComentario) VALUES(?,?)";
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(this.screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return false;
+        }
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1,idUserLogado);
+            ps.setInt(2,idComentario);
+            res = ps.executeUpdate() > 0;
+            ps.close();
+            c.close();
+
+        }catch (SQLException e){
+            Log.e("Erro no Insert SQL: ", e.getMessage());
+        }
+        return res;
+    }
+
+    public boolean removeCurtidaComentario(int idComentario, int idUserLogado){
+        boolean res = false;
+        String sql = "DELETE FROM tblLikesPorComentario WHERE idUsuario = ? AND idComentario = ?";
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(this.screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return false;
+        }
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1,idUserLogado);
+            ps.setInt(2,idComentario);
+            res = ps.executeUpdate() > 0;
+            ps.close();
+            c.close();
+
+        }catch (SQLException e){
+            Log.e("Erro no Insert SQL: ", e.getMessage());
+        }
+        return res;
+    }
+
 }

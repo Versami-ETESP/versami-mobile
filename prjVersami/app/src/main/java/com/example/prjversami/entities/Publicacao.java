@@ -10,6 +10,7 @@ public class Publicacao {
     private String postDate;
     private Integer idPublicacao;
     private Integer totalLikes = 0;
+    private Integer totalComentarios = 0;
     private Usuario usuario;
     private Livro livro;
 
@@ -31,6 +32,14 @@ public class Publicacao {
 
     // metodos getters e setters
 
+
+    public Integer getTotalComentarios() {
+        return totalComentarios;
+    }
+
+    public void setTotalComentarios(Integer totalComentarios) {
+        this.totalComentarios = totalComentarios;
+    }
 
     public Integer getTotalLikes() {
         return totalLikes;

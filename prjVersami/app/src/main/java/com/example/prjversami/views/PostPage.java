@@ -2,6 +2,7 @@ package com.example.prjversami.views;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,11 +14,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -25,7 +30,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prjversami.R;
+import com.example.prjversami.controllers.CriarPostController;
 import com.example.prjversami.controllers.PublicacaoController;
+import com.example.prjversami.entities.Comentario;
 import com.example.prjversami.entities.Livro;
 import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.entities.Usuario;
@@ -34,14 +41,18 @@ import com.example.prjversami.util.ImagensUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class PostPage extends AppCompatActivity {
 
     private ImageView profileImage, bookImage;
-    private TextView bookName, profileName, data, content, commentLabel, arroba;
+    private TextView bookName, profileName, data, content, commentLabel, arroba, labelSemComent;
+    private EditText editComentarios;
+    private RecyclerView recyclerComentarios;
     private CheckBox like;
     private LinearLayout bookInfo;
     private Publicacao publicacao;
+    private List<Comentario> comentarios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +71,14 @@ public class PostPage extends AppCompatActivity {
         commentLabel = findViewById(R.id.post_page_labelcomment);
         like = findViewById(R.id.post_page_like);
         bookInfo = findViewById(R.id.post_page_book);
+        labelSemComent = findViewById(R.id.post_page_labelSemComentarios);
+        editComentarios = findViewById(R.id.post_page_editComentario);
+        recyclerComentarios = findViewById(R.id.post_page_comentarios);
         ConstraintLayout containerPost = findViewById(R.id.post_page_container);
         ProgressBar progressBar = findViewById(R.id.post_page_progress);
 
+        editComentarios.setVisibility(View.GONE);
+        recyclerComentarios.setVisibility(View.GONE);
         containerPost.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -74,11 +90,13 @@ public class PostPage extends AppCompatActivity {
         }
 
         PublicacaoController pc = new PublicacaoController(getApplicationContext());
+        int idPublic = bundle.getInt("idPublicacao"), idUser = getSharedPreferences("login",MODE_PRIVATE).getInt("id",0);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                publicacao = pc.obterPublicacao(bundle.getInt("idPublicacao"));
+                publicacao = pc.obterPublicacao(idPublic);
+                comentarios = pc.listarComentarios(idPublic,idUser);
                 Usuario user = publicacao.getUsuario();
                 Livro livro = publicacao.getLivro();
 
@@ -87,6 +105,7 @@ public class PostPage extends AppCompatActivity {
                 data.setText(publicacao.getPostDate());
                 content.setText(publicacao.getContent());
                 like.setText(publicacao.getTotalLikes().toString());
+                commentLabel.setText(publicacao.getTotalComentarios().toString());
                 like.setChecked(publicacao.isLike());
                 if(user.getUserImage() != null)
                     profileImage.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
@@ -99,10 +118,30 @@ public class PostPage extends AppCompatActivity {
                     bookInfo.setVisibility(View.GONE);
                 }
 
+                editComentarios.setVisibility(View.VISIBLE);
+                recyclerComentarios.setVisibility(View.VISIBLE);
                 containerPost.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
+
+                if(comentarios.isEmpty()){
+                    recyclerComentarios.setVisibility(View.GONE);
+                    labelSemComent.setVisibility(View.VISIBLE);
+                }
             }
         },200);
+
+        editComentarios.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                String comentario = editComentarios.getText().toString();
+
+                if(i == EditorInfo.IME_ACTION_SEND){
+
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -126,6 +165,30 @@ public class PostPage extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Comentario criarComentario(int idPublicacao, String comentario){
+        if(comentario.length() > 248){
+            editComentarios.setError("Comentário dever ter no máximo 248 caracteres");
+            return null;
+        }
+        SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
+        Bitmap fotoPerfil = ImagensUtil.pegarImagem("imagemPerfil.jpeg",getApplicationContext());
+
+        Usuario user = new Usuario();
+        user.setUserID(pref.getInt("id",0));
+        user.setUserName(pref.getString("nome",""));
+        user.setUserLogin(pref.getString("arroba",""));
+        if(fotoPerfil != null)
+            user.setUserImage(ImagensUtil.converteParaBytes(fotoPerfil));
+
+        CriarPostController cpc = new CriarPostController(getApplicationContext());
+        Comentario comentObj = new Comentario(comentario,user);
+
+        if(cpc.postarComentario(comentObj,idPublicacao))
+            return comentObj;
+        else
+            return null;
     }
 
     private void personalizarActionBar(){

@@ -1,18 +1,38 @@
 package com.example.prjversami.entities;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Comentario {
 
+    private int idComentario;
     private Usuario user;
     private String content;
-    private Integer like;
-    private Calendar commentDate;
+    private String commentDate;
+    private boolean like;
 
-    public Comentario(String content){
+    public Comentario() {
+
+    }
+
+    public Comentario(String content, Usuario user){
         this.setContent(content);
-        commentDate = Calendar.getInstance();
-        this.like = 0;
+        this.user = user;
+
+        //definindo a data
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date agora = new Date();
+        this.commentDate = df.format(agora);
+    }
+
+
+    public int getIdComentario() {
+        return idComentario;
+    }
+
+    public void setIdComentario(int idComentario) {
+        this.idComentario = idComentario;
     }
 
     public Usuario getUser() {
@@ -31,22 +51,19 @@ public class Comentario {
         this.content = content;
     }
 
-    public Integer getLike() {
-        return like;
-    }
-
-    public Calendar getCommentDate() {
+    public String getCommentDate() {
         return commentDate;
     }
 
-
-    public void addLike(boolean isLike){
-        if(isLike)
-            this.like++;
+    public boolean isLike() {
+        return like;
+    }
+    public void addLike() {
+        this.like = true;
     }
 
-    public void removeLike(boolean isLike){
-        if(!isLike && this.like > 0)
-            this.like--;
+    public void removeLike() {
+        this.like = false;
     }
+
 }

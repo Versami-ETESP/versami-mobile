@@ -3,6 +3,7 @@ package com.example.prjversami.controllers;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.prjversami.entities.Comentario;
 import com.example.prjversami.entities.Livro;
 import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.util.Conexao;
@@ -82,6 +83,36 @@ public class CriarPostController {
         }else{
             NavigationUtil.activityErro(screen);
         }
+        return resposta;
+    }
+
+    public boolean postarComentario(Comentario comentario, int idPublicacao){
+        String sql = "INSERT INTO tblComentario(comentario,data_coment,idPublicacao,idUsuario) VALUES (?,?,?,?)";
+        boolean resposta = false;
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(this.screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return resposta;
+        }
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1,comentario.getContent());
+            ps.setString(2,comentario.getCommentDate());
+            ps.setInt(3,idPublicacao);
+            ps.setInt(4,comentario.getUser().getUserID());
+
+            resposta = ps.executeUpdate() > 0;
+
+            ps.close();
+            c.close();
+        }catch (SQLException e){
+            Log.e("Erro no Insert", e.getMessage());
+        }
+
         return resposta;
     }
 }
