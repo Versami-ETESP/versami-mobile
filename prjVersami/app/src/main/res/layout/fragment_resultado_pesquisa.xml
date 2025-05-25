@@ -31,9 +31,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:text="Nenhum resultado para a pesquisa"
+        android:text="Não foram encontrados resultados para a pesquisa\n:("
         android:textAlignment="center"
-        android:textSize="20dp"
+        android:layout_marginTop="15dp"
+        android:textSize="28dp"
         android:fontFamily="@font/quicksand_medium"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/resultado_recycler"

@@ -53,14 +53,14 @@ public class PublicacaoController {
                 "JOIN tblUsuario u ON p.idUsuario = u.idUsuario " +
                 "LEFT JOIN tblLivro l ON l.idLivro = p.idLivro " +
                 "WHERE p.idUsuario = ? ORDER BY p.dataPublic DESC";
-
+        int idUserLogado = this.screen.getSharedPreferences("login", Context.MODE_PRIVATE).getInt("id", 0);
         this.con = new Conexao();
         Connection c = this.con.connectDB(screen);
 
         if(c != null){
             try{
                 PreparedStatement ps = con.connect.prepareStatement(sql);
-                ps.setInt(1, id);
+                ps.setInt(1, idUserLogado);
                 ps.setInt(2, id);
 
                 this.con.result = ps.executeQuery();

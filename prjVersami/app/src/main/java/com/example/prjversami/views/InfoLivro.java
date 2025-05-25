@@ -44,7 +44,7 @@ public class InfoLivro extends AppCompatActivity {
         progressBar = findViewById(R.id.livroinfo_progress);
         container = findViewById(R.id.livroinfo_container);
 
-        //container.setVisibility(View.GONE);
+        container.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
         Bundle bundle = getIntent().getExtras();
@@ -80,10 +80,10 @@ public class InfoLivro extends AppCompatActivity {
                 if(livro.isFavorite())
                     btnFavorito.setText("Favorito");
 
-                //container.setVisibility(View.VISIBLE);
+                container.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             }
-        },200);
+        },500);
 
         btnFavorito.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +111,18 @@ public class InfoLivro extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    /*
+    public void trocarVisibilidade(int valor){
+        linhas.setVisibility(valor);
+        txtLabel1.setVisibility(valor);
+        txtLabel2.setVisibility(valor);
+        txtTitulo.setVisibility(valor);
+        txtAutor.setVisibility(valor);
+        txtGenero.setVisibility(valor);
+        txtDescricao.setVisibility(valor);
+        imgCapa.setVisibility(valor);
+        btnFavorito.setVisibility(valor);
+    }*/
 
     public void personalizarActionBar(){
         if(getSupportActionBar() == null)

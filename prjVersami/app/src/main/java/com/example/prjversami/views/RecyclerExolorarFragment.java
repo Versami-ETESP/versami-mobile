@@ -1,6 +1,7 @@
 package com.example.prjversami.views;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.SearchController;
@@ -75,10 +78,26 @@ public class RecyclerExolorarFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recycler = view.findViewById(R.id.toplivro_recycler);
+        ProgressBar progressBar = view.findViewById(R.id.topLivro_progress);
+        TextView label = view.findViewById(R.id.toplivro_label);
 
         SearchController sc = new SearchController(getContext());
-        livros = sc.retornaTopLivros();
-        recycler.setAdapter(new AdapterTopLivros(this.livros, getContext()));
-        recycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        progressBar.setVisibility(View.VISIBLE);
+        recycler.setVisibility(View.GONE);
+        label.setVisibility(View.GONE);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                livros = sc.retornaTopLivros();
+                progressBar.setVisibility(View.GONE);
+                recycler.setVisibility(View.VISIBLE);
+                label.setVisibility(View.VISIBLE);
+
+                recycler.setAdapter(new AdapterTopLivros(livros, getContext()));
+                recycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
+            }
+        },200);
     }
 }
