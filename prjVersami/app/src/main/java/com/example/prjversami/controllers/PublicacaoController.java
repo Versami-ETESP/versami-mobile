@@ -49,7 +49,8 @@ public class PublicacaoController {
                 "u.fotoUsuario, l.nomeLivro, " +
                 "l.imgCapa, " +
                 "(SELECT COUNT(*) FROM tblLikesPorPost lp WHERE lp.idUsuario= ? AND lp.idPublicacao= p.idPublicacao) AS 'liked', " +
-                "(SELECT COUNT (*) FROM tblLikesPorPost lp where lp.idPublicacao=p.idPublicacao ) as 'totLike' " +
+                "(SELECT COUNT(*) FROM tblLikesPorPost lp where lp.idPublicacao=p.idPublicacao ) as 'totLike', " +
+                "(SELECT COUNT(*) FROM tblComentario c WHERE c.idPublicacao = p.idPublicacao) AS 'totComent' " +
                 "FROM tblPublicacao p " +
                 "JOIN tblUsuario u ON p.idUsuario = u.idUsuario " +
                 "LEFT JOIN tblLivro l ON l.idLivro = p.idLivro " +
@@ -72,6 +73,7 @@ public class PublicacaoController {
                     pub.setIdPublicacao(con.result.getInt("idPublicacao"));
                     pub.setContent(con.result.getString("conteudo"));
                     pub.setTotalLikes(con.result.getInt("totLike"));
+                    pub.setTotalComentarios(con.result.getInt("totComent"));
 
                     Timestamp timestamp = con.result.getTimestamp("dataPublic");
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -125,7 +127,8 @@ public class PublicacaoController {
                         "u.fotoUsuario, l.nomeLivro, " +
                         "l.imgCapa, " +
                         "(SELECT COUNT(*) FROM tblLikesPorPost lp WHERE lp.idUsuario= ? AND lp.idPublicacao= p.idPublicacao) AS 'liked', " +
-                        "(SELECT COUNT (*) FROM tblLikesPorPost lp where lp.idPublicacao=p.idPublicacao ) as 'totLike' " +
+                        "(SELECT COUNT(*) FROM tblLikesPorPost lp where lp.idPublicacao=p.idPublicacao ) as 'totLike'," +
+                        "(SELECT COUNT(*) FROM tblComentario c WHERE c.idPublicacao = p.idPublicacao) AS 'totComent' " +
                         "FROM tblPublicacao p " +
                         "JOIN tblUsuario u ON p.idUsuario = u.idUsuario " +
                         "LEFT JOIN tblLivro l ON l.idLivro = p.idLivro " +
@@ -147,6 +150,7 @@ public class PublicacaoController {
                     pub.setIdPublicacao(con.result.getInt("idPublicacao"));
                     pub.setContent(con.result.getString("conteudo"));
                     pub.setTotalLikes(con.result.getInt("totLike"));
+                    pub.setTotalComentarios(con.result.getInt("totComent"));
 
                     Timestamp timestamp = con.result.getTimestamp("dataPublic");
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -250,10 +254,10 @@ public class PublicacaoController {
     public List<Comentario> listarComentarios(int idPublicação, int idUser){
         List<Comentario> comentarios = new ArrayList<>();
         String sql = "SELECT c.idComentario, c.comentario, u.arroba_usuario, u.fotoUsuario, u.idUsuario, " +
-                "(SELECT COUNT(*) FROM tblLikesPorComentario lp WHERE lp.idUsuario= ? AND lp.idComentario = c.idComentario) AS 'liked', " +
+                "(SELECT COUNT(*) FROM tblLikesPorComentario lp WHERE lp.idUsuario= ? AND lp.idComentario = c.idComentario) AS 'liked' " +
                 "FROM tblComentario c " +
                 "JOIN tblUsuario u ON c.idUsuario = u.idUsuario " +
-                "WHERE c.idPublicacao = ? ORDER BY c.dataPublic DESC";
+                "WHERE c.idPublicacao = ? ORDER BY c.data_coment DESC";
         this.con = new Conexao();
         Connection c = this.con.connectDB(screen);
 

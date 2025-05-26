@@ -14,6 +14,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -53,6 +55,7 @@ public class PostPage extends AppCompatActivity {
     private LinearLayout bookInfo;
     private Publicacao publicacao;
     private List<Comentario> comentarios;
+    private AdapterComentarios adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,9 @@ public class PostPage extends AppCompatActivity {
 
         personalizarActionBar();
 
+        ConstraintLayout containerPost = findViewById(R.id.post_page_container);
+        ProgressBar progressBar = findViewById(R.id.post_page_progress);
+        View root = findViewById(R.id.post_page_root);
         profileImage = findViewById(R.id.post_page_image);
         bookImage = findViewById(R.id.post_page_cover);
         bookName = findViewById(R.id.post_page_bookname);
@@ -74,8 +80,8 @@ public class PostPage extends AppCompatActivity {
         labelSemComent = findViewById(R.id.post_page_labelSemComentarios);
         editComentarios = findViewById(R.id.post_page_editComentario);
         recyclerComentarios = findViewById(R.id.post_page_comentarios);
-        ConstraintLayout containerPost = findViewById(R.id.post_page_container);
-        ProgressBar progressBar = findViewById(R.id.post_page_progress);
+
+        recyclerComentarios.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         editComentarios.setVisibility(View.GONE);
         recyclerComentarios.setVisibility(View.GONE);
@@ -89,6 +95,7 @@ public class PostPage extends AppCompatActivity {
             return;
         }
 
+
         PublicacaoController pc = new PublicacaoController(getApplicationContext());
         int idPublic = bundle.getInt("idPublicacao"), idUser = getSharedPreferences("login",MODE_PRIVATE).getInt("id",0);
 
@@ -97,18 +104,26 @@ public class PostPage extends AppCompatActivity {
             public void run() {
                 publicacao = pc.obterPublicacao(idPublic);
                 comentarios = pc.listarComentarios(idPublic,idUser);
+                adapter = new AdapterComentarios(comentarios,getApplicationContext());
+                recyclerComentarios.setAdapter(adapter);
+
                 Usuario user = publicacao.getUsuario();
                 Livro livro = publicacao.getLivro();
 
                 profileName.setText(user.getUserName());
-                arroba.setText(user.getUserLogin());
+                arroba.setText("@"+user.getUserLogin());
                 data.setText(publicacao.getPostDate());
                 content.setText(publicacao.getContent());
                 like.setText(publicacao.getTotalLikes().toString());
                 commentLabel.setText(publicacao.getTotalComentarios().toString());
                 like.setChecked(publicacao.isLike());
-                if(user.getUserImage() != null)
+                if(user.getUserImage() != null){
                     profileImage.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
+                }else{
+                    profileImage.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                    profileImage.setImageResource(R.drawable.user_icon_placeholder2);
+                }
+
 
                 if(livro != null){
                     bookInfo.setVisibility(View.VISIBLE);
@@ -123,9 +138,15 @@ public class PostPage extends AppCompatActivity {
                 containerPost.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
 
+
                 if(comentarios.isEmpty()){
                     recyclerComentarios.setVisibility(View.GONE);
                     labelSemComent.setVisibility(View.VISIBLE);
+                    Log.d("Comentarios vazios", "Passei aqui");
+                }else{
+                    labelSemComent.setVisibility(View.GONE);
+                    recyclerComentarios.setVisibility(View.VISIBLE);
+                    Log.d("Comentarios com dados", "Passei aqui");
                 }
             }
         },200);
@@ -136,7 +157,28 @@ public class PostPage extends AppCompatActivity {
                 String comentario = editComentarios.getText().toString();
 
                 if(i == EditorInfo.IME_ACTION_SEND){
+                    Comentario comentObj = criarComentario(idPublic, comentario);
 
+                    if(comentObj == null){
+                        Snackbar.make(root,"Comentário inválido. Verifique os campos.",Snackbar.LENGTH_LONG).show();
+                        return false;
+                    }
+                    CriarPostController cpc = new CriarPostController(getApplicationContext());
+
+                    if(!cpc.postarComentario(comentObj, idPublic)){
+                        Snackbar.make(root,"Erro ao publicar o comentário. Tente novamente mais tarde!",Snackbar.LENGTH_LONG).show();
+                        return false;
+                    }
+                    if(recyclerComentarios.getVisibility() == View.GONE){
+                        labelSemComent.setVisibility(View.GONE);
+                        recyclerComentarios.setVisibility(View.VISIBLE);
+                    }
+                    comentarios.add(comentObj);
+                    publicacao.setTotalComentarios(publicacao.getTotalComentarios()+1);
+                    commentLabel.setText(publicacao.getTotalComentarios().toString());
+                    adapter.notifyItemInserted(comentarios.size() - 1);
+                    recyclerComentarios.scrollToPosition(comentarios.size() -1);
+                    editComentarios.setText("");
                     return true;
                 }
                 return false;
@@ -168,8 +210,13 @@ public class PostPage extends AppCompatActivity {
     }
 
     private Comentario criarComentario(int idPublicacao, String comentario){
+        if(comentario.isEmpty()){
+            editComentarios.setError("Os comentários devem conter algum texto.");
+            return null;
+        }
+
         if(comentario.length() > 248){
-            editComentarios.setError("Comentário dever ter no máximo 248 caracteres");
+            editComentarios.setError("Comentário devem ter no máximo 248 caracteres");
             return null;
         }
         SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
@@ -182,13 +229,7 @@ public class PostPage extends AppCompatActivity {
         if(fotoPerfil != null)
             user.setUserImage(ImagensUtil.converteParaBytes(fotoPerfil));
 
-        CriarPostController cpc = new CriarPostController(getApplicationContext());
-        Comentario comentObj = new Comentario(comentario,user);
-
-        if(cpc.postarComentario(comentObj,idPublicacao))
-            return comentObj;
-        else
-            return null;
+        return new Comentario(comentario,user);
     }
 
     private void personalizarActionBar(){

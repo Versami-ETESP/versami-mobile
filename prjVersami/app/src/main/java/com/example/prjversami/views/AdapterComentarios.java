@@ -2,7 +2,9 @@ package com.example.prjversami.views;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +47,12 @@ public class AdapterComentarios extends RecyclerView.Adapter{
         PublicacaoController pc = new PublicacaoController(context);
         Comentario comentario = comentarios.get(i);
         Usuario user = comentario.getUser();
+
+        Typeface fonteBold = ResourcesCompat.getFont(context, R.font.quicksand_bold);
+        Typeface fonteMedium = ResourcesCompat.getFont(context, R.font.quicksand_medium);
+
+        holder.arrobaUser.setTypeface(fonteBold);
+        holder.conteudo.setTypeface(fonteMedium);
 
         holder.arrobaUser.setText(user.getUserLogin());
         holder.conteudo.setText(comentario.getContent());

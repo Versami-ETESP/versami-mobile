@@ -61,6 +61,7 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
         holder.data.setText(publicacao.getPostDate());
         holder.profileName.setText(user.getUserName());
         holder.arroba.setText("@"+user.getUserLogin());
+        holder.commentLabel.setText(publicacao.getTotalComentarios().toString());
         holder.like.setText(publicacao.getTotalLikes().toString());
         holder.like.setOnCheckedChangeListener(null);
         holder.like.setChecked(publicacao.isLike());
