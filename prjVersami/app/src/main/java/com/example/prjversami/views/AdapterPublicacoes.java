@@ -119,6 +119,7 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
             public void onClick(View view) {
                 Intent intent = new Intent(context, PostPage.class);
                 intent.putExtra("idPublicacao", publicacao.getIdPublicacao());
+                intent.putExtra("idDonoPublic",publicacao.getUsuario().getUserID());
                 context.startActivity(intent);
             }
         });

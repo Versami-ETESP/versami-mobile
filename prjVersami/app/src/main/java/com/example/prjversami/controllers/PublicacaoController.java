@@ -397,4 +397,55 @@ public class PublicacaoController {
         return res;
     }
 
+    public boolean criarDenuncia(int idUser, int idPublicacao){
+        String sql = "INSERT INTO tblDenuncia (idUsuario,idPublicacao,statusDenun) VALUES (?,?,?)";
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return false;
+        }
+        boolean resultado = false;
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, idUser);
+            ps.setInt(2,idPublicacao);
+            ps.setInt(3,1); // 1 é o id de denuncia pendente
+
+            resultado = ps.executeUpdate() > 0;
+            ps.close();
+            c.close();
+        }catch (SQLException e){
+            Log.e("Erro no Insert SQL: ", e.getMessage());
+        }
+        return resultado;
+    }
+
+    public boolean excluirPublicacaoBD(int idPublicacao){
+        String sql = "DELETE FROM tblPublicacao WHERE idPublicacao = ?";
+
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return false;
+        }
+        boolean resultado = false;
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, idPublicacao);
+
+            resultado = ps.executeUpdate() > 0;
+            ps.close();
+            c.close();
+        }catch (SQLException e){
+            Log.e("Erro no Delete SQL: ", e.getMessage());
+        }
+        return resultado;
+    }
+
 }

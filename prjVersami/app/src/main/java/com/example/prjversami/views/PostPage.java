@@ -1,6 +1,7 @@
 package com.example.prjversami.views;
 
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -53,9 +55,11 @@ public class PostPage extends AppCompatActivity {
     private RecyclerView recyclerComentarios;
     private CheckBox like;
     private LinearLayout bookInfo;
+    private View root;
     private Publicacao publicacao;
     private List<Comentario> comentarios;
     private AdapterComentarios adapter;
+    private int idUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class PostPage extends AppCompatActivity {
 
         ConstraintLayout containerPost = findViewById(R.id.post_page_container);
         ProgressBar progressBar = findViewById(R.id.post_page_progress);
-        View root = findViewById(R.id.post_page_root);
+        root = findViewById(R.id.post_page_root);
         profileImage = findViewById(R.id.post_page_image);
         bookImage = findViewById(R.id.post_page_cover);
         bookName = findViewById(R.id.post_page_bookname);
@@ -97,7 +101,8 @@ public class PostPage extends AppCompatActivity {
 
 
         PublicacaoController pc = new PublicacaoController(getApplicationContext());
-        int idPublic = bundle.getInt("idPublicacao"), idUser = getSharedPreferences("login",MODE_PRIVATE).getInt("id",0);
+        int idPublic = bundle.getInt("idPublicacao");
+        idUser = getSharedPreferences("login",MODE_PRIVATE).getInt("id",0);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -200,13 +205,78 @@ public class PostPage extends AppCompatActivity {
                 compartilharNoStories(bitmap);
                 break;
             case R.id.menu_post_page_denunciar:
-                Toast.makeText(getApplicationContext(), "Denunciar publicação", Toast.LENGTH_LONG).show();
+                denunciarPublicacao();
+                break;
+            case R.id.menu_post_page_deletar:
+                excluirPublicação();
                 break;
             case android.R.id.home:
                 finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem itemExcluir = menu.findItem(R.id.menu_post_page_deletar);
+        MenuItem itemDenunciar = menu.findItem(R.id.menu_post_page_denunciar);
+        MenuItem itemCompartilhar = menu.findItem(R.id.menu_post_page_compartilhar);
+
+        this.idUser = getSharedPreferences("login",MODE_PRIVATE).getInt("id",0);
+        int idDonoPublic = getIntent().getExtras().getInt("idDonoPublic");
+
+        if(idDonoPublic == this.idUser){
+            itemExcluir.setVisible(true);
+            itemCompartilhar.setVisible(true);
+            itemDenunciar.setVisible(false);
+        }else{
+            itemExcluir.setVisible(false);
+            itemCompartilhar.setVisible(false);
+            itemDenunciar.setVisible(true);
+        }
+        return true;
+    }
+
+    private void excluirPublicação(){
+        AlertDialog.Builder excluir = new AlertDialog.Builder(this);
+        excluir.setTitle("Excluir Publicação");
+        excluir.setMessage("Você tem certeza que deseja excluir essa publicação?");
+        excluir.setNegativeButton("Não", null);
+        excluir.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                PublicacaoController pc = new PublicacaoController(getApplicationContext());
+                if(pc.excluirPublicacaoBD(publicacao.getIdPublicacao())){
+                    Intent intent = new Intent(PostPage.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    //todo corrigir isso
+                }else{
+                    Snackbar.make(root, "Não foi possível excluir sua publicação. Tente novamente mais tarde",Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+        excluir.create().show();
+    }
+
+    private void denunciarPublicacao(){
+        AlertDialog.Builder denuncia = new AlertDialog.Builder(this);
+        denuncia.setTitle("Denunciar Publicação");
+        denuncia.setMessage("Você tem certeza que deseja denunciar essa publicação?");
+        denuncia.setNegativeButton("Não", null);
+        denuncia.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                PublicacaoController pc = new PublicacaoController(getApplicationContext());
+                if(pc.criarDenuncia(idUser, publicacao.getIdPublicacao())){
+                    Snackbar.make(root, "Denúncia enviada com sucesso. Vamos analisar em breve",Snackbar.LENGTH_LONG).show();
+                }else{
+                    Snackbar.make(root, "Não foi possível enviar sua denúncia. Tente novamente mais tarde",Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+        denuncia.create().show();
     }
 
     private Comentario criarComentario(int idPublicacao, String comentario){
