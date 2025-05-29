@@ -49,6 +49,7 @@ public class EditarPerfil extends AppCompatActivity {
     ProgressBar progressBar;
 
     byte[] capa, perfil;
+    boolean alterou = false;
 
     private static final int REQUEST_FOTO_PERFIL = 100;
     private static final int REQUEST_FOTO_CAPA = 200;
@@ -145,7 +146,14 @@ public class EditarPerfil extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == android.R.id.home){
-            finish();
+            if(this.alterou){
+                Intent intent = new Intent(EditarPerfil.this,MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }else{
+                finish();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -267,6 +275,7 @@ public class EditarPerfil extends AppCompatActivity {
             lc.guardarDados(usuario.getUserID(), nome, arroba_novo, this.perfil);
             desabilitarEdicao();
             Snackbar.make(v, "Dados atualizados com sucesso!", Snackbar.LENGTH_LONG).show();
+            this.alterou = true;
         }else{
             Snackbar.make(v, "Dados não atualizados. Tente mais tarde!", Snackbar.LENGTH_LONG).show();
         }

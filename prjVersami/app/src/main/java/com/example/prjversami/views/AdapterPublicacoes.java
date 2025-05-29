@@ -120,7 +120,7 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
                 Intent intent = new Intent(context, PostPage.class);
                 intent.putExtra("idPublicacao", publicacao.getIdPublicacao());
                 intent.putExtra("idDonoPublic",publicacao.getUsuario().getUserID());
-                context.startActivity(intent);
+               context.startActivity(intent);
             }
         });
     }

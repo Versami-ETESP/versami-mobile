@@ -39,7 +39,9 @@ public class RecyclerPostsFragment extends Fragment {
     private String mParam2;
 
     private PublicacaoController controller;
-    ProgressBar carregando;
+    private ProgressBar carregando;
+    private List<Publicacao> publicacoes;
+    private AdapterPublicacoes adapter;
 
     public RecyclerPostsFragment() {
         // Required empty public constructor
@@ -97,7 +99,7 @@ public class RecyclerPostsFragment extends Fragment {
             @Override
             public void run() {
                 Bundle bundle = getArguments();
-                List<Publicacao> publicacoes = new ArrayList<>();
+                publicacoes = new ArrayList<>();
 
                 if(bundle != null){
                     String frag = bundle.getString("fragment");
@@ -116,9 +118,10 @@ public class RecyclerPostsFragment extends Fragment {
                         txtSemPost.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);
                     }else {
+                        adapter = new AdapterPublicacoes(publicacoes, view.getContext());
                         txtSemPost.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
-                        recyclerView.setAdapter(new AdapterPublicacoes(publicacoes, view.getContext()));
+                        recyclerView.setAdapter(adapter);
                     }
                 }
             }

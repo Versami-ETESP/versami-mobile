@@ -249,9 +249,9 @@ public class PostPage extends AppCompatActivity {
                 PublicacaoController pc = new PublicacaoController(getApplicationContext());
                 if(pc.excluirPublicacaoBD(publicacao.getIdPublicacao())){
                     Intent intent = new Intent(PostPage.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
-                    //todo corrigir isso
                 }else{
                     Snackbar.make(root, "Não foi possível excluir sua publicação. Tente novamente mais tarde",Snackbar.LENGTH_LONG).show();
                 }
