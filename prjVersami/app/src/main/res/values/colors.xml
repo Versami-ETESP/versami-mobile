@@ -8,4 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="versami_blue">#61C1D1</color>
+    <color name="red_like">#ff3a54</color>
+    <color name="green_comment">#72ffc1</color>
 </resources>

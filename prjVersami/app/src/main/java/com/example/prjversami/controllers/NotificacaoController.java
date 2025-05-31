@@ -16,6 +16,12 @@ public class NotificacaoController {
     public static final int COMENTARIO = 3;
     public static final int SEGUIU = 4;
 
+    private Context screen;
+
+    public NotificacaoController(Context context){
+        this.screen = context;
+    }
+
     public static void notificarAcao(int tipoAcao, int idUsuarioAlvo, String arrobaUserAcao, Context context) {
 
         if (tipoAcao < 1 || tipoAcao > 4) {
@@ -64,4 +70,5 @@ public class NotificacaoController {
             Log.e("Erro ao notificar", e.getMessage());
         }
     }
+
 }

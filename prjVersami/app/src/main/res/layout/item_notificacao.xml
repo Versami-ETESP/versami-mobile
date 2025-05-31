@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:layout_marginBottom="5dp"
+    android:id="@+id/itemNotificacao_container"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp"
+        android:layout_marginRight="5dp">
+        <ImageView
+            android:id="@+id/itemNotificacao_imagem"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_favorite"
+            android:background="@color/red_like"/>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/itemNotificacao_txtTipo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipo de Notificação"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:fontFamily="@font/quicksand_bold"/>
+        <TextView
+            android:id="@+id/itemNotificacao_mensagem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mensagem da notificação"
+            android:fontFamily="@font/quicksand_medium"/>
+    </android.support.v7.widget.LinearLayoutCompat>
+</android.support.v7.widget.LinearLayoutCompat>
