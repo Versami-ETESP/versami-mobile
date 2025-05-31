@@ -147,11 +147,9 @@ public class PostPage extends AppCompatActivity {
                 if(comentarios.isEmpty()){
                     recyclerComentarios.setVisibility(View.GONE);
                     labelSemComent.setVisibility(View.VISIBLE);
-                    Log.d("Comentarios vazios", "Passei aqui");
                 }else{
                     labelSemComent.setVisibility(View.GONE);
                     recyclerComentarios.setVisibility(View.VISIBLE);
-                    Log.d("Comentarios com dados", "Passei aqui");
                 }
             }
         },200);
