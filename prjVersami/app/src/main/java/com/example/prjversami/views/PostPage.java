@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,9 +36,11 @@ import android.widget.Toast;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.CriarPostController;
+import com.example.prjversami.controllers.NotificacaoController;
 import com.example.prjversami.controllers.PublicacaoController;
 import com.example.prjversami.entities.Comentario;
 import com.example.prjversami.entities.Livro;
+import com.example.prjversami.entities.Notificacao;
 import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.ImagensUtil;
@@ -59,7 +62,8 @@ public class PostPage extends AppCompatActivity {
     private Publicacao publicacao;
     private List<Comentario> comentarios;
     private AdapterComentarios adapter;
-    private int idUser;
+    private int idUser, idUserAlvo;
+    private String arrobaUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +103,9 @@ public class PostPage extends AppCompatActivity {
             return;
         }
 
-
         PublicacaoController pc = new PublicacaoController(getApplicationContext());
         int idPublic = bundle.getInt("idPublicacao");
+        arrobaUser = getSharedPreferences("login",MODE_PRIVATE).getString("arroba","");
         idUser = getSharedPreferences("login",MODE_PRIVATE).getInt("id",0);
 
         new Handler().postDelayed(new Runnable() {
@@ -115,13 +119,16 @@ public class PostPage extends AppCompatActivity {
                 Usuario user = publicacao.getUsuario();
                 Livro livro = publicacao.getLivro();
 
+                idUserAlvo = user.getUserID();
+
                 profileName.setText(user.getUserName());
                 arroba.setText("@"+user.getUserLogin());
                 data.setText(publicacao.getPostDate());
                 content.setText(publicacao.getContent());
+                like.setOnCheckedChangeListener(null);
+                like.setChecked(publicacao.isLike());
                 like.setText(publicacao.getTotalLikes().toString());
                 commentLabel.setText(publicacao.getTotalComentarios().toString());
-                like.setChecked(publicacao.isLike());
                 if(user.getUserImage() != null){
                     profileImage.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
                 }else{
@@ -151,6 +158,26 @@ public class PostPage extends AppCompatActivity {
                     labelSemComent.setVisibility(View.GONE);
                     recyclerComentarios.setVisibility(View.VISIBLE);
                 }
+
+                like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if(b){
+                            pc.setCurtidas(publicacao.getIdPublicacao());
+                            publicacao.addLike();
+                            publicacao.setTotalLikes(publicacao.getTotalLikes()+1);
+                            like.setText(publicacao.getTotalLikes().toString());
+
+                            if(idUser != idUserAlvo)
+                                NotificacaoController.notificarAcao(Notificacao.CURTIDA_POST,idUserAlvo,arrobaUser,getApplicationContext());
+                        }else{
+                            pc.removeCurtidas(publicacao.getIdPublicacao());
+                            publicacao.removeLike();
+                            publicacao.setTotalLikes(publicacao.getTotalLikes()-1);
+                            like.setText(publicacao.getTotalLikes().toString());
+                        }
+                    }
+                });
             }
         },200);
 
@@ -182,6 +209,9 @@ public class PostPage extends AppCompatActivity {
                     adapter.notifyItemInserted(comentarios.size() - 1);
                     recyclerComentarios.scrollToPosition(comentarios.size() -1);
                     editComentarios.setText("");
+                    if(idUser != idUserAlvo)
+                        NotificacaoController.notificarAcao(Notificacao.COMENTARIO,idUserAlvo,arrobaUser,getApplicationContext());
+
                     return true;
                 }
                 return false;

@@ -43,23 +43,23 @@ public class AdapterNotificacoes extends RecyclerView.Adapter {
         holder.msgNotificacao.setText(notificacao.getMsgNotificacao());
 
         switch (notificacao.getTipoNotificacao()) {
-            case NotificacaoController.CURTIDA_COMENTARIO:
-            case NotificacaoController.CURTIDA_POST:
+            case Notificacao.CURTIDA_COMENTARIO:
+            case Notificacao.CURTIDA_POST:
                 holder.imageView.setImageResource(R.drawable.ic_favorite);
                 holder.imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.red_like));
 
-                if(notificacao.getTipoNotificacao() == NotificacaoController.CURTIDA_POST)
+                if(notificacao.getTipoNotificacao() == Notificacao.CURTIDA_POST)
                     holder.tipoNotificacao.setText("Nova Curtida na sua Publicação");
 
-                if(notificacao.getTipoNotificacao() == NotificacaoController.CURTIDA_COMENTARIO)
+                if(notificacao.getTipoNotificacao() == Notificacao.CURTIDA_COMENTARIO)
                     holder.tipoNotificacao.setText("Nova Curtida no seu Comentario");
                 break;
-            case NotificacaoController.COMENTARIO:
-                holder.tipoNotificacao.setText("Novo Comentário na sua Publicação");
+            case Notificacao.COMENTARIO:
+                holder.tipoNotificacao.setText("Novo Comentário");
                 holder.imageView.setImageResource(R.drawable.ic_comment_image);
                 holder.imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.green_comment));
                 break;
-            case NotificacaoController.SEGUIU:
+            case Notificacao.SEGUIU:
                 holder.tipoNotificacao.setText("Novo Seguidor");
                 holder.imageView.setImageResource(R.drawable.ic_person_add);
                 holder.imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.versami_blue));

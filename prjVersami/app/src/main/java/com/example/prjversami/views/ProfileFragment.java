@@ -24,7 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prjversami.R;
+import com.example.prjversami.controllers.NotificacaoController;
 import com.example.prjversami.controllers.PerfilController;
+import com.example.prjversami.entities.Notificacao;
 import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.NavigationUtil;
 import com.example.prjversami.util.ImagensUtil;
@@ -46,6 +48,8 @@ public class ProfileFragment extends Fragment {
     private FrameLayout frame;
     private PerfilController perCon;
     private int idUsuarioVisualizado;
+    private int idUsuarioLogado;
+    private String arrobaUser;
     private Usuario user;
 
     public ProfileFragment() {
@@ -103,7 +107,8 @@ public class ProfileFragment extends Fragment {
             public void run() {
                 //criando obj usuario e pegando o id do usuario logado
                 SharedPreferences pref = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-                int idUsuarioLogado = pref.getInt("id", 0);
+                idUsuarioLogado = pref.getInt("id", 0);
+                arrobaUser = pref.getString("arroba","");
 
                 if(idUsuarioVisualizado == 0)
                     idUsuarioVisualizado = idUsuarioLogado;
@@ -192,6 +197,8 @@ public class ProfileFragment extends Fragment {
                     user.setSeguidores(user.getSeguidores() + 1);
                     seguidores.setText(user.getSeguidores().toString()+"\nSeguidores");
                     btnSeguir.setText("Seguindo");
+                    if(idUsuarioLogado != idUsuarioVisualizado)
+                        NotificacaoController.notificarAcao(Notificacao.SEGUIU,idUsuarioVisualizado,arrobaUser,getContext());
                 }else{
                     perCon.deixarDeSeguirUsuario(idUsurioLogado, idUsuarioVisualizado);
                     user.setSeguidor(false);

@@ -14,10 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NotificacaoController {
-    public static final int CURTIDA_POST = 1;
-    public static final int CURTIDA_COMENTARIO = 2;
-    public static final int COMENTARIO = 3;
-    public static final int SEGUIU = 4;
 
     private Conexao con;
     private Context screen;
@@ -37,16 +33,16 @@ public class NotificacaoController {
         String mensagem = arrobaUserAcao;
 
         switch (tipoAcao){
-            case CURTIDA_POST:
+            case Notificacao.CURTIDA_POST:
                 mensagem += " curtiu sua publicação";
                 break;
-            case CURTIDA_COMENTARIO:
+            case Notificacao.CURTIDA_COMENTARIO:
                 mensagem += " curtiu seu comentario";
                 break;
-            case COMENTARIO:
+            case Notificacao.COMENTARIO:
                 mensagem += " comentou sua publicação";
                 break;
-            case SEGUIU:
+            case Notificacao.SEGUIU:
                 mensagem += " seguiu você";
                 break;
         }

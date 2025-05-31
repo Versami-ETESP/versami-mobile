@@ -15,8 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.prjversami.R;
+import com.example.prjversami.controllers.NotificacaoController;
 import com.example.prjversami.controllers.PublicacaoController;
 import com.example.prjversami.entities.Comentario;
+import com.example.prjversami.entities.Notificacao;
 import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.ImagensUtil;
 
@@ -48,6 +50,10 @@ public class AdapterComentarios extends RecyclerView.Adapter{
         Comentario comentario = comentarios.get(i);
         Usuario user = comentario.getUser();
 
+        int idUserLogado = context.getSharedPreferences("login",Context.MODE_PRIVATE).getInt("id",0);
+        int idUserAlvo = user.getUserID();
+        String arrobaUserLogado = context.getSharedPreferences("login",Context.MODE_PRIVATE).getString("arroba","");
+
         Typeface fonteBold = ResourcesCompat.getFont(context, R.font.quicksand_bold);
         Typeface fonteMedium = ResourcesCompat.getFont(context, R.font.quicksand_medium);
 
@@ -71,6 +77,8 @@ public class AdapterComentarios extends RecyclerView.Adapter{
                 if(b){
                     if(pc.adicionarCurtidaComentario(comentario.getIdComentario(), idUsuarioLogado)){
                         comentario.addLike();
+                        if(idUserLogado != idUserAlvo)
+                            NotificacaoController.notificarAcao(Notificacao.CURTIDA_COMENTARIO,idUserAlvo,arrobaUserLogado,context);
                     }
                 }else{
                     if(pc.removeCurtidaComentario(comentario.getIdComentario(), idUsuarioLogado)){

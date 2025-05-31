@@ -1,6 +1,10 @@
 package com.example.prjversami.entities;
 
 public class Notificacao {
+    public static final int CURTIDA_POST = 1;
+    public static final int CURTIDA_COMENTARIO = 2;
+    public static final int COMENTARIO = 3;
+    public static final int SEGUIU = 4;
 
     private int idNotificacao, tipoNotificacao;
     private boolean visualizado;

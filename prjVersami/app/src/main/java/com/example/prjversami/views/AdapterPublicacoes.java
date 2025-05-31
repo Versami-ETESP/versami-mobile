@@ -19,8 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.prjversami.R;
+import com.example.prjversami.controllers.NotificacaoController;
 import com.example.prjversami.controllers.PublicacaoController;
 import com.example.prjversami.entities.Livro;
+import com.example.prjversami.entities.Notificacao;
 import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.ImagensUtil;
@@ -56,6 +58,10 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
 
         Usuario user = publicacao.getUsuario();
         Livro livro = publicacao.getLivro();
+
+        int idUserLogado = context.getSharedPreferences("login",Context.MODE_PRIVATE).getInt("id",0);
+        int idUserAlvo = user.getUserID();
+        String arrobaUserLogado = context.getSharedPreferences("login",Context.MODE_PRIVATE).getString("arroba","");
 
         holder.content.setText(publicacao.getContent());
         holder.data.setText(publicacao.getPostDate());
@@ -93,6 +99,9 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
                     publicacao.addLike();
                     publicacao.setTotalLikes(publicacao.getTotalLikes()+1);
                     holder.like.setText(publicacao.getTotalLikes().toString());
+
+                    if(idUserLogado != idUserAlvo)
+                        NotificacaoController.notificarAcao(Notificacao.CURTIDA_POST,idUserAlvo,arrobaUserLogado,context);
                 }else{
                     controller.removeCurtidas(publicacao.getIdPublicacao());
                     publicacao.removeLike();
