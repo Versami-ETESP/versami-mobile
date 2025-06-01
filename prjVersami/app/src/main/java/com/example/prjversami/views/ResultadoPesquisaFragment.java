@@ -8,7 +8,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +23,10 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link resultadoPesquisaFragment#newInstance} factory method to
+ * Use the {@link ResultadoPesquisaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class resultadoPesquisaFragment extends Fragment {
+public class ResultadoPesquisaFragment extends Fragment {
 
     private static final String ARG_PESQUISA = "PESQUISA";
 
@@ -39,13 +38,13 @@ public class resultadoPesquisaFragment extends Fragment {
     private List<Livro> livros;
     private List<Usuario> usuarios;
 
-    public resultadoPesquisaFragment() {
+    public ResultadoPesquisaFragment() {
         // Required empty public constructor
     }
 
 
-    public static resultadoPesquisaFragment newInstance(String pesquisa) {
-        resultadoPesquisaFragment fragment = new resultadoPesquisaFragment();
+    public static ResultadoPesquisaFragment newInstance(String pesquisa) {
+        ResultadoPesquisaFragment fragment = new ResultadoPesquisaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PESQUISA, pesquisa);
         fragment.setArguments(args);

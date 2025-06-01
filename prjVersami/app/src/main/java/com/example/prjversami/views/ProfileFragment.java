@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.NotificacaoController;
@@ -235,7 +233,7 @@ public class ProfileFragment extends Fragment {
                 editor.putInt("id", -1);
                 editor.apply();
                 ImagensUtil.apagarImagem("imagemPerfil.jpeg", getContext());
-                startActivity(new Intent(getContext(), splash.class));
+                startActivity(new Intent(getContext(), Splash.class));
                 getActivity().finish();
                 return true;
             default:

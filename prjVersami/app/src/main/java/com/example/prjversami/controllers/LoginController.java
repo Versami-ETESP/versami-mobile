@@ -148,4 +148,29 @@ public class LoginController {
         }
         return retorno;
     }
+
+    public void atualizarDadosUsuario(int idUsuario){
+        String sql = "SELECT nome, arroba_usuario, fotoUsuario FROM tblUsuario WHERE idUsuario = ?";
+        this.con = new Conexao();
+        Connection c = this.con.connectDB(screen);
+
+        if(c == null){
+            NavigationUtil.activityErro(screen);
+            return;
+        }
+
+        try{
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1,idUsuario);
+            this.con.result = ps.executeQuery();
+            if(this.con.result.next()){
+                String nomeUser = con.result.getString("nome");
+                String arroba = con.result.getString("arroba_usuario");
+                byte[] imagem = con.result.getBytes("fotoUsuario");
+                guardarDados(idUsuario,nomeUser,arroba,imagem);
+            }
+        }catch (SQLException e){
+            Log.e("SQL erro", "Erro ao executar query: " + e.getMessage());
+        }
+    }
 }

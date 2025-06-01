@@ -12,6 +12,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.provider.OpenableColumns;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -94,7 +96,11 @@ public class ImagensUtil {
         Usuario user = publicacao.getUsuario();
 
         if(user.getUserImage() != null){
-            imagemUser.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
+            //deixando a imagem circular para aparecer no stories
+            Bitmap imagem = ImagensUtil.converteParaBitmap(user.getUserImage());
+            RoundedBitmapDrawable rounded = RoundedBitmapDrawableFactory.create(context.getResources(),imagem);
+            rounded.setCircular(true);
+            imagemUser.setImageDrawable(rounded);
         }else{
             imagemUser.setImageResource(R.drawable.user_icon_placeholder2);
             imagemUser.setBackgroundColor(Color.parseColor("#D3D3D3"));
@@ -159,19 +165,6 @@ public class ImagensUtil {
             cursor.close();
         }
         return false;
-    }
-
-    public static Bitmap recorteImagem(Bitmap bitmap){
-        int larguraOriginal = bitmap.getWidth();
-        int alturaOriginal = bitmap.getHeight();
-
-        int recorteLargura = larguraOriginal/2;
-        int recorteAltura = alturaOriginal/2;
-
-        int x = larguraOriginal/4;
-        int y = alturaOriginal/4;
-
-        return Bitmap.createBitmap(bitmap, x, y, recorteLargura, recorteAltura);
     }
 
     public static Bitmap recorteImagemPerfil(Bitmap bitmap) {

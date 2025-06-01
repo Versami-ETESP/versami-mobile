@@ -36,22 +36,19 @@
             android:name=".views.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".views.teste"
+            android:name=".views.Cadastro2"
             android:exported="false" />
         <activity
-            android:name=".views.cadastro2"
+            android:name=".views.Login"
             android:exported="false" />
         <activity
-            android:name=".views.login"
+            android:name=".views.TelaBemvindo"
             android:exported="false" />
         <activity
-            android:name=".views.telaBemvindo"
+            android:name=".views.Cadastro"
             android:exported="false" />
         <activity
-            android:name=".views.cadastro"
-            android:exported="false" />
-        <activity
-            android:name=".views.splash"
+            android:name=".views.Splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

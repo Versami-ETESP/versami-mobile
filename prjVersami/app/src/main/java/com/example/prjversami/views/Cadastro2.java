@@ -12,8 +12,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -30,7 +28,7 @@ import com.example.prjversami.entities.Usuario;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class cadastro2 extends AppCompatActivity {
+public class Cadastro2 extends AppCompatActivity {
 
     Usuario user;
     Button btnCadastrar;
@@ -130,7 +128,7 @@ public class cadastro2 extends AppCompatActivity {
             user.setUserImage(img);
 
         if (cad.register(user)) {
-            Intent tela = new Intent(cadastro2.this, login.class);
+            Intent tela = new Intent(Cadastro2.this, Login.class);
             startActivity(tela);
             finish();
         } else {

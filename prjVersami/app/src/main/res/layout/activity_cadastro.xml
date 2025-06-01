@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#61c1d1"
     android:fillViewport="true"
-    tools:context=".views.cadastro">
+    tools:context=".views.Cadastro">
 <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">

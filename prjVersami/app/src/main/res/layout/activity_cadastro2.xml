@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/versami_blue"
     android:onClick="abrirArquivos"
-    tools:context=".views.cadastro2">
+    tools:context=".views.Cadastro2">
 
     <ImageView
         android:id="@+id/cadastro_imgLogo2"

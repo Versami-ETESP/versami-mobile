@@ -22,7 +22,7 @@ import com.example.prjversami.util.Criptografia;
 
 import java.util.ArrayList;
 
-public class cadastro extends AppCompatActivity {
+public class Cadastro extends AppCompatActivity {
 
     EditText name, email, pass, confirm, birth, answer;
     Button btnLogin, btnNext;
@@ -95,7 +95,7 @@ public class cadastro extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent tela = new Intent(cadastro.this, login.class);
+                Intent tela = new Intent(Cadastro.this, Login.class);
                 startActivity(tela);
                 finish();
             }
@@ -111,7 +111,7 @@ public class cadastro extends AppCompatActivity {
                 } else if (((Pergunta) spnPergunta.getSelectedItem()).getIdPergunta() <= 0) {
                     Snackbar.make(view, "Por favor, selecione uma pergunta!", Snackbar.LENGTH_LONG).show();
                 } else {
-                    Intent tela = new Intent(cadastro.this, cadastro2.class);
+                    Intent tela = new Intent(Cadastro.this, Cadastro2.class);
                     tela.putExtra("nome", name.getText().toString());
                     tela.putExtra("email", email.getText().toString());
                     tela.putExtra("nasc", birth.getText().toString());

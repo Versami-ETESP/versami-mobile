@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".views.resultadoPesquisaFragment">
+    tools:context=".views.ResultadoPesquisaFragment">
     <ProgressBar
         android:id="@+id/resultado_progress"
         android:layout_width="wrap_content"

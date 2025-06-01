@@ -8,7 +8,7 @@ import android.widget.Button;
 
 import com.example.prjversami.R;
 
-public class telaBemvindo extends AppCompatActivity {
+public class TelaBemvindo extends AppCompatActivity {
 
     Button btnNext;
 
@@ -22,7 +22,7 @@ public class telaBemvindo extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(telaBemvindo.this, login.class);
+                Intent intent = new Intent(TelaBemvindo.this, Login.class);
                 startActivity(intent);
             }
         });

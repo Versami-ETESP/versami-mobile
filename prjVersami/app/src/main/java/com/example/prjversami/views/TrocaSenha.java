@@ -88,7 +88,7 @@ public class TrocaSenha extends AppCompatActivity {
 
         if(lc.alteraSenha(this.user, resposta)){
             Snackbar.make(v, "Senha Alterada", Snackbar.LENGTH_LONG).show();
-            startActivity(new Intent(TrocaSenha.this, login.class));
+            startActivity(new Intent(TrocaSenha.this, Login.class));
             finish();
         }else{
             Snackbar.make(v, "Erro ao alterar a senha. Tente Novamente!", Snackbar.LENGTH_LONG).show();

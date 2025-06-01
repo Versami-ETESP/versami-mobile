@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/youngman"
     android:orientation="vertical"
-    tools:context=".views.telaBemvindo" >
+    tools:context=".views.TelaBemvindo" >
 
     <ImageView
         android:id="@+id/imageView4"

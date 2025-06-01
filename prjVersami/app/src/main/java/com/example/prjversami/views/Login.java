@@ -11,7 +11,7 @@ import android.widget.EditText;
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.LoginController;
 
-public class login extends AppCompatActivity {
+public class Login extends AppCompatActivity {
 
     Button btnAcessar, btnCadastrar, btnTrocaSenha;
     EditText txtUsuario, txtSenha;
@@ -33,7 +33,7 @@ public class login extends AppCompatActivity {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent tela = new Intent(login.this, cadastro.class);
+                Intent tela = new Intent(Login.this, Cadastro.class);
                 startActivity(tela);
                 finish();
             }
@@ -45,7 +45,7 @@ public class login extends AppCompatActivity {
 
                 if (!txtSenha.getText().toString().isEmpty() && !txtUsuario.getText().toString().isEmpty()) {
                     if (log.login(txtUsuario.getText().toString(), txtSenha.getText().toString())) {
-                        Intent tela = new Intent(login.this, MainActivity.class);
+                        Intent tela = new Intent(Login.this, MainActivity.class);
                         startActivity(tela);
                         finish();
                     } else {
@@ -60,7 +60,7 @@ public class login extends AppCompatActivity {
         btnTrocaSenha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(login.this, TrocaSenha.class));
+                startActivity(new Intent(Login.this, TrocaSenha.class));
             }
         });
     }
