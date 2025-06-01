@@ -113,7 +113,7 @@ public class SearchController {
                 user.setUserID(this.con.result.getInt("idUsuario"));
                 user.setUserName(this.con.result.getString("nome"));
                 if(this.con.result.getBytes("fotoUsuario") != null)
-                    user.setUserImage(this.con.result.getBytes("imgCapa"));
+                    user.setUserImage(this.con.result.getBytes("fotoUsuario"));
 
                 usuarios.add(user);
             }

@@ -37,6 +37,7 @@ import com.example.prjversami.util.Conexao;
 import com.example.prjversami.util.ImagensUtil;
 import com.example.prjversami.util.Validacao;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -47,6 +48,7 @@ public class EditarPerfil extends AppCompatActivity {
     ImageButton btnAlterarCapa, btnAlterarPerfil;
     Button btnSalvar, btnEditar;
     ProgressBar progressBar;
+    View view;
 
     byte[] capa, perfil;
     boolean alterou = false;
@@ -61,6 +63,7 @@ public class EditarPerfil extends AppCompatActivity {
 
         personalizarActionBar();
 
+        view = findViewById(R.id.editPerfil_view);
         txtNome = findViewById(R.id.editPerfil_txtNome);
         txtArroba = findViewById(R.id.editPerfil_txtArroba);
         txtBio = findViewById(R.id.editPerfil_bio);
@@ -118,27 +121,31 @@ public class EditarPerfil extends AppCompatActivity {
         if(resultCode == Activity.RESULT_OK && data != null){
             Uri uri = data.getData();
 
-            switch (requestCode){
-                case REQUEST_FOTO_PERFIL:
-                    try {
-                        InputStream input = getContentResolver().openInputStream(uri);
-                        Bitmap bitmap = BitmapFactory.decodeStream(input);
-                        this.imgPerfil.setImageBitmap(bitmap);
-                        this.perfil = ImagensUtil.converteParaBytes(bitmap);
-                    } catch (IOException e) {
-                        Log.e("Erro ao obter imagem", e.getMessage());
-                    }
-                    break;
-                case REQUEST_FOTO_CAPA:
-                    try {
-                        InputStream input = getContentResolver().openInputStream(uri);
-                        Bitmap bitmap = BitmapFactory.decodeStream(input);
+            if(!ImagensUtil.verificarTamanhoImagem(uri, getApplicationContext())){
+                Snackbar.make(view,"Arquivo acima do limite permitido. Max: 2MB",Snackbar.LENGTH_LONG).show();
+                return;
+            }
+
+            try(InputStream input = getContentResolver().openInputStream(uri)){
+
+                Bitmap bitmap = BitmapFactory.decodeStream(input);
+
+                switch (requestCode){
+                    case REQUEST_FOTO_PERFIL:
+                        if(bitmap.getHeight() > bitmap.getWidth()){
+                            Snackbar.make(view,"Use imagem quadrada (1:1) para melhor aparência.",Snackbar.LENGTH_LONG).show();
+                        }
+                        Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 1024,1024, true);
+                        this.imgPerfil.setImageBitmap(scaled);
+                        this.perfil = ImagensUtil.converteParaBytes(scaled);
+                        break;
+                    case REQUEST_FOTO_CAPA:
                         this.imgCapa.setImageBitmap(bitmap);
                         this.capa = ImagensUtil.converteParaBytes(bitmap);
-                    } catch (IOException e) {
-                        Log.e("Erro ao obter imagem", e.getMessage());
-                    }
-                    break;
+                        break;
+                }
+            }catch (IOException e){
+                Log.e("Erro ao obter imagem", e.getMessage());
             }
         }
     }

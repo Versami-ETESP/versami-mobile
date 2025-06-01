@@ -1,6 +1,7 @@
 package com.example.prjversami.util;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +10,8 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -139,5 +142,45 @@ public class ImagensUtil {
         roundedCanvas.drawBitmap(bitmapOriginal, 0f, 0f, paint);
 
         return rounded;
+    }
+
+    public static boolean verificarTamanhoImagem(Uri uri, Context context){
+        int maxBytes = 2*1024*1024;
+        Cursor cursor = context.getContentResolver().query(uri, null,null,null,null);
+
+        if(cursor != null){
+            int tamanhoIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+
+            if(tamanhoIndex != -1 && cursor.moveToFirst()){
+                long tamanho = cursor.getLong(tamanhoIndex);
+                cursor.close();
+                return tamanho <= maxBytes;
+            }
+            cursor.close();
+        }
+        return false;
+    }
+
+    public static Bitmap croparCapa(Bitmap bitmap, int larguraAlvo, int alturaAlvo){
+        int larguraOriginal = bitmap.getWidth();
+        int alturaOriginal = bitmap.getHeight();
+
+        float aspectOriginal = (float) larguraOriginal/alturaOriginal;
+        float aspectoAlvo = (float) larguraAlvo/alturaAlvo;
+
+        int corteLargura = larguraOriginal;
+        int corteAltura = alturaOriginal;
+
+        if(aspectOriginal > aspectoAlvo){
+            corteLargura = (int)(alturaOriginal * aspectoAlvo);
+        }else{
+            corteAltura = (int)(larguraOriginal * aspectoAlvo);
+        }
+
+        int x = (larguraOriginal - corteLargura)/2;
+        int y = (alturaOriginal - corteAltura)/2;
+
+        Bitmap crop = Bitmap.createBitmap(bitmap, x, y, corteLargura, corteAltura);
+        return Bitmap.createScaledBitmap(crop, larguraAlvo, alturaAlvo, true);
     }
 }

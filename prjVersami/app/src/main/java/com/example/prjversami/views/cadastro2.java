@@ -15,10 +15,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.CadastroController;
@@ -69,13 +71,16 @@ public class cadastro2 extends AppCompatActivity {
          */
         if (requestCode == 12 && resultCode == Activity.RESULT_OK && data != null) {
             Uri uri = data.getData();
-            try {
-                InputStream input = getContentResolver().openInputStream(uri);
+            if(!ImagensUtil.verificarTamanhoImagem(uri,getApplicationContext())){
+                Toast.makeText(getApplicationContext(),"Arquivo acima do limite permitido. Max: 2MB",Toast.LENGTH_LONG).show();
+                return;
+            }
+            try(InputStream input = getContentResolver().openInputStream(uri)) {
                 Bitmap bitmap = BitmapFactory.decodeStream(input);
                 userImage.setImageBitmap(bitmap);
                 img = ImagensUtil.converteParaBytes(bitmap);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("Erro ao obter imagem", e.getMessage());
             }
         }
     }
