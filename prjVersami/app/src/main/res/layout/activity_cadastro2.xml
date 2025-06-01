@@ -52,7 +52,7 @@
             android:clickable="true"
             android:focusable="true"
             android:onClick="abrirArquivos"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@drawable/user_icon_placeholder2"
 
             />

@@ -132,14 +132,16 @@ public class EditarPerfil extends AppCompatActivity {
 
                 switch (requestCode){
                     case REQUEST_FOTO_PERFIL:
-                        if(bitmap.getHeight() > bitmap.getWidth()){
-                            Snackbar.make(view,"Use imagem quadrada (1:1) para melhor aparência.",Snackbar.LENGTH_LONG).show();
+                        if(bitmap.getHeight() != bitmap.getWidth()){
+                            Snackbar.make(view,"Imagem ajustada para melhor aparência.",Snackbar.LENGTH_LONG).show();
+                            bitmap = ImagensUtil.recorteImagemPerfil(bitmap);
                         }
-                        Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 1024,1024, true);
-                        this.imgPerfil.setImageBitmap(scaled);
-                        this.perfil = ImagensUtil.converteParaBytes(scaled);
+                        this.imgPerfil.setImageBitmap(bitmap);
+                        this.perfil = ImagensUtil.converteParaBytes(bitmap);
                         break;
                     case REQUEST_FOTO_CAPA:
+                        Snackbar.make(view,"Imagem ajustada para melhor aparência.",Snackbar.LENGTH_LONG).show();
+                        bitmap = ImagensUtil.recorteImagemCapa(bitmap);
                         this.imgCapa.setImageBitmap(bitmap);
                         this.capa = ImagensUtil.converteParaBytes(bitmap);
                         break;

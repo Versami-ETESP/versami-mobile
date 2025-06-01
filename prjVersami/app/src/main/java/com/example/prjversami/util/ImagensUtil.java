@@ -161,26 +161,73 @@ public class ImagensUtil {
         return false;
     }
 
-    public static Bitmap croparCapa(Bitmap bitmap, int larguraAlvo, int alturaAlvo){
+    public static Bitmap recorteImagem(Bitmap bitmap){
         int larguraOriginal = bitmap.getWidth();
         int alturaOriginal = bitmap.getHeight();
 
-        float aspectOriginal = (float) larguraOriginal/alturaOriginal;
-        float aspectoAlvo = (float) larguraAlvo/alturaAlvo;
+        int recorteLargura = larguraOriginal/2;
+        int recorteAltura = alturaOriginal/2;
 
-        int corteLargura = larguraOriginal;
-        int corteAltura = alturaOriginal;
+        int x = larguraOriginal/4;
+        int y = alturaOriginal/4;
 
-        if(aspectOriginal > aspectoAlvo){
-            corteLargura = (int)(alturaOriginal * aspectoAlvo);
-        }else{
-            corteAltura = (int)(larguraOriginal * aspectoAlvo);
+        return Bitmap.createBitmap(bitmap, x, y, recorteLargura, recorteAltura);
+    }
+
+    public static Bitmap recorteImagemPerfil(Bitmap bitmap) {
+        int larguraOriginal = bitmap.getWidth();
+        int alturaOriginal = bitmap.getHeight();
+
+        int tamanhoLado;
+        int x;
+        int y;
+
+        if (larguraOriginal <= alturaOriginal) {
+            tamanhoLado = larguraOriginal;
+            x = 0;
+            y = (alturaOriginal - tamanhoLado) / 2;
+        } else {
+            tamanhoLado = alturaOriginal;
+            x = (larguraOriginal - tamanhoLado) / 2;
+            y = 0;
         }
 
-        int x = (larguraOriginal - corteLargura)/2;
-        int y = (alturaOriginal - corteAltura)/2;
+        Bitmap novoBitmap = Bitmap.createBitmap(bitmap, x, y, tamanhoLado, tamanhoLado);
 
-        Bitmap crop = Bitmap.createBitmap(bitmap, x, y, corteLargura, corteAltura);
-        return Bitmap.createScaledBitmap(crop, larguraAlvo, alturaAlvo, true);
+        if(novoBitmap.getHeight() > 720 || novoBitmap.getHeight() > 720)
+            novoBitmap = Bitmap.createScaledBitmap(novoBitmap, 720, 720, true);
+
+        return novoBitmap;
+    }
+
+    public static Bitmap recorteImagemCapa(Bitmap bitmap) {
+        int larguraOriginal = bitmap.getWidth();
+        int alturaOriginal = bitmap.getHeight();
+
+        double proporcaoDesejada = 16.0 / 9.0;
+
+        int novaLargura;
+        int novaAltura;
+        int x;
+        int y;
+
+
+        double alturaCalculadaPelaLargura = larguraOriginal / proporcaoDesejada;
+
+        if (alturaCalculadaPelaLargura <= alturaOriginal) {
+
+            novaLargura = larguraOriginal;
+            novaAltura = (int) alturaCalculadaPelaLargura;
+            x = 0;
+            y = (alturaOriginal - novaAltura) / 2;
+        } else {
+
+            novaAltura = alturaOriginal;
+            novaLargura = (int) (alturaOriginal * proporcaoDesejada);
+            x = (larguraOriginal - novaLargura) / 2;
+            y = 0;
+        }
+
+        return Bitmap.createBitmap(bitmap, x, y, novaLargura, novaAltura);
     }
 }

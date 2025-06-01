@@ -77,6 +77,10 @@ public class cadastro2 extends AppCompatActivity {
             }
             try(InputStream input = getContentResolver().openInputStream(uri)) {
                 Bitmap bitmap = BitmapFactory.decodeStream(input);
+                if(bitmap.getHeight() != bitmap.getWidth()){
+                    Toast.makeText(getApplicationContext(),"Imagem ajustada para melhor aparência.",Toast.LENGTH_LONG).show();
+                    bitmap = ImagensUtil.recorteImagemPerfil(bitmap);
+                }
                 userImage.setImageBitmap(bitmap);
                 img = ImagensUtil.converteParaBytes(bitmap);
             } catch (IOException e) {
