@@ -8,6 +8,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,8 @@ public class AdapterPublicacoes extends RecyclerView.Adapter {
         }else{
             holder.bookInfo.setVisibility(View.GONE);
         }
+
+        Log.d("Adapter", "Bind: id=" + publicacao.getIdPublicacao() + " like=" + publicacao.isLike());
 
         // evento que verifica a mudança de estado do checkbox de curtidas
         holder.like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

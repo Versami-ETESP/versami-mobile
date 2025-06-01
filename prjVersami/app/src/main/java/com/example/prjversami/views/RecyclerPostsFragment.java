@@ -1,7 +1,5 @@
 package com.example.prjversami.views;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.PublicacaoController;
 import com.example.prjversami.entities.Publicacao;
+import com.example.prjversami.util.Compartilha;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,4 +126,55 @@ public class RecyclerPostsFragment extends Fragment {
             }
         },200);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!Compartilha.isLikeAlterado() || Compartilha.getPublicacaoAlterada() == null) return;
+
+        Log.d("Recycler","Passei aqui");
+        for(int i = 0; i < publicacoes.size(); i++){
+
+            if(publicacoes.get(i).getIdPublicacao() == Compartilha.getPublicacaoAlterada().getIdPublicacao()){
+                publicacoes.get(i).setTotalLikes(Compartilha.getPublicacaoAlterada().getTotalLikes());
+                if(Compartilha.getPublicacaoAlterada().isLike())
+                    publicacoes.get(i).addLike();
+                else
+                    publicacoes.get(i).removeLike();
+                adapter.notifyItemChanged(i);
+                break;
+            }
+        }
+        Compartilha.resetDados();
+    }
+
+    public void onResumeManual(){
+        if(Compartilha.getPublicacaoAlterada() == null) return;
+        int idAlterado = Compartilha.getPublicacaoAlterada().getIdPublicacao();
+        for(int i = 0; i < publicacoes.size(); i++){
+
+            if(publicacoes.get(i).getIdPublicacao() == idAlterado){
+                if(Compartilha.isPublicacaoExcluida()){
+                    publicacoes.remove(i);
+                    adapter.notifyItemRemoved(i);
+                    Compartilha.resetDados();
+                    Compartilha.setPublicacaoExcluida(false);
+                    return;
+                }
+
+                if(Compartilha.isLikeAlterado()){
+                    publicacoes.get(i).setTotalLikes(Compartilha.getPublicacaoAlterada().getTotalLikes());
+                    if(Compartilha.getPublicacaoAlterada().isLike())
+                        publicacoes.get(i).addLike();
+                    else
+                        publicacoes.get(i).removeLike();
+                    publicacoes.get(i).setTotalComentarios(Compartilha.getPublicacaoAlterada().getTotalComentarios());
+                    adapter.notifyItemChanged(i);
+                }
+                break;
+            }
+        }
+        Compartilha.resetDados();
+    }
+
 }

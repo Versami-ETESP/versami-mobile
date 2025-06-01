@@ -33,6 +33,7 @@ import com.example.prjversami.R;
 import com.example.prjversami.controllers.LoginController;
 import com.example.prjversami.controllers.PerfilController;
 import com.example.prjversami.entities.Usuario;
+import com.example.prjversami.util.Compartilha;
 import com.example.prjversami.util.Conexao;
 import com.example.prjversami.util.ImagensUtil;
 import com.example.prjversami.util.Validacao;
@@ -155,14 +156,8 @@ public class EditarPerfil extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == android.R.id.home){
-            if(this.alterou){
-                Intent intent = new Intent(EditarPerfil.this,MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
-            }else{
-                finish();
-            }
+            if(this.alterou) Compartilha.setEditouPerfil(true);
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }

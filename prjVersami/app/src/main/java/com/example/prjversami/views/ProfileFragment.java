@@ -31,6 +31,8 @@ import com.example.prjversami.entities.Usuario;
 import com.example.prjversami.util.NavigationUtil;
 import com.example.prjversami.util.ImagensUtil;
 
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ProfileFragment#newInstance} factory method to
@@ -238,6 +240,17 @@ public class ProfileFragment extends Fragment {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        List<Fragment> filhos = getChildFragmentManager().getFragments();
+        for (Fragment f : filhos) {
+            if (f instanceof RecyclerPostsFragment) {
+                ((RecyclerPostsFragment) f).onResumeManual();
+            }
         }
     }
 

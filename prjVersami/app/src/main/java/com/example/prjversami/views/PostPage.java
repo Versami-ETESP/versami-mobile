@@ -16,7 +16,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,7 +31,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.CriarPostController;
@@ -43,6 +41,7 @@ import com.example.prjversami.entities.Livro;
 import com.example.prjversami.entities.Notificacao;
 import com.example.prjversami.entities.Publicacao;
 import com.example.prjversami.entities.Usuario;
+import com.example.prjversami.util.Compartilha;
 import com.example.prjversami.util.ImagensUtil;
 
 import java.io.File;
@@ -62,7 +61,9 @@ public class PostPage extends AppCompatActivity {
     private Publicacao publicacao;
     private List<Comentario> comentarios;
     private AdapterComentarios adapter;
+
     private int idUser, idUserAlvo;
+    private boolean mudouStatus = false;
     private String arrobaUser;
 
     @Override
@@ -170,11 +171,15 @@ public class PostPage extends AppCompatActivity {
 
                             if(idUser != idUserAlvo)
                                 NotificacaoController.notificarAcao(Notificacao.CURTIDA_POST,idUserAlvo,arrobaUser,getApplicationContext());
+                            mudouStatus = true;
+                            Log.d("like", "passei aqui");
                         }else{
                             pc.removeCurtidas(publicacao.getIdPublicacao());
                             publicacao.removeLike();
                             publicacao.setTotalLikes(publicacao.getTotalLikes()-1);
                             like.setText(publicacao.getTotalLikes().toString());
+                            mudouStatus = true;
+                            Log.d("like", "passei aqui");
                         }
                     }
                 });
@@ -211,7 +216,7 @@ public class PostPage extends AppCompatActivity {
                     editComentarios.setText("");
                     if(idUser != idUserAlvo)
                         NotificacaoController.notificarAcao(Notificacao.COMENTARIO,idUserAlvo,arrobaUser,getApplicationContext());
-
+                    mudouStatus = true;
                     return true;
                 }
                 return false;
@@ -239,6 +244,17 @@ public class PostPage extends AppCompatActivity {
                 excluirPublicação();
                 break;
             case android.R.id.home:
+                if(mudouStatus){
+                    Publicacao alterado = new Publicacao();
+                    alterado.setIdPublicacao(publicacao.getIdPublicacao());
+                    if(mudouStatus) alterado.addLike();
+                    else alterado.removeLike();
+                    alterado.setTotalLikes(publicacao.getTotalLikes());
+                    alterado.setTotalComentarios(publicacao.getTotalComentarios());
+                    Compartilha.setLikeAlterado(true);
+                    Compartilha.setPublicacaoAlterada(publicacao);
+                    Log.d("Post", "passei aqui");
+                }
                 finish();
                 break;
         }
@@ -266,6 +282,22 @@ public class PostPage extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(mudouStatus){
+            Publicacao alterado = new Publicacao();
+            alterado.setIdPublicacao(publicacao.getIdPublicacao());
+            if(mudouStatus) alterado.addLike();
+            else alterado.removeLike();
+            alterado.setTotalLikes(publicacao.getTotalLikes());
+            Compartilha.setLikeAlterado(true);
+            Compartilha.setPublicacaoAlterada(publicacao);
+            Log.d("Post", "passei aqui");
+        }
+        finish();
+    }
+
     private void excluirPublicação(){
         AlertDialog.Builder excluir = new AlertDialog.Builder(this);
         excluir.setTitle("Excluir Publicação");
@@ -276,9 +308,8 @@ public class PostPage extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 PublicacaoController pc = new PublicacaoController(getApplicationContext());
                 if(pc.excluirPublicacaoBD(publicacao.getIdPublicacao())){
-                    Intent intent = new Intent(PostPage.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    Compartilha.setPublicacaoExcluida(true);
+                    Compartilha.setPublicacaoAlterada(publicacao);
                     finish();
                 }else{
                     Snackbar.make(root, "Não foi possível excluir sua publicação. Tente novamente mais tarde",Snackbar.LENGTH_LONG).show();

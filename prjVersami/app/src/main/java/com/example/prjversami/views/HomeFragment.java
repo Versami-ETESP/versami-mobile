@@ -4,12 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.prjversami.R;
 import com.example.prjversami.util.NavigationUtil;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,4 +77,17 @@ public class HomeFragment extends Fragment {
         NavigationUtil.carregarFragment(getChildFragmentManager(), R.id.home_framelayout, new RecyclerPostsFragment(), bundle);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("Home","Passou aqui");
+        List<Fragment> filhos = getChildFragmentManager().getFragments();
+        for (Fragment f : filhos) {
+            Log.d("Home", "Fragment encontrado: " + f.getClass().getSimpleName());
+            Log.d("Home", "É RecyclerPostsFragment? " + (f instanceof RecyclerPostsFragment));
+            if (f instanceof RecyclerPostsFragment) {
+                ((RecyclerPostsFragment) f).onResumeManual();
+            }
+        }
+    }
 }

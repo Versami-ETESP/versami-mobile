@@ -8,11 +8,14 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.prjversami.R;
 import com.example.prjversami.controllers.NotificacaoController;
+import com.example.prjversami.util.Compartilha;
 import com.example.prjversami.util.NavigationUtil;
 
 
@@ -21,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     FrameLayout frameLayout;
+    int idUsuarioLogado;
+    long ultimoVoltarPressionado = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         frameLayout = findViewById(R.id.fragment_container);
+        idUsuarioLogado = getSharedPreferences("login", MODE_PRIVATE).getInt("id", 0);
 
         if(savedInstanceState == null){
             NavigationUtil.carregarFragment(getSupportFragmentManager(),R.id.fragment_container, new HomeFragment());
@@ -57,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new NotificationFragment();
                         break;
                     case R.id.menu_profile:
-                        int idUsuarioLogado = getSharedPreferences("login", MODE_PRIVATE).getInt("id", 0);
                         fragment = ProfileFragment.newInstance(idUsuarioLogado);
                         break;
                 }
@@ -69,6 +74,33 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(Compartilha.isEditouPerfil()){
+            Compartilha.setEditouPerfil(false);
+            NavigationUtil.carregarFragment(getSupportFragmentManager(),R.id.fragment_container, ProfileFragment.newInstance(idUsuarioLogado));
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        if(!(fragment instanceof HomeFragment)){
+            NavigationUtil.carregarFragment(getSupportFragmentManager(), R.id.fragment_container, new HomeFragment());
+            bottomNavigationView.setSelectedItemId(R.id.menu_home);
+        }else{
+            long agora = System.currentTimeMillis();
+            if(agora - ultimoVoltarPressionado < 2000){
+                super.onBackPressed();
+            }else{
+                ultimoVoltarPressionado = agora;
+                Toast.makeText(this, "Pressione voltar novamente para sair", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void personalizarActionBar(String title){
