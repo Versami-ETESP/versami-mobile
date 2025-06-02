@@ -17,7 +17,7 @@
     <string name="botao_seguir">Seguir</string>
     <string name="botao_seguindo">Seguindo</string>
     <string name="lorem">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint provident aliquid quas quasi quisquam voluptas, pariatur culpa! Sequi accusamus libero animi error autem eveniet porro, eos quam voluptates unde eum!</string>
-
+    <string name="sobrenos2">Versão Mobile Desenvolvida por:\nYgor Gabriel e Thamiris Fernandes\nDesign por:\nMatheus Canesso</string>
     <string-array name="spinner_teste">
         <item>Selecione uma pergunta...</item>
         <item>Qual o seu livro favorito?</item>

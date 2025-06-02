@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.prjversami.R;
+import com.example.prjversami.SobreNos;
 import com.example.prjversami.controllers.NotificacaoController;
 import com.example.prjversami.controllers.PerfilController;
 import com.example.prjversami.entities.Notificacao;
@@ -225,6 +226,9 @@ public class ProfileFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_profile_edit:
                 startActivity(new Intent(getContext(), EditarPerfil.class));
+                return true;
+            case R.id.menu_profile_sobre:
+                startActivity(new Intent(getContext(), SobreNos.class));
                 return true;
             case R.id.menu_profile_exit:
                 SharedPreferences pref = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
