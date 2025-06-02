@@ -22,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.prjversami.R;
-import com.example.prjversami.SobreNos;
 import com.example.prjversami.controllers.NotificacaoController;
 import com.example.prjversami.controllers.PerfilController;
 import com.example.prjversami.entities.Notificacao;

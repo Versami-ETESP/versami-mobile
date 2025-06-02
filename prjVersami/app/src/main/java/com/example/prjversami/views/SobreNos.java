@@ -1,9 +1,11 @@
-package com.example.prjversami;
+package com.example.prjversami.views;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+
+import com.example.prjversami.R;
 
 public class SobreNos extends AppCompatActivity {
 
