@@ -7,13 +7,12 @@
         android:title="@string/menu_fragment_edit"
         app:showAsAction="collapseActionView"/>
     <item
-        android:id="@+id/menu_profile_sobre"
-        android:title="Sobre Nós"
-        app:showAsAction="collapseActionView"/>
-    <item
         android:id="@+id/menu_profile_exit"
         android:icon="@drawable/ic_exit"
         android:title="@string/menu_fragment_exit"
         app:showAsAction="collapseActionView"/>
-
+    <item
+        android:id="@+id/menu_profile_sobre"
+        android:title="Sobre Nós"
+        app:showAsAction="collapseActionView"/>
 </menu>

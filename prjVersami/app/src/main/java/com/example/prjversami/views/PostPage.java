@@ -61,6 +61,7 @@ public class PostPage extends AppCompatActivity {
     private Publicacao publicacao;
     private List<Comentario> comentarios;
     private AdapterComentarios adapter;
+    private Uri stickerAssetUri;
 
     private int idUser, idUserAlvo;
     private boolean mudouStatus = false;
@@ -99,22 +100,22 @@ public class PostPage extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        if(bundle == null){
+        if (bundle == null) {
             finish();
             return;
         }
 
         PublicacaoController pc = new PublicacaoController(getApplicationContext());
         int idPublic = bundle.getInt("idPublicacao");
-        arrobaUser = getSharedPreferences("login",MODE_PRIVATE).getString("arroba","");
-        idUser = getSharedPreferences("login",MODE_PRIVATE).getInt("id",0);
+        arrobaUser = getSharedPreferences("login", MODE_PRIVATE).getString("arroba", "");
+        idUser = getSharedPreferences("login", MODE_PRIVATE).getInt("id", 0);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 publicacao = pc.obterPublicacao(idPublic);
-                comentarios = pc.listarComentarios(idPublic,idUser);
-                adapter = new AdapterComentarios(comentarios,getApplicationContext());
+                comentarios = pc.listarComentarios(idPublic, idUser);
+                adapter = new AdapterComentarios(comentarios, getApplicationContext());
                 recyclerComentarios.setAdapter(adapter);
 
                 Usuario user = publicacao.getUsuario();
@@ -123,26 +124,26 @@ public class PostPage extends AppCompatActivity {
                 idUserAlvo = user.getUserID();
 
                 profileName.setText(user.getUserName());
-                arroba.setText("@"+user.getUserLogin());
+                arroba.setText("@" + user.getUserLogin());
                 data.setText(publicacao.getPostDate());
                 content.setText(publicacao.getContent());
                 like.setOnCheckedChangeListener(null);
                 like.setChecked(publicacao.isLike());
                 like.setText(publicacao.getTotalLikes().toString());
                 commentLabel.setText(publicacao.getTotalComentarios().toString());
-                if(user.getUserImage() != null){
+                if (user.getUserImage() != null) {
                     profileImage.setImageBitmap(ImagensUtil.converteParaBitmap(user.getUserImage()));
-                }else{
+                } else {
                     profileImage.setBackgroundColor(Color.parseColor("#d3d3d3"));
                     profileImage.setImageResource(R.drawable.user_icon_placeholder2);
                 }
 
 
-                if(livro != null){
+                if (livro != null) {
                     bookInfo.setVisibility(View.VISIBLE);
                     bookName.setText(livro.getTitle());
                     bookImage.setImageBitmap(ImagensUtil.converteParaBitmap(livro.getCover()));
-                }else{
+                } else {
                     bookInfo.setVisibility(View.GONE);
                 }
 
@@ -152,10 +153,10 @@ public class PostPage extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
 
 
-                if(comentarios.isEmpty()){
+                if (comentarios.isEmpty()) {
                     recyclerComentarios.setVisibility(View.GONE);
                     labelSemComent.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     labelSemComent.setVisibility(View.GONE);
                     recyclerComentarios.setVisibility(View.VISIBLE);
                 }
@@ -163,20 +164,20 @@ public class PostPage extends AppCompatActivity {
                 like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if(b){
+                        if (b) {
                             pc.setCurtidas(publicacao.getIdPublicacao());
                             publicacao.addLike();
-                            publicacao.setTotalLikes(publicacao.getTotalLikes()+1);
+                            publicacao.setTotalLikes(publicacao.getTotalLikes() + 1);
                             like.setText(publicacao.getTotalLikes().toString());
 
-                            if(idUser != idUserAlvo)
-                                NotificacaoController.notificarAcao(Notificacao.CURTIDA_POST,idUserAlvo,arrobaUser,getApplicationContext());
+                            if (idUser != idUserAlvo)
+                                NotificacaoController.notificarAcao(Notificacao.CURTIDA_POST, idUserAlvo, arrobaUser, getApplicationContext());
                             mudouStatus = true;
                             Log.d("like", "passei aqui");
-                        }else{
+                        } else {
                             pc.removeCurtidas(publicacao.getIdPublicacao());
                             publicacao.removeLike();
-                            publicacao.setTotalLikes(publicacao.getTotalLikes()-1);
+                            publicacao.setTotalLikes(publicacao.getTotalLikes() - 1);
                             like.setText(publicacao.getTotalLikes().toString());
                             mudouStatus = true;
                             Log.d("like", "passei aqui");
@@ -184,38 +185,38 @@ public class PostPage extends AppCompatActivity {
                     }
                 });
             }
-        },200);
+        }, 200);
 
         editComentarios.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 String comentario = editComentarios.getText().toString();
 
-                if(i == EditorInfo.IME_ACTION_SEND){
+                if (i == EditorInfo.IME_ACTION_SEND) {
                     Comentario comentObj = criarComentario(idPublic, comentario);
 
-                    if(comentObj == null){
-                        Snackbar.make(root,"Comentário inválido. Verifique os campos.",Snackbar.LENGTH_LONG).show();
+                    if (comentObj == null) {
+                        Snackbar.make(root, "Comentário inválido. Verifique os campos.", Snackbar.LENGTH_LONG).show();
                         return false;
                     }
                     CriarPostController cpc = new CriarPostController(getApplicationContext());
 
-                    if(!cpc.postarComentario(comentObj, idPublic)){
-                        Snackbar.make(root,"Erro ao publicar o comentário. Tente novamente mais tarde!",Snackbar.LENGTH_LONG).show();
+                    if (!cpc.postarComentario(comentObj, idPublic)) {
+                        Snackbar.make(root, "Erro ao publicar o comentário. Tente novamente mais tarde!", Snackbar.LENGTH_LONG).show();
                         return false;
                     }
-                    if(recyclerComentarios.getVisibility() == View.GONE){
+                    if (recyclerComentarios.getVisibility() == View.GONE) {
                         labelSemComent.setVisibility(View.GONE);
                         recyclerComentarios.setVisibility(View.VISIBLE);
                     }
                     comentarios.add(comentObj);
-                    publicacao.setTotalComentarios(publicacao.getTotalComentarios()+1);
+                    publicacao.setTotalComentarios(publicacao.getTotalComentarios() + 1);
                     commentLabel.setText(publicacao.getTotalComentarios().toString());
                     adapter.notifyItemInserted(comentarios.size() - 1);
-                    recyclerComentarios.scrollToPosition(comentarios.size() -1);
+                    recyclerComentarios.scrollToPosition(comentarios.size() - 1);
                     editComentarios.setText("");
-                    if(idUser != idUserAlvo)
-                        NotificacaoController.notificarAcao(Notificacao.COMENTARIO,idUserAlvo,arrobaUser,getApplicationContext());
+                    if (idUser != idUserAlvo)
+                        NotificacaoController.notificarAcao(Notificacao.COMENTARIO, idUserAlvo, arrobaUser, getApplicationContext());
                     mudouStatus = true;
                     return true;
                 }
@@ -232,7 +233,7 @@ public class PostPage extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_post_page_compartilhar:
                 Bitmap bitmap = ImagensUtil.criarStickerPublicacao(getApplicationContext(), this.publicacao);
                 compartilharNoStories(bitmap);
@@ -244,10 +245,10 @@ public class PostPage extends AppCompatActivity {
                 excluirPublicação();
                 break;
             case android.R.id.home:
-                if(mudouStatus){
+                if (mudouStatus) {
                     Publicacao alterado = new Publicacao();
                     alterado.setIdPublicacao(publicacao.getIdPublicacao());
-                    if(mudouStatus) alterado.addLike();
+                    if (mudouStatus) alterado.addLike();
                     else alterado.removeLike();
                     alterado.setTotalLikes(publicacao.getTotalLikes());
                     alterado.setTotalComentarios(publicacao.getTotalComentarios());
@@ -267,14 +268,14 @@ public class PostPage extends AppCompatActivity {
         MenuItem itemDenunciar = menu.findItem(R.id.menu_post_page_denunciar);
         MenuItem itemCompartilhar = menu.findItem(R.id.menu_post_page_compartilhar);
 
-        this.idUser = getSharedPreferences("login",MODE_PRIVATE).getInt("id",0);
+        this.idUser = getSharedPreferences("login", MODE_PRIVATE).getInt("id", 0);
         int idDonoPublic = getIntent().getExtras().getInt("idDonoPublic");
 
-        if(idDonoPublic == this.idUser){
+        if (idDonoPublic == this.idUser) {
             itemExcluir.setVisible(true);
             itemCompartilhar.setVisible(true);
             itemDenunciar.setVisible(false);
-        }else{
+        } else {
             itemExcluir.setVisible(false);
             itemCompartilhar.setVisible(false);
             itemDenunciar.setVisible(true);
@@ -285,10 +286,10 @@ public class PostPage extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(mudouStatus){
+        if (mudouStatus) {
             Publicacao alterado = new Publicacao();
             alterado.setIdPublicacao(publicacao.getIdPublicacao());
-            if(mudouStatus) alterado.addLike();
+            if (mudouStatus) alterado.addLike();
             else alterado.removeLike();
             alterado.setTotalLikes(publicacao.getTotalLikes());
             Compartilha.setLikeAlterado(true);
@@ -298,7 +299,7 @@ public class PostPage extends AppCompatActivity {
         finish();
     }
 
-    private void excluirPublicação(){
+    private void excluirPublicação() {
         AlertDialog.Builder excluir = new AlertDialog.Builder(this);
         excluir.setTitle("Excluir Publicação");
         excluir.setMessage("Você tem certeza que deseja excluir essa publicação?");
@@ -307,19 +308,19 @@ public class PostPage extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 PublicacaoController pc = new PublicacaoController(getApplicationContext());
-                if(pc.excluirPublicacaoBD(publicacao.getIdPublicacao())){
+                if (pc.excluirPublicacaoBD(publicacao.getIdPublicacao())) {
                     Compartilha.setPublicacaoExcluida(true);
                     Compartilha.setPublicacaoAlterada(publicacao);
                     finish();
-                }else{
-                    Snackbar.make(root, "Não foi possível excluir sua publicação. Tente novamente mais tarde",Snackbar.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(root, "Não foi possível excluir sua publicação. Tente novamente mais tarde", Snackbar.LENGTH_LONG).show();
                 }
             }
         });
         excluir.create().show();
     }
 
-    private void denunciarPublicacao(){
+    private void denunciarPublicacao() {
         AlertDialog.Builder denuncia = new AlertDialog.Builder(this);
         denuncia.setTitle("Denunciar Publicação");
         denuncia.setMessage("Você tem certeza que deseja denunciar essa publicação?");
@@ -328,41 +329,41 @@ public class PostPage extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 PublicacaoController pc = new PublicacaoController(getApplicationContext());
-                if(pc.criarDenuncia(idUser, publicacao.getIdPublicacao())){
-                    Snackbar.make(root, "Denúncia enviada com sucesso. Vamos analisar em breve",Snackbar.LENGTH_LONG).show();
-                }else{
-                    Snackbar.make(root, "Não foi possível enviar sua denúncia. Tente novamente mais tarde",Snackbar.LENGTH_LONG).show();
+                if (pc.criarDenuncia(idUser, publicacao.getIdPublicacao())) {
+                    Snackbar.make(root, "Denúncia enviada com sucesso. Vamos analisar em breve", Snackbar.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(root, "Não foi possível enviar sua denúncia. Tente novamente mais tarde", Snackbar.LENGTH_LONG).show();
                 }
             }
         });
         denuncia.create().show();
     }
 
-    private Comentario criarComentario(int idPublicacao, String comentario){
-        if(comentario.isEmpty()){
+    private Comentario criarComentario(int idPublicacao, String comentario) {
+        if (comentario.isEmpty()) {
             editComentarios.setError("Os comentários devem conter algum texto.");
             return null;
         }
 
-        if(comentario.length() > 248){
+        if (comentario.length() > 248) {
             editComentarios.setError("Comentário devem ter no máximo 248 caracteres");
             return null;
         }
         SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
-        Bitmap fotoPerfil = ImagensUtil.pegarImagem("imagemPerfil.jpeg",getApplicationContext());
+        Bitmap fotoPerfil = ImagensUtil.pegarImagem("imagemPerfil.jpeg", getApplicationContext());
 
         Usuario user = new Usuario();
-        user.setUserID(pref.getInt("id",0));
-        user.setUserName(pref.getString("nome",""));
-        user.setUserLogin(pref.getString("arroba",""));
-        if(fotoPerfil != null)
+        user.setUserID(pref.getInt("id", 0));
+        user.setUserName(pref.getString("nome", ""));
+        user.setUserLogin(pref.getString("arroba", ""));
+        if (fotoPerfil != null)
             user.setUserImage(ImagensUtil.converteParaBytes(fotoPerfil));
 
-        return new Comentario(comentario,user);
+        return new Comentario(comentario, user);
     }
 
-    private void personalizarActionBar(){
-        if(getSupportActionBar() == null)
+    private void personalizarActionBar() {
+        if (getSupportActionBar() == null)
             return;
 
         getSupportActionBar().setTitle("");
@@ -371,44 +372,65 @@ public class PostPage extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_arrow_back_24);
     }
 
-    private void compartilharNoStories(Bitmap bitmap){
-        try{
-            File cachePath = new File(getApplicationContext().getCacheDir(),"images");
+    private void compartilharNoStories(Bitmap bitmap) {
+        Snackbar load = Snackbar.make(root, "Carregando Imagem...", Snackbar.LENGTH_INDEFINITE);
+        load.show();
+
+        try {
+            File cachePath = new File(getApplicationContext().getCacheDir(), "images");
             cachePath.mkdirs();
             File file = new File(cachePath, "sticker.png");
             FileOutputStream stream = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             stream.close();
 
-            Uri stickerAssetUri = FileProvider.getUriForFile(getApplicationContext(),
+            stickerAssetUri = FileProvider.getUriForFile(getApplicationContext(),
                     getApplicationContext().getPackageName() + ".fileprovider",
                     file);
 
-            String sourceApplication = "2259474054448179";
-            Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
-            intent.putExtra("source_application", sourceApplication);
-            intent.setType("image/png");
-            intent.putExtra("interactive_asset_uri", stickerAssetUri);
-            intent.putExtra("top_background_color", "#61C1D1");
-            intent.putExtra("bottom_background_color", "#61C1D1");
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    load.dismiss();
+                    criarIntentInstagram();
+                }
+            }, 1000);
 
-            getApplicationContext().grantUriPermission(
-                    "com.instagram.android", stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Log.d("PermissionDebug", "Permissão concedida para URI: " + stickerAssetUri.toString());
+        } catch (IOException e) {
+            Log.e("Erro na imgem", "nao foi possivel criar a imagem");
+            load.dismiss();
+            Snackbar.make(root, "Não foi possível compartilhar publicação. Tente mais tarde!", Snackbar.LENGTH_LONG).show();
+        }
+    }
 
-            try {
-                startActivity(intent);
-            } catch (ActivityNotFoundException e) {
-                Log.e("IntentDebug", "Instagram não encontrado: " + e.getMessage());
-            } catch (Exception e) {
-                Log.e("IntentDebug", "Erro ao iniciar Intent: " + e.getMessage());
-            }
+    private void criarIntentInstagram(){
 
-        }catch (IOException e){
-            Log.e("Erro ao compartilhar", e.getMessage());
-            View view = findViewById(android.R.id.content);
-            Snackbar.make(view, "Não foi possível compartilhar publicação. Tente mais tarde!", Snackbar.LENGTH_LONG).show();
+        if(this.stickerAssetUri == null){
+            Snackbar.make(root, "Imagem ainda não está pronta para compartilhar", Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        String sourceApplication = "2259474054448179";
+        Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+        intent.putExtra("source_application", sourceApplication);
+        intent.setType("image/png");
+        intent.putExtra("interactive_asset_uri", stickerAssetUri);
+        intent.putExtra("top_background_color", "#61C1D1");
+        intent.putExtra("bottom_background_color", "#61C1D1");
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        getApplicationContext().grantUriPermission(
+                "com.instagram.android", stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        Log.d("PermissionDebug", "Permissão concedida para URI: " + stickerAssetUri.toString());
+
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Snackbar.make(root, "Instagram não localizado", Snackbar.LENGTH_LONG).show();
+            Log.e("IntentDebug", "Instagram não encontrado: " + e.getMessage());
+        } catch (Exception e) {
+            Snackbar.make(root, "Não foi possível compartilhar publicação. Tente mais tarde!", Snackbar.LENGTH_LONG).show();
+            Log.e("IntentDebug", "Erro ao iniciar Intent: " + e.getMessage());
         }
     }
 }

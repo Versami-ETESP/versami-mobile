@@ -5,6 +5,8 @@ public class Notificacao {
     public static final int CURTIDA_COMENTARIO = 2;
     public static final int COMENTARIO = 3;
     public static final int SEGUIU = 4;
+    public static final int FEEDBACK_DENUNCIA = 5;
+    public static final int POST_DELETADO = 6;
 
     private int idNotificacao, tipoNotificacao;
     private boolean visualizado;

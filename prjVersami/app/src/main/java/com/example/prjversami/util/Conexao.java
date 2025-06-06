@@ -22,7 +22,7 @@ public class Conexao {
             Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
             //Toast.makeText(context.getApplicationContext(), "Driver Correto", Toast.LENGTH_SHORT).show();
         }catch(Exception e){
-            Log.e("Erro de Conexao: ", e.getMessage());
+            Log.d("Erro de Conexao: ", e.getMessage());
             //Toast.makeText(context.getApplicationContext(),"Driver Incorreto", Toast.LENGTH_SHORT).show();
             return null;
         }

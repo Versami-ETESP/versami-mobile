@@ -10,4 +10,6 @@
     <color name="versami_blue">#61C1D1</color>
     <color name="red_like">#ff3a54</color>
     <color name="green_comment">#72ffc1</color>
+    <color name="yellow_report">#e3ec47</color>
+    <color name="orange_flag">#ecc347</color>
 </resources>

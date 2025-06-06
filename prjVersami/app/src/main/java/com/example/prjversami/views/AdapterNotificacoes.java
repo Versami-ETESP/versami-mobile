@@ -48,10 +48,10 @@ public class AdapterNotificacoes extends RecyclerView.Adapter {
                 holder.imageView.setImageResource(R.drawable.ic_favorite);
                 holder.imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.red_like));
 
-                if(notificacao.getTipoNotificacao() == Notificacao.CURTIDA_POST)
+                if (notificacao.getTipoNotificacao() == Notificacao.CURTIDA_POST)
                     holder.tipoNotificacao.setText("Nova Curtida na sua Publicação");
 
-                if(notificacao.getTipoNotificacao() == Notificacao.CURTIDA_COMENTARIO)
+                if (notificacao.getTipoNotificacao() == Notificacao.CURTIDA_COMENTARIO)
                     holder.tipoNotificacao.setText("Nova Curtida no seu Comentario");
                 break;
             case Notificacao.COMENTARIO:
@@ -63,6 +63,16 @@ public class AdapterNotificacoes extends RecyclerView.Adapter {
                 holder.tipoNotificacao.setText("Novo Seguidor");
                 holder.imageView.setImageResource(R.drawable.ic_person_add);
                 holder.imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.versami_blue));
+                break;
+            case Notificacao.FEEDBACK_DENUNCIA:
+                holder.tipoNotificacao.setText("Denúncia Analisada");
+                holder.imageView.setImageResource(R.drawable.ic_flag);
+                holder.imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.orange_flag));
+                break;
+            case Notificacao.POST_DELETADO:
+                holder.tipoNotificacao.setText("Publicação Deletada");
+                holder.imageView.setImageResource(R.drawable.ic_report);
+                holder.imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow_report));
                 break;
         }
 
