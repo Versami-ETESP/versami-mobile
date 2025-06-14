@@ -41,25 +41,26 @@ public class TrocaSenha extends AppCompatActivity {
     }
 
     public void pesquisar(View v){
-
-        if(!nomeUser.getText().toString().isEmpty()){
-            LoginController lc = new LoginController(getApplicationContext());
-            String[] dados = lc.resgatarPergunta(nomeUser.getText().toString());
-
-            if (dados != null && !dados[0].isEmpty()){
-                this.user.setResposta(dados[1]);
-                this.user.setUserLogin(nomeUser.getText().toString());
-
-                nomeUser.setEnabled(false);
-                pergunta.setText(dados[0]);
-                pergunta.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                pergunta.setSelected(true);
-            }else{
-                nomeUser.setError("Usuário não localizado.");
-            }
-        }else{
+        if(nomeUser.getText().toString().isEmpty()){
             nomeUser.setError("Preencher Usuário");
+            return;
         }
+
+        LoginController lc = new LoginController(getApplicationContext());
+        String[] dados = lc.resgatarPergunta(nomeUser.getText().toString());
+
+        if (dados == null || dados[0] == null || dados[0].isEmpty()){
+            nomeUser.setError("Usuário não localizado.");
+            return;
+        }
+
+        this.user.setResposta(dados[1]);
+        this.user.setUserLogin(nomeUser.getText().toString());
+
+        nomeUser.setEnabled(false);
+        pergunta.setText(dados[0]);
+        pergunta.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        pergunta.setSelected(true);
     }
 
     public void alterarSenhar(View v){

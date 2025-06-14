@@ -74,6 +74,8 @@ public class LoginController {
                 if(con.result.next()){
                     pergunta[0] = con.result.getString("pergunta");
                     pergunta[1] = con.result.getString("resposta");
+                }else{
+                    return null;
                 }
             }catch (SQLException e){
                 Log.e("Erro na Consulta", e.getMessage());

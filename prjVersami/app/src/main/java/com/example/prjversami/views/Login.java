@@ -49,7 +49,7 @@ public class Login extends AppCompatActivity {
                         startActivity(tela);
                         finish();
                     } else {
-                        Snackbar.make(view, "Usuário ou senha inválido!", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, "Usuário ou senha incorretos!", Snackbar.LENGTH_LONG).show();
                     }
                 } else {
                     Snackbar.make(view, "Por favor, preencher os campos!", Snackbar.LENGTH_LONG).show();

@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="337dp"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="88dp"
         android:fontFamily="@font/quicksand"
         android:text="Acesse agora sua conta na Versami e explore diversas avaliações dos seus livros favoritos!"

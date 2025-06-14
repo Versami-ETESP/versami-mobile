@@ -44,7 +44,7 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="327dp"
-        android:layout_height="52dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:fontFamily="@font/quicksand"
         android:text="Crie agora sua conta na Versami e explore diversas avaliações dos seus livros favoritos!"
@@ -154,7 +154,7 @@
         android:fontFamily="@font/quicksand_medium"
         android:layout_marginTop="15dp"
         android:padding="10dp"
-        android:inputType="textPassword"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cadastro_spnPergunta"
